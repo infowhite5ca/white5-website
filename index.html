@@ -193,11 +193,31 @@
     }
 
     .btn-primary {
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      color: #06203a;
-      box-shadow: 0 14px 36px rgba(94, 203, 255, 0.28);
-    }
-
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #06203a;
+  box-shadow: 0 14px 36px rgba(94, 203, 255, 0.28);
+}
+    .btn-primary::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 120%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,0.6),
+    transparent
+  );
+  transform: skewX(-25deg);
+}
+    .btn-primary:hover::after {
+  left: 120%;
+  transition: 0.8s;
+}
     .btn-primary:hover {
       transform: translateY(-1px);
     }
