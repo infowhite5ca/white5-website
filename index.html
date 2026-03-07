@@ -197,27 +197,26 @@
     }
 
     .btn-primary {
-  background: linear-gradient(135deg, #7ee6ff, #38b6ff);
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, #7ee6ff 0%, #3dbfff 100%);
   color: #06203a;
   border: 1px solid rgba(255,255,255,0.18);
   box-shadow:
     0 14px 34px rgba(56,182,255,0.35),
-    inset 0 1px 0 rgba(255,255,255,0.55);
+    inset 0 1px 0 rgba(255,255,255,0.45);
 }
     .btn-primary::after {
   content: "";
   position: absolute;
-  top: 0;
-  left: -120%;
-  width: 120%;
-  height: 100%;
-  background: linear-gradient(
-    120deg,
-    transparent,
-    rgba(255,255,255,0.6),
-    transparent
-  );
-  transform: skewX(-25deg);
+  left: -5%;
+  bottom: -45%;
+  width: 110%;
+  height: 130%;
+  background: rgba(255,255,255,0.14);
+  border-radius: 45%;
+  transform: rotate(5deg);
+  animation: waveFloat2 6s ease-in-out infinite;
 }
     .btn-primary:hover::after {
   left: 120%;
@@ -229,23 +228,41 @@
     0 20px 40px rgba(56,182,255,0.4),
     0 0 20px rgba(126,230,255,0.18);
     }
-.btn-primary::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -120%;
-  width: 120%;
-  height: 100%;
-  background: linear-gradient(
-    120deg,
-    transparent,
-    rgba(255,255,255,0.45),
-    transparent
-  );
-  transform: skewX(-25deg);
-  transition: 0.7s;
+    @keyframes waveFloat {
+  0% {
+    transform: translateX(-3%) rotate(-6deg);
+  }
+  50% {
+    transform: translateX(3%) rotate(-2deg);
+  }
+  100% {
+    transform: translateX(-3%) rotate(-6deg);
+  }
 }
 
+@keyframes waveFloat2 {
+  0% {
+    transform: translateX(4%) rotate(5deg);
+  }
+  50% {
+    transform: translateX(-4%) rotate(1deg);
+  }
+  100% {
+    transform: translateX(4%) rotate(5deg);
+  }
+}
+.btn-primary::before {
+content: "";
+  position: absolute;
+  left: -10%;
+  bottom: -35%;
+  width: 120%;
+  height: 140%;
+  background: rgba(255,255,255,0.22);
+  border-radius: 40%;
+  transform: rotate(-6deg);
+  animation: waveFloat 4.5s ease-in-out infinite;
+}
 .btn-primary:hover::before {
   left: 120%;
 }
