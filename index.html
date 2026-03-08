@@ -841,21 +841,63 @@
       </div>
     </section>
 
-<section id="quote">
+<section id="quote-reviews">
   <style>
-    #quote .quote-grid{
-      max-width: 900px;
+    #quote-reviews{
+      padding: 60px 0 80px;
+      position: relative;
+      z-index: 2;
+    }
+
+    #quote-reviews .quote-reviews-grid{
+      max-width: 1300px;
       margin: 0 auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 28px;
+      align-items: start;
     }
 
-    #quote .quote-card{
-      background: #fff;
-      padding: 40px;
-      border-radius: 16px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    #quote-reviews .quote-card,
+    #quote-reviews .reviews-section{
+      background: rgba(255,255,255,0.96);
+      border-radius: 22px;
+      padding: 30px;
+      box-shadow: 0 14px 35px rgba(0,0,0,0.14);
+      border: 1px solid rgba(255,255,255,0.2);
     }
 
-    #quote .quote-calculator{
+    #quote-reviews .quote-card{
+      color: #111 !important;
+    }
+
+    #quote-reviews .quote-card h2,
+    #quote-reviews .quote-card h3,
+    #quote-reviews .quote-card p,
+    #quote-reviews .quote-card li,
+    #quote-reviews .quote-card label,
+    #quote-reviews .quote-card strong{
+      color: #111 !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
+
+    #quote-reviews .quote-card .section-head h2{
+      font-size: 54px;
+      line-height: 0.95;
+      margin: 0 0 16px;
+      color: #111 !important;
+    }
+
+    #quote-reviews .quote-card .section-head p{
+      font-size: 18px;
+      line-height: 1.6;
+      margin: 0 0 18px;
+      color: #4b5563 !important;
+    }
+
+    #quote-reviews .quote-calculator{
       display: flex;
       flex-direction: column;
       gap: 14px;
@@ -863,59 +905,219 @@
       margin-bottom: 25px;
     }
 
-    #quote .quote-calculator label{
+    #quote-reviews .quote-calculator label{
       font-weight: 700;
+      font-size: 16px;
+      color: #111 !important;
+    }
+
+    #quote-reviews .quote-calculator input{
+      padding: 14px 16px;
+      font-size: 18px;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      width: 100%;
+      background: #fff;
       color: #111;
     }
 
-    #quote .quote-calculator input{
-      padding: 12px;
-      font-size: 16px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      width: 100%;
-    }
-
-    #quote .quote-calculator button{
-      padding: 14px;
-      font-size: 16px;
+    #quote-reviews .quote-calculator button{
+      padding: 15px 18px;
+      font-size: 18px;
       background: #38b6ff;
       color: white;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       font-weight: 700;
       cursor: pointer;
       transition: 0.2s ease;
+      box-shadow: 0 10px 22px rgba(56,182,255,0.24);
     }
 
-    #quote .quote-calculator button:hover{
+    #quote-reviews .quote-calculator button:hover{
       background: #2499db;
+      transform: translateY(-1px);
     }
 
-    #quote .quote-result{
+    #quote-reviews .quote-result{
+      font-size: 20px;
+      margin-top: 8px;
+      color: #111 !important;
+    }
+
+    #quote-reviews .quote-result strong{
       font-size: 22px;
-      margin-top: 10px;
-      color: #111;
     }
 
-    #quote .contact-list{
+    #quote-reviews .contact-list{
       list-style: none;
       padding: 0;
-      margin-top: 20px;
+      margin: 20px 0 0;
     }
 
-    #quote .contact-list li{
-      margin-bottom: 8px;
+    #quote-reviews .contact-list li{
+      margin-bottom: 10px;
+      font-size: 16px;
+      color: #111 !important;
     }
 
-    #quote .mini-note{
-      margin-top: 15px;
+    #quote-reviews .contact-list a{
+      color: #1570ff;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    #quote-reviews .contact-list a:hover{
+      text-decoration: underline;
+    }
+
+    #quote-reviews .mini-note{
+      margin-top: 16px;
       font-size: 14px;
-      color: #666;
+      line-height: 1.5;
+      color: #6b7280 !important;
+    }
+
+    #quote-reviews .reviews-section{
+      background: rgba(32, 53, 79, 0.86);
+      color: #fff;
+      backdrop-filter: blur(8px);
+    }
+
+    #quote-reviews .reviews-title{
+      margin: 0 0 22px;
+      font-size: 32px;
+      color: #fff;
+    }
+
+    #quote-reviews .reviews-grid{
+      display: grid;
+      gap: 18px;
+    }
+
+    #quote-reviews .review-card{
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 18px;
+      padding: 20px 22px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.14);
+    }
+
+    #quote-reviews .review-top{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    #quote-reviews .review-top strong{
+      color: #fff;
+      font-size: 22px;
+    }
+
+    #quote-reviews .google{
+      color: #7fd4ff;
+      font-weight: 700;
+      font-size: 16px;
+      text-decoration: none;
+    }
+
+    #quote-reviews .stars{
+      color: #ffd34d;
+      font-size: 22px;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+    }
+
+    #quote-reviews .review-card p{
+      margin: 0;
+      line-height: 1.7;
+      font-size: 17px;
+      color: rgba(255,255,255,0.96);
+    }
+
+    #quote-reviews .review-buttons{
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    #quote-reviews .review-btn{
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      padding: 0 24px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 16px;
+      transition: 0.2s ease;
+    }
+
+    #quote-reviews .review-btn:first-child{
+      background: #69d1ff;
+      color: #06203b;
+      box-shadow: 0 12px 24px rgba(105,209,255,0.25);
+    }
+
+    #quote-reviews .review-btn.leave{
+      background: #fff;
+      color: #0f172a;
+      box-shadow: 0 12px 24px rgba(255,255,255,0.18);
+    }
+
+    #quote-reviews .review-btn:hover{
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 1100px){
+      #quote-reviews .quote-reviews-grid{
+        grid-template-columns: 1fr;
+      }
+
+      #quote-reviews .quote-card .section-head h2{
+        font-size: 42px;
+      }
+    }
+
+    @media (max-width: 640px){
+      #quote-reviews{
+        padding: 40px 0 60px;
+      }
+
+      #quote-reviews .quote-reviews-grid{
+        padding: 0 14px;
+        gap: 18px;
+      }
+
+      #quote-reviews .quote-card,
+      #quote-reviews .reviews-section{
+        padding: 22px 18px;
+      }
+
+      #quote-reviews .quote-card .section-head h2{
+        font-size: 34px;
+      }
+
+      #quote-reviews .reviews-title{
+        font-size: 26px;
+      }
+
+      #quote-reviews .review-top strong{
+        font-size: 18px;
+      }
+
+      #quote-reviews .review-card p{
+        font-size: 15px;
+      }
     }
   </style>
 
-  <div class="container quote-grid">
+  <div class="quote-reviews-grid">
     <article class="quote-card">
       <div class="section-head" style="margin-bottom:16px;">
         <h2>Get a Free Quote</h2>
@@ -951,10 +1153,63 @@
       </ul>
 
       <p class="mini-note">
-        Final price may vary depending on building height,
-        accessibility and service type.
+        Final price may vary depending on building height, accessibility and service type.
       </p>
     </article>
+
+    <section class="reviews-section">
+      <h2 class="reviews-title">Customer Reviews</h2>
+
+      <div class="reviews-grid">
+        <div class="review-card">
+          <div class="review-top">
+            <strong>Demetrius Lloyd</strong>
+            <a class="google" href="https://share.google/1fQlufbSsUMOv4vaP" target="_blank">Google</a>
+          </div>
+          <div class="stars">★★★★★</div>
+          <p>
+            Great service! Had my gutters cleaned fast, professionally, and thoroughly.
+            Everything was cleaned properly and left tidy. Highly recommend.
+          </p>
+        </div>
+
+        <div class="review-card">
+          <div class="review-top">
+            <strong>Margaret Stewart</strong>
+            <a class="google" href="https://share.google/1fQlufbSsUMOv4vaP" target="_blank">Google</a>
+          </div>
+          <div class="stars">★★★★★</div>
+          <p>
+            I had Volodymyr pressure wash my house with 40 years of build up! He was amazing to get it back to looking new! My neighbours are amazed at how clean it looks! He worked very hard scrubbing it down with a solution and elbow grease!
+          </p>
+        </div>
+
+        <div class="review-card">
+          <div class="review-top">
+            <strong>Qasim S</strong>
+            <a class="google" href="https://share.google/1fQlufbSsUMOv4vaP" target="_blank">Google</a>
+          </div>
+          <div class="stars">★★★★★</div>
+          <p>
+            He cleaned the gutters on the backside of our home. He was polite, competent, thorough and showed the result of his work by making a video of the gutters after the cleaning. I have no hesitation in recommending him to others.
+          </p>
+        </div>
+      </div>
+
+      <div class="review-buttons">
+        <a class="review-btn"
+           href="https://share.google/1fQlufbSsUMOv4vaP"
+           target="_blank">
+          Read More on Google
+        </a>
+
+        <a class="review-btn leave"
+           href="https://g.page/r/CSF5A4laimnNEAI/review"
+           target="_blank">
+          Leave a Review
+        </a>
+      </div>
+    </section>
   </div>
 </section>
 
