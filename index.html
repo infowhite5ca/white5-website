@@ -842,26 +842,152 @@
     </section>
 
     <section id="quote">
-      <div class="container quote-grid">
-        <article class="quote-card">
-          <div class="section-head" style="margin-bottom: 16px;">
-            <h2>Get a Free Quote</h2>
-            <p>
-              Ready for a cleaner exterior? Reach out and we’ll talk about your windows,
-              gutters or power washing project.
-            </p>
-          </div>
 
-          <ul class="contact-list">
-            <li>Phone: <a href="tel:14034793905">403-479-3905</a></li>
-            <li>Email: <a href="mailto:info@white5.ca">info@white5.ca</a></li>
-            <li>Location: Calgary, Alberta</li>
-          </ul>
+<style>
+.quote-grid{
+max-width:900px;
+margin:auto;
+}
 
-          <p class="mini-note">
-            Later we can replace this block with a real quote form or a Google Form embed.
-          </p>
-        </article>
+.quote-card{
+background:white;
+padding:40px;
+border-radius:10px;
+box-shadow:0 10px 25px rgba(0,0,0,0.08);
+}
+
+.quote-calculator{
+display:flex;
+flex-direction:column;
+gap:14px;
+margin-top:20px;
+margin-bottom:25px;
+}
+
+.quote-calculator input{
+padding:12px;
+font-size:16px;
+border-radius:6px;
+border:1px solid #ccc;
+}
+
+.quote-calculator button{
+padding:14px;
+font-size:16px;
+background:#38b6ff;
+color:white;
+border:none;
+border-radius:6px;
+font-weight:bold;
+cursor:pointer;
+transition:0.2s;
+}
+
+.quote-calculator button:hover{
+background:#2499db;
+}
+
+.quote-result{
+font-size:22px;
+margin-top:10px;
+}
+
+.contact-list{
+list-style:none;
+padding:0;
+margin-top:20px;
+}
+
+.contact-list li{
+margin-bottom:6px;
+}
+
+.mini-note{
+margin-top:15px;
+font-size:14px;
+color:#666;
+}
+</style>
+
+<div class="container quote-grid">
+
+<article class="quote-card">
+
+<div class="section-head" style="margin-bottom:16px;">
+
+<h2>Get a Free Quote</h2>
+
+<p>
+Enter the approximate size of your house to get an instant estimate
+for exterior cleaning services.
+</p>
+
+</div>
+
+<div class="quote-calculator">
+
+<label>House size (sq ft)</label>
+
+<input
+type="number"
+id="sqft"
+placeholder="Example: 2000"
+/>
+
+<button onclick="calculateQuote()">
+Calculate Estimate
+</button>
+
+<div class="quote-result">
+Estimated price:
+<strong id="price">$0</strong>
+</div>
+
+</div>
+
+<ul class="contact-list">
+
+<li>
+Phone:
+<a href="tel:14034793905">403-479-3905</a>
+</li>
+
+<li>
+Email:
+<a href="mailto:info@white5.ca">info@white5.ca</a>
+</li>
+
+<li>
+Location: Calgary, Alberta
+</li>
+
+</ul>
+
+<p class="mini-note">
+Final price may vary depending on building height,
+accessibility and service type.
+</p>
+
+</article>
+
+</div>
+
+<script>
+
+function calculateQuote(){
+
+let sqft = document.getElementById("sqft").value;
+
+let price = sqft * 0.125;
+
+document.getElementById("price").innerText =
+"$" + price.toFixed(2);
+
+}
+
+</script>
+
+</section>
 
         <section class="reviews-section">
           <h2 class="reviews-title">Customer Reviews</h2>
