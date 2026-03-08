@@ -8,10 +8,12 @@
     name="description"
     content="Professional window cleaning, gutter cleaning and power washing services in Calgary."
   />
-<link href="https://fonts.googleapis.com/css2?family=Marko+One&display=swap" rel="stylesheet">
+
+  <link href="https://fonts.googleapis.com/css2?family=Marko+One&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Agbalumo&display=swap" rel="stylesheet">
-   <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Marko+One&display=swap" rel="stylesheet">
+
   <style>
     :root {
       --bg: #071a2f;
@@ -37,15 +39,17 @@
     }
 
     body {
-  margin: 0;
-  font-family: "Google Sans", sans-serif;
-  color: var(--text);
-  background:
-    radial-gradient(circle at top right, rgba(94, 203, 255, 0.18), transparent 26%),
-    radial-gradient(circle at left center, rgba(138, 240, 255, 0.12), transparent 24%),
-    linear-gradient(180deg, #08182b 0%, #0b2340 42%, #071a2f 100%);
-  line-height: 1.5;
+      margin: 0;
+      font-family: "Google Sans", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top right, rgba(94, 203, 255, 0.18), transparent 26%),
+        radial-gradient(circle at left center, rgba(138, 240, 255, 0.12), transparent 24%),
+        linear-gradient(180deg, #08182b 0%, #0b2340 42%, #071a2f 100%);
+      line-height: 1.5;
     }
+
+    a {
       color: inherit;
       text-decoration: none;
     }
@@ -96,7 +100,7 @@
     }
 
     .logo-title {
-      font-family: "Marko One", cursive;
+      font-family: "Marko One", serif;
       font-size: 40px;
       font-weight: 800;
       color: var(--white);
@@ -162,11 +166,30 @@
     }
 
     h1 {
-      font-family: "Marko One", serif
+      font-family: "Marko One", serif;
       margin: 0 0 18px;
       font-size: clamp(38px, 6vw, 74px);
       line-height: 0.98;
-      letter-spacing: -1.6px;
+      letter-spacing: -1.2px;
+    }
+
+    h2 {
+      font-family: "Marko One", serif;
+      font-size: clamp(28px, 4vw, 46px);
+      letter-spacing: 0.4px;
+      margin: 0 0 10px;
+    }
+
+    h3 {
+      font-family: "Marko One", serif;
+      font-size: 22px;
+      margin-top: 28px;
+      margin-bottom: 6px;
+      letter-spacing: 0.3px;
+    }
+
+    p {
+      font-family: "Google Sans", sans-serif;
     }
 
     .hero p {
@@ -185,116 +208,90 @@
 
     .btn {
       display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 58px;
-  padding: 0 32px;
-  border-radius: 999px;
-  font-weight: 700;
-  font-size: 16px;
-  letter-spacing: 0.3px;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-  position: relative;
-  overflow: hidden;
+      align-items: center;
+      justify-content: center;
+      min-height: 58px;
+      padding: 0 32px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: 0.3px;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      position: relative;
+      overflow: hidden;
     }
 
     .btn-primary {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  font-family: "Agbalumo", system-ui;
-  font-size: 26px;
-  line-height: 1;
-
-  padding: 14px 28px;
-
-  background-image: url("water.png");
-  background-size: 180%;
-  background-position: top;
-  background-repeat: no-repeat;
-
-  animation: waterMove 8s ease-in-out infinite;
-
-  color: #06203a;
-  border: 1px solid rgba(255,255,255,0.18);
-  box-shadow:
-    0 14px 34px rgba(56,182,255,0.35),
-    inset 0 1px 0 rgba(255,255,255,0.45);
-}
-    @keyframes waterMove {
-  0% {
-    background-position: top left;
-  }
-
-  50% {
-    background-position: top right;
-  }
-
-  100% {
-    background-position: top left;
-  }
-}
-    .btn-primary::after {
-  content: "";
-  position: absolute;
-  left: -5%;
-  bottom: -45%;
-  width: 110%;
-  height: 130%;
-  background: rgba(255,255,255,0.14);
-  border-radius: 45%;
-  transform: rotate(5deg);
-  animation: waveFloat2 6s ease-in-out infinite;
-}
-    .btn-primary:hover::after {
-  left: 120%;
-  transition: 0.8s;
-}
-    .btn-primary:hover {
-     transform: translateY(-2px);
-  box-shadow:
-    0 18px 40px rgba(56,182,255,0.45),
-    0 0 20px rgba(120,220,255,0.35);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: "Agbalumo", system-ui;
+      font-size: 26px;
+      line-height: 1;
+      padding: 14px 28px;
+      background-image: url("water.png");
+      background-size: 180%;
+      background-position: top;
+      background-repeat: no-repeat;
+      animation: waterMove 8s ease-in-out infinite;
+      color: #06203a;
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow:
+        0 14px 34px rgba(56,182,255,0.35),
+        inset 0 1px 0 rgba(255,255,255,0.45);
     }
-    @keyframes waveFloat {
-  0% {
-    transform: translateX(-3%) rotate(-6deg);
-  }
-  50% {
-    transform: translateX(3%) rotate(-2deg);
-  }
-  100% {
-    transform: translateX(-3%) rotate(-6deg);
-  }
-}
 
-@keyframes waveFloat2 {
-  0% {
-    transform: translateX(4%) rotate(5deg);
-  }
-  50% {
-    transform: translateX(-4%) rotate(1deg);
-  }
-  100% {
-    transform: translateX(4%) rotate(5deg);
-  }
-}
-.btn-primary::before {
-content: "";
-  position: absolute;
-  left: -10%;
-  bottom: -35%;
-  width: 120%;
-  height: 140%;
-  background: rgba(255,255,255,0.22);
-  border-radius: 40%;
-  transform: rotate(-6deg);
-  animation: waveFloat 4.5s ease-in-out infinite;
-}
-.btn-primary:hover::before {
-  left: 120%;
-}
+    @keyframes waterMove {
+      0% { background-position: top left; }
+      50% { background-position: top right; }
+      100% { background-position: top left; }
+    }
+
+    .btn-primary::before {
+      content: "";
+      position: absolute;
+      left: -10%;
+      bottom: -35%;
+      width: 120%;
+      height: 140%;
+      background: rgba(255,255,255,0.22);
+      border-radius: 40%;
+      transform: rotate(-6deg);
+      animation: waveFloat 4.5s ease-in-out infinite;
+    }
+
+    .btn-primary::after {
+      content: "";
+      position: absolute;
+      left: -5%;
+      bottom: -45%;
+      width: 110%;
+      height: 130%;
+      background: rgba(255,255,255,0.14);
+      border-radius: 45%;
+      transform: rotate(5deg);
+      animation: waveFloat2 6s ease-in-out infinite;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow:
+        0 18px 40px rgba(56,182,255,0.45),
+        0 0 20px rgba(120,220,255,0.35);
+    }
+
+    @keyframes waveFloat {
+      0% { transform: translateX(-3%) rotate(-6deg); }
+      50% { transform: translateX(3%) rotate(-2deg); }
+      100% { transform: translateX(-3%) rotate(-6deg); }
+    }
+
+    @keyframes waveFloat2 {
+      0% { transform: translateX(4%) rotate(5deg); }
+      50% { transform: translateX(-4%) rotate(1deg); }
+      100% { transform: translateX(4%) rotate(5deg); }
+    }
+
     .btn-secondary {
       border: 1px solid rgba(255,255,255,0.16);
       background: rgba(255,255,255,0.05);
@@ -379,12 +376,6 @@ content: "";
       margin-bottom: 24px;
     }
 
-    .section-head h2 {
-      margin: 0 0 10px;
-      font-size: clamp(28px, 4vw, 46px);
-      letter-spacing: -0.8px;
-    }
-
     .section-head p {
       margin: 0;
       color: var(--muted);
@@ -417,13 +408,6 @@ content: "";
       background: linear-gradient(135deg, rgba(94, 203, 255, 0.18), rgba(138, 240, 255, 0.18));
       border: 1px solid rgba(255,255,255,0.12);
       margin-bottom: 18px;
-    }
-
-    .service-card h3,
-    .feature-card h3,
-    .quote-card h3 {
-      margin: 0 0 10px;
-      font-size: 24px;
     }
 
     .service-card p,
@@ -559,11 +543,6 @@ content: "";
         padding: 22px;
       }
 
-     h2 {
-  font-family: "Marko One", serif;
-  font-size: 42px;
-  letter-spacing: 0.4px;
-}
       .hero p,
       .section-head p {
         font-size: 16px;
@@ -611,39 +590,41 @@ content: "";
           <div class="eyebrow">Calgary Exterior Cleaning</div>
           <h1>Why Choose White5</h1>
 
-<p>
-I focus on doing honest, careful work and treating every home with respect.
-My goal is simple—quality results and customers who feel comfortable calling again.
-</p>
-<h3>✔ Purified Water Window Cleaning</h3>
-<p>
-Spot-free cleaning using a water-fed pole system that removes dirt without leaving residue or streaks.
-</p>
+          <p>
+            I focus on doing honest, careful work and treating every home with respect.
+            My goal is simple—quality results and customers who feel comfortable calling again.
+          </p>
 
-<h3>✔ Careful Gutter Maintenance</h3>
-<p>
-Thorough gutter and downspout cleaning to help prevent overflow, foundation issues, and water damage.
-</p>
+          <h3>✔ Purified Water Window Cleaning</h3>
+          <p>
+            Spot-free cleaning using a water-fed pole system that removes dirt without leaving residue or streaks.
+          </p>
 
-<h3>✔ Honest & Straightforward Service</h3>
-<p>
-Clear communication, fair pricing, and no unnecessary upselling. You know what to expect before the work starts.
-</p>
+          <h3>✔ Careful Gutter Maintenance</h3>
+          <p>
+            Thorough gutter and downspout cleaning to help prevent overflow, foundation issues, and water damage.
+          </p>
 
-<h3>✔ Attention to Detail</h3>
-<p>
-Frames, corners, tracks, and small areas that are often missed receive the same level of care as the main surfaces.
-</p>
+          <h3>✔ Honest & Straightforward Service</h3>
+          <p>
+            Clear communication, fair pricing, and no unnecessary upselling. You know what to expect before the work starts.
+          </p>
 
-<h3>✔ Local Owner-Operated Service</h3>
-<p>
-You deal directly with the person doing the work. No crews, no shortcuts—just consistent quality.
-</p>
+          <h3>✔ Attention to Detail</h3>
+          <p>
+            Frames, corners, tracks, and small areas that are often missed receive the same level of care as the main surfaces.
+          </p>
 
-<h3>✔ Going the Extra Mile</h3>
-<p>
-When customers are respectful and easy to work with, I naturally try to help beyond the basic scope whenever possible.
-</p>
+          <h3>✔ Local Owner-Operated Service</h3>
+          <p>
+            You deal directly with the person doing the work. No crews, no shortcuts—just consistent quality.
+          </p>
+
+          <h3>✔ Going the Extra Mile</h3>
+          <p>
+            When customers are respectful and easy to work with, I naturally try to help beyond the basic scope whenever possible.
+          </p>
+
           <div class="hero-actions">
             <a class="btn btn-primary" href="#quote">Get a Free Quote</a>
             <a class="btn btn-secondary" href="#services">Explore Services</a>
