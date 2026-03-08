@@ -216,12 +216,12 @@
       font-weight: 700;
       font-size: 16px;
       letter-spacing: 0.3px;
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
       position: relative;
       overflow: hidden;
     }
 
-   .btn-primary {
+    .btn-primary {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -236,29 +236,31 @@
       animation: waterMove 8s ease-in-out infinite;
       color: #000000;
       border: 1px solid rgba(255,255,255,0.18);
-      text-shadow:0 0 3px #ffffff,
-  0 0 6px #ffffff,
-  0 1px 2px rgba(255,255,255,0.35);
+      text-shadow:
+        0 0 3px #ffffff,
+        0 0 6px #ffffff,
+        0 1px 2px rgba(255,255,255,0.35);
       box-shadow:
         0 14px 34px rgba(56,182,255,0.35),
         inset 0 1px 0 rgba(255,255,255,0.45);
-}
-     @keyframes waterMove {
+    }
+
+    @keyframes waterMove {
       0% { background-position: top left; }
       50% { background-position: top right; }
       100% { background-position: top left; }
     }
-.btn-primary:hover {
-  border: 1px solid rgba(255,255,255,0.6);
 
-  box-shadow:
-    0 0 12px rgba(255,255,255,0.9),
-    0 0 25px rgba(56,182,255,0.8),
-    0 0 40px rgba(56,182,255,0.6),
-    inset 0 1px 0 rgba(255,255,255,0.6);
+    .btn-primary:hover {
+      border: 1px solid rgba(255,255,255,0.6);
+      box-shadow:
+        0 0 12px rgba(255,255,255,0.9),
+        0 0 25px rgba(56,182,255,0.8),
+        0 0 40px rgba(56,182,255,0.6),
+        inset 0 1px 0 rgba(255,255,255,0.6);
+      transform: translateY(-2px);
+    }
 
-  transform: translateY(-2px);
-}
     .btn-secondary {
       border: 1px solid rgba(255,255,255,0.16);
       background: rgba(255,255,255,0.05);
@@ -357,7 +359,8 @@
 
     .service-card,
     .feature-card,
-    .quote-card {
+    .quote-card,
+    .reviews-section {
       background: var(--card);
       border: 1px solid var(--card-border);
       border-radius: var(--radius);
@@ -459,6 +462,108 @@
       font-size: 14px;
     }
 
+    .reviews-section {
+      text-align: center;
+    }
+
+    .reviews-title {
+      font-family: "Agbalumo", system-ui;
+      font-size: 48px;
+      color: white;
+      margin-bottom: 28px;
+      text-shadow: 0 2px 10px rgba(255,255,255,0.25);
+    }
+
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      max-width: 100%;
+      margin: auto;
+    }
+
+    .review-card {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 22px;
+      padding: 24px;
+      text-align: left;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      transition: 0.3s;
+    }
+
+    .review-card:hover {
+      transform: translateY(-6px);
+      box-shadow:
+        0 0 18px rgba(255,255,255,0.3),
+        0 20px 40px rgba(0,0,0,0.35);
+    }
+
+    .review-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+      color: white;
+      align-items: center;
+    }
+
+    .google {
+      color: #7fd8ff;
+      font-size: 14px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .stars {
+      color: #ffd34d;
+      font-size: 20px;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+    }
+
+    .review-card p {
+      color: rgba(255,255,255,0.9);
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .review-buttons {
+      margin-top: 28px;
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .review-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      padding: 14px 28px;
+      border-radius: 999px;
+      background: #6fd3ff;
+      color: #06233a;
+      text-decoration: none;
+      font-weight: 700;
+      box-shadow: 0 10px 25px rgba(111,211,255,0.35);
+      transition: 0.3s;
+    }
+
+    .review-btn:hover {
+      transform: translateY(-2px);
+      box-shadow:
+        0 0 16px rgba(255,255,255,0.7),
+        0 0 30px rgba(111,211,255,0.4);
+    }
+
+    .review-btn.leave {
+      background: #ffffff;
+      color: #0a2a45;
+    }
+
     .footer {
       padding: 28px 0 44px;
       color: var(--muted);
@@ -506,7 +611,8 @@
       .service-card,
       .feature-card,
       .quote-card,
-      .highlight-copy {
+      .highlight-copy,
+      .reviews-section {
         padding: 22px;
       }
 
@@ -527,6 +633,15 @@
       .logo-subtitle {
         font-size: 10px;
       }
+
+      .reviews-title {
+        font-size: 36px;
+      }
+
+      .review-top {
+        flex-direction: column;
+        align-items: flex-start;
+      }
     }
   </style>
 </head>
@@ -542,9 +657,9 @@
       </div>
 
       <nav class="nav">
-        <a href="#services">Gutters Cleaning</a>
-        <a href="#why-us">Power Washing</a>
-        <a href="#quote">Window Cleaning</a>
+        <a href="#services">Gutter Cleaning</a>
+        <a href="#services">Power Washing</a>
+        <a href="#services">Window Cleaning</a>
         <a class="nav-cta" href="#quote">Free Quote</a>
       </nav>
     </div>
@@ -747,17 +862,62 @@
             Later we can replace this block with a real quote form or a Google Form embed.
           </p>
         </article>
-<section id="reviews" style="padding:80px 20px; text-align:center;">
 
-<h2 style="font-family:'Agbalumo', system-ui; font-size:40px;">
-Customer Reviews
-</h2>
-<script src="https://elfsightcdn.com/platform.js" async></script>
-<div class="elfsight-app-5d229d96-dc2c-45a7-b60d-e5523b9ba41a"
-data-elfsight-app-lazy></div>
+        <section class="reviews-section">
+          <h2 class="reviews-title">Customer Reviews</h2>
 
+          <div class="reviews-grid">
+            <div class="review-card">
+              <div class="review-top">
+                <strong>Demetrius Lloyd</strong>
+                <span class="google">Google</span>
+              </div>
+              <div class="stars">★★★★★</div>
+              <p>
+                Great service! Had my gutters cleaned fast, professionally, and thoroughly.
+                Everything was cleaned properly and left tidy. Highly recommend.
+              </p>
+            </div>
+
+            <div class="review-card">
+              <div class="review-top">
+                <strong>Sarah Mitchell</strong>
+                <span class="google">Google</span>
+              </div>
+              <div class="stars">★★★★★</div>
+              <p>
+                Excellent window cleaning service. Very friendly communication and
+                fair pricing. The windows look amazing.
+              </p>
+            </div>
+
+            <div class="review-card">
+              <div class="review-top">
+                <strong>Jason Carter</strong>
+                <span class="google">Google</span>
+              </div>
+              <div class="stars">★★★★★</div>
+              <p>
+                Professional and reliable. Power washing made the house look brand new.
+                Will definitely use White5 again.
+              </p>
+            </div>
           </div>
-        </article>
+
+          <div class="review-buttons">
+            <a class="review-btn"
+               href="https://www.google.com/search?q=white5+calgary"
+               target="_blank">
+              Read More on Google
+            </a>
+
+            <a class="review-btn leave"
+               href="PUT_YOUR_GOOGLE_REVIEW_LINK_HERE"
+               target="_blank">
+              Leave a Review
+            </a>
+          </div>
+        </section>
       </div>
     </section>
   </main>
