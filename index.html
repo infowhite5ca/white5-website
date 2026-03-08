@@ -1,59 +1,809 @@
-<section class="hero">
-  <div class="container hero-grid">
-    <div>
-      <div class="eyebrow">Calgary Exterior Cleaning</div>
-      <h1>Why Choose White5</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>White5 Exterior Cleaning | Calgary</title>
+  <meta
+    name="description"
+    content="Professional window cleaning, gutter cleaning and power washing services in Calgary."
+  />
 
-      <p>
-        I focus on doing honest, careful work and treating every home with respect.
-        My goal is simple—quality results and customers who feel comfortable calling again.
-      </p>
+  <link href="https://fonts.googleapis.com/css2?family=Marko+One&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Agbalumo&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Marko+One&display=swap" rel="stylesheet">
 
-      <h3>✔ Purified Water Window Cleaning</h3>
-      <p>
-        Spot-free cleaning using a water-fed pole system that removes dirt without leaving residue or streaks.
-      </p>
+  <style>
+    :root {
+      --bg: #071a2f;
+      --bg-soft: #0d2744;
+      --card: rgba(255, 255, 255, 0.08);
+      --card-border: rgba(255, 255, 255, 0.14);
+      --text: #eef7ff;
+      --muted: #bfd8ef;
+      --accent: #5ecbff;
+      --accent-2: #8af0ff;
+      --white: #ffffff;
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+      --radius: 22px;
+      --max: 1180px;
+    }
 
-      <h3>✔ Careful Gutter Maintenance</h3>
-      <p>
-        Thorough gutter and downspout cleaning to help prevent overflow, foundation issues, and water damage.
-      </p>
+    * {
+      box-sizing: border-box;
+    }
 
-      <h3>✔ Honest & Straightforward Service</h3>
-      <p>
-        Clear communication, fair pricing, and no unnecessary upselling. You know what to expect before the work starts.
-      </p>
+    html {
+      scroll-behavior: smooth;
+    }
 
-      <h3>✔ Attention to Detail</h3>
-      <p>
-        Frames, corners, tracks, and small areas that are often missed receive the same level of care as the main surfaces.
-      </p>
+    body {
+      margin: 0;
+      font-family: "Google Sans", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top right, rgba(94, 203, 255, 0.18), transparent 26%),
+        radial-gradient(circle at left center, rgba(138, 240, 255, 0.12), transparent 24%),
+        linear-gradient(180deg, #08182b 0%, #0b2340 42%, #071a2f 100%);
+      line-height: 1.5;
+    }
 
-      <h3>✔ Local Owner-Operated Service</h3>
-      <p>
-        You deal directly with the person doing the work. No crews, no shortcuts—just consistent quality.
-      </p>
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
-      <h3>✔ Going the Extra Mile</h3>
-      <p>
-        When customers are respectful and easy to work with, I naturally try to help beyond the basic scope whenever possible.
-      </p>
+    .container {
+      width: min(100% - 32px, var(--max));
+      margin: 0 auto;
+    }
 
-      <div class="hero-actions">
-        <a class="btn btn-primary" href="#quote">Get a Free Quote</a>
-        <a class="btn btn-secondary" href="#services">Explore Services</a>
-      </div>
-    </div>
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(10px);
+      background: rgba(5, 16, 29, 0.55);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
 
-    <div class="hero-card">
-      <div class="hero-visual">
-        <div class="hero-overlay-box">
-          <h3>Exterior cleaning with a premium look</h3>
-          <p>
-            A cleaner, sharper presentation for your home starts from the outside.
-          </p>
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 5px 0;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+    }
+
+    .logo-img {
+      width: 300px;
+      height: auto;
+      object-fit: contain;
+      display: block;
+      filter: drop-shadow(0 10px 22px rgba(94, 203, 255, 0.18));
+      flex-shrink: 0;
+    }
+
+    .logo-text-wrap {
+      display: flex;
+      flex-direction: column;
+      line-height: 1;
+    }
+
+    .logo-title {
+      font-family: "Marko One", serif;
+      font-size: 40px;
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: 0.2px;
+    }
+
+    .logo-subtitle {
+      margin-top: 4px;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+    }
+
+    .nav {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .nav a {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .nav a:hover {
+      color: var(--white);
+    }
+
+    .nav-cta {
+      padding: 11px 18px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #06203a !important;
+      font-weight: 700;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 88px 0 68px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 36px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--accent-2);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-family: "Marko One", serif;
+      margin: 0 0 18px;
+      font-size: clamp(38px, 6vw, 74px);
+      line-height: 0.98;
+      letter-spacing: -1.2px;
+    }
+
+    h2 {
+      font-family: "Marko One", serif;
+      font-size: clamp(28px, 4vw, 46px);
+      letter-spacing: 0.4px;
+      margin: 0 0 10px;
+    }
+
+    h3 {
+      font-family: "Marko One", serif;
+      font-size: 22px;
+      margin-top: 28px;
+      margin-bottom: 6px;
+      letter-spacing: 0.3px;
+    }
+
+    p {
+      font-family: "Google Sans", sans-serif;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 620px;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 58px;
+      padding: 0 32px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: 0.3px;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: "Agbalumo", system-ui;
+      font-size: 26px;
+      line-height: 1;
+      padding: 14px 28px;
+      background-image: url("water.png");
+      background-size: 180%;
+      background-position: top;
+      background-repeat: no-repeat;
+      animation: waterMove 8s ease-in-out infinite;
+      color: #06203a;
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow:
+        0 14px 34px rgba(56,182,255,0.35),
+        inset 0 1px 0 rgba(255,255,255,0.45);
+    }
+
+    @keyframes waterMove {
+      0% { background-position: top left; }
+      50% { background-position: top right; }
+      100% { background-position: top left; }
+    }
+
+    .btn-primary::before {
+      content: "";
+      position: absolute;
+      left: -10%;
+      bottom: -35%;
+      width: 120%;
+      height: 140%;
+      background: rgba(255,255,255,0.22);
+      border-radius: 40%;
+      transform: rotate(-6deg);
+      animation: waveFloat 4.5s ease-in-out infinite;
+    }
+
+    .btn-primary::after {
+      content: "";
+      position: absolute;
+      left: -5%;
+      bottom: -45%;
+      width: 110%;
+      height: 130%;
+      background: rgba(255,255,255,0.14);
+      border-radius: 45%;
+      transform: rotate(5deg);
+      animation: waveFloat2 6s ease-in-out infinite;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow:
+        0 18px 40px rgba(56,182,255,0.45),
+        0 0 20px rgba(120,220,255,0.35);
+    }
+
+    @keyframes waveFloat {
+      0% { transform: translateX(-3%) rotate(-6deg); }
+      50% { transform: translateX(3%) rotate(-2deg); }
+      100% { transform: translateX(-3%) rotate(-6deg); }
+    }
+
+    @keyframes waveFloat2 {
+      0% { transform: translateX(4%) rotate(5deg); }
+      50% { transform: translateX(-4%) rotate(1deg); }
+      100% { transform: translateX(4%) rotate(5deg); }
+    }
+
+    .btn-secondary {
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.05);
+      color: var(--white);
+    }
+
+    .hero-card {
+      position: relative;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.14), rgba(255,255,255,0.06)),
+        rgba(255,255,255,0.05);
+      border: 1px solid var(--card-border);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      min-height: 500px;
+    }
+
+    .hero-visual {
+      height: 100%;
+      min-height: 500px;
+      position: relative;
+      background:
+        linear-gradient(180deg, rgba(7,26,47,0.15), rgba(7,26,47,0.62)),
+        url("calgary.webp") center/cover no-repeat;
+    }
+
+    .hero-overlay-box {
+      position: absolute;
+      left: 24px;
+      right: 24px;
+      bottom: 24px;
+      padding: 22px;
+      border-radius: 22px;
+      background: rgba(7, 26, 47, 0.66);
+      border: 1px solid rgba(255,255,255,0.12);
+      backdrop-filter: blur(10px);
+    }
+
+    .hero-overlay-box h3 {
+      margin: 0 0 8px;
+      font-size: 22px;
+    }
+
+    .hero-overlay-box p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 26px;
+    }
+
+    .stat {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 18px;
+      padding: 18px;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 28px;
+      margin-bottom: 6px;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    section {
+      padding: 34px 0 28px;
+    }
+
+    .section-head {
+      max-width: 760px;
+      margin-bottom: 24px;
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .services {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .service-card,
+    .feature-card,
+    .quote-card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 26px;
+      box-shadow: var(--shadow);
+    }
+
+    .icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      font-size: 24px;
+      background: linear-gradient(135deg, rgba(94, 203, 255, 0.18), rgba(138, 240, 255, 0.18));
+      border: 1px solid rgba(255,255,255,0.12);
+      margin-bottom: 18px;
+    }
+
+    .service-card p,
+    .feature-card p,
+    .quote-card p,
+    .service-card li {
+      color: var(--muted);
+    }
+
+    .service-card ul {
+      padding-left: 18px;
+      margin: 16px 0 0;
+    }
+
+    .service-card li + li {
+      margin-top: 8px;
+    }
+
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 22px;
+    }
+
+    .highlight {
+      margin-top: 26px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+    }
+
+    .highlight-panel {
+      border-radius: 28px;
+      overflow: hidden;
+      min-height: 320px;
+      border: 1px solid var(--card-border);
+      box-shadow: var(--shadow);
+      background:
+        linear-gradient(180deg, rgba(7,26,47,0.15), rgba(7,26,47,0.55)),
+        url("https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=80") center/cover no-repeat;
+    }
+
+    .highlight-copy {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 28px;
+      padding: 30px;
+      box-shadow: var(--shadow);
+    }
+
+    .highlight-copy h3 {
+      margin-top: 0;
+      margin-bottom: 12px;
+      font-size: 30px;
+    }
+
+    .quote-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .contact-list {
+      margin: 16px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .contact-list li + li {
+      margin-top: 10px;
+    }
+
+    .contact-list a {
+      color: var(--white);
+      font-weight: 700;
+    }
+
+    .mini-note {
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .footer {
+      padding: 28px 0 44px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .footer-line {
+      height: 1px;
+      background: rgba(255,255,255,0.08);
+      margin-bottom: 18px;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .quote-grid,
+      .highlight,
+      .why-grid,
+      .services {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .nav {
+        display: none;
+      }
+
+      .hero {
+        padding-top: 54px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .topbar-inner {
+        padding: 14px 0;
+      }
+
+      .hero-card,
+      .hero-visual {
+        min-height: 380px;
+      }
+
+      .service-card,
+      .feature-card,
+      .quote-card,
+      .highlight-copy {
+        padding: 22px;
+      }
+
+      .hero p,
+      .section-head p {
+        font-size: 16px;
+      }
+
+      .logo-img {
+        width: 160px;
+        height: auto;
+      }
+
+      .logo-title {
+        font-size: 20px;
+      }
+
+      .logo-subtitle {
+        font-size: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <div class="logo">
+        <img src="logo.png" alt="White5 logo" class="logo-img" />
+        <div class="logo-text-wrap">
+          <div class="logo-title">White5</div>
+          <div class="logo-subtitle">Exterior Cleaning</div>
         </div>
       </div>
+
+      <nav class="nav">
+        <a href="#services">Gutters Cleaning</a>
+        <a href="#why-us">Power Washing</a>
+        <a href="#quote">Window Cleaning</a>
+        <a class="nav-cta" href="#quote">Free Quote</a>
+      </nav>
     </div>
-  </div>
-</section>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <div class="eyebrow">Calgary Exterior Cleaning</div>
+          <h1>Why Choose White5</h1>
+
+          <p>
+            I focus on doing honest, careful work and treating every home with respect.
+            My goal is simple—quality results and customers who feel comfortable calling again.
+          </p>
+
+          <h3>✔ Purified Water Window Cleaning</h3>
+          <p>
+            Spot-free cleaning using a water-fed pole system that removes dirt without leaving residue or streaks.
+          </p>
+
+          <h3>✔ Careful Gutter Maintenance</h3>
+          <p>
+            Thorough gutter and downspout cleaning to help prevent overflow, foundation issues, and water damage.
+          </p>
+
+          <h3>✔ Honest & Straightforward Service</h3>
+          <p>
+            Clear communication, fair pricing, and no unnecessary upselling. You know what to expect before the work starts.
+          </p>
+
+          <h3>✔ Attention to Detail</h3>
+          <p>
+            Frames, corners, tracks, and small areas that are often missed receive the same level of care as the main surfaces.
+          </p>
+
+          <h3>✔ Local Owner-Operated Service</h3>
+          <p>
+            You deal directly with the person doing the work. No crews, no shortcuts—just consistent quality.
+          </p>
+
+          <h3>✔ Going the Extra Mile</h3>
+          <p>
+            When customers are respectful and easy to work with, I naturally try to help beyond the basic scope whenever possible.
+          </p>
+
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#quote">Get a Free Quote</a>
+            <a class="btn btn-secondary" href="#services">Explore Services</a>
+          </div>
+        </div>
+
+        <div class="hero-card">
+          <div class="hero-visual">
+            <div class="hero-overlay-box">
+              <h3>Exterior cleaning with a premium look</h3>
+              <p>
+                A cleaner, sharper presentation for your home starts from the outside.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="services">
+      <div class="container">
+        <div class="section-head">
+          <h2>Services</h2>
+          <p>
+            Focused exterior cleaning for homes that need clarity, protection and a better first impression.
+          </p>
+        </div>
+
+        <div class="services">
+          <article class="service-card">
+            <div class="icon">🪟</div>
+            <h3>Window Cleaning</h3>
+            <p>
+              Bring back natural light and a polished look with exterior and interior window cleaning.
+            </p>
+            <ul>
+              <li>Exterior window cleaning</li>
+              <li>Interior window cleaning</li>
+              <li>Track and detail cleaning</li>
+            </ul>
+          </article>
+
+          <article class="service-card">
+            <div class="icon">💧</div>
+            <h3>Power Washing</h3>
+            <p>
+              Remove dirt, buildup and weather stains from hard exterior surfaces.
+            </p>
+            <ul>
+              <li>Driveways and walkways</li>
+              <li>Patios and concrete</li>
+              <li>Siding and exterior surfaces</li>
+            </ul>
+          </article>
+
+          <article class="service-card">
+            <div class="icon">🏠</div>
+            <h3>Gutter Cleaning</h3>
+            <p>
+              Keep water flowing properly and reduce the risk of overflow and damage.
+            </p>
+            <ul>
+              <li>Debris removal</li>
+              <li>Downspout flow check</li>
+              <li>Seasonal maintenance support</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="why-us">
+      <div class="container">
+        <div class="section-head">
+          <h2>What Makes White5 Different</h2>
+          <p>
+            Because a home service website should not feel like a sad coupon flyer from 2007.
+            White5 is built around clarity, presentation and practical results.
+          </p>
+        </div>
+
+        <div class="why-grid">
+          <article class="feature-card">
+            <div class="icon">✨</div>
+            <h3>Clean Presentation</h3>
+            <p>
+              We focus on visible improvement. Cleaner glass, cleaner surfaces, cleaner overall look.
+            </p>
+          </article>
+
+          <article class="feature-card">
+            <div class="icon">🛠️</div>
+            <h3>Practical Service</h3>
+            <p>
+              Straightforward work, clear communication and no decorative nonsense where it does not belong.
+            </p>
+          </article>
+
+          <article class="feature-card">
+            <div class="icon">📍</div>
+            <h3>Calgary Focus</h3>
+            <p>
+              Local service with attention to the look and upkeep that matters for Calgary homes.
+            </p>
+          </article>
+
+          <article class="feature-card">
+            <div class="icon">⚡</div>
+            <h3>Simple Quotes</h3>
+            <p>
+              A fast quote process so people can stop guessing and decide whether they want the job done.
+            </p>
+          </article>
+        </div>
+
+        <div class="highlight">
+          <div class="highlight-panel"></div>
+          <div class="highlight-copy">
+            <h3>Exterior cleaning that feels premium</h3>
+            <p>
+              The goal is not just removing dirt. The goal is making the property look cared for,
+              sharper and more valuable from the first glance.
+            </p>
+            <p>
+              This is where White5 can lean into that clean-water, modern-Calgary, premium-home vibe we talked about.
+            </p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="#quote">Request Quote</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="quote">
+      <div class="container quote-grid">
+        <article class="quote-card">
+          <div class="section-head" style="margin-bottom: 16px;">
+            <h2>Get a Free Quote</h2>
+            <p>
+              Ready for a cleaner exterior? Reach out and we’ll talk about your windows,
+              gutters or power washing project.
+            </p>
+          </div>
+
+          <ul class="contact-list">
+            <li>Phone: <a href="tel:14034793905">403-479-3905</a></li>
+            <li>Email: <a href="mailto:info@white5.ca">info@white5.ca</a></li>
+            <li>Location: Calgary, Alberta</li>
+          </ul>
+
+          <p class="mini-note">
+            Later we can replace this block with a real quote form or a Google Form embed.
+          </p>
+        </article>
+
+        <article class="quote-card">
+          <div class="icon">🌊</div>
+          <h3>White5</h3>
+          <p>
+            Window cleaning, gutter cleaning and power washing with a clean, modern brand direction.
+          </p>
+          <p>
+            This version is already strong enough to build on. Next we can add your exact visuals,
+            custom background sections, better typography, real photos and a stronger branded layout.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-secondary" href="#services">View Services</a>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-line"></div>
+      <div>© 2026 White5 Exterior Cleaning. All rights reserved.</div>
+    </div>
+  </footer>
+</body>
+</html>
