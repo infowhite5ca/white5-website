@@ -147,9 +147,20 @@
 
     .hero-grid {
       display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
+      grid-template-columns: 1.18fr 0.82fr;
       gap: 36px;
-      align-items: center;
+      align-items: start;
+    }
+
+    .hero-content-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-main {
+      min-width: 0;
     }
 
     .eyebrow {
@@ -192,7 +203,7 @@
       font-family: "Google Sans", sans-serif;
     }
 
-    .hero p {
+    .hero-main p {
       margin: 0;
       max-width: 620px;
       color: var(--muted);
@@ -222,7 +233,7 @@
     }
 
     .btn-primary {
-      display: flex;
+      display: inline-flex;
       justify-content: center;
       align-items: center;
       font-family: "Agbalumo", system-ui;
@@ -265,6 +276,67 @@
       border: 1px solid rgba(255,255,255,0.16);
       background: rgba(255,255,255,0.05);
       color: var(--white);
+    }
+
+    .hero-contact-card {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.18);
+      backdrop-filter: blur(10px);
+      position: relative;
+      top: 8px;
+    }
+
+    .hero-contact-card h3 {
+      margin: 0 0 12px;
+      font-size: 26px;
+      line-height: 1.1;
+    }
+
+    .hero-contact-card p {
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .hero-contact-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .hero-contact-list li {
+      margin-bottom: 12px;
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .hero-contact-list strong {
+      display: block;
+      margin-bottom: 2px;
+      color: #fff;
+      font-size: 14px;
+      letter-spacing: 0.2px;
+    }
+
+    .hero-contact-list a {
+      color: #9be7ff;
+      font-weight: 700;
+    }
+
+    .hero-contact-list a:hover {
+      color: #ffffff;
+    }
+
+    .hero-contact-note {
+      margin-top: 16px;
+      font-size: 13px;
+      color: var(--muted);
+      opacity: 0.95;
     }
 
     .hero-card {
@@ -363,31 +435,6 @@
       display: block;
     }
 
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-      margin-top: 26px;
-    }
-
-    .stat {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 18px;
-      padding: 18px;
-    }
-
-    .stat strong {
-      display: block;
-      font-size: 28px;
-      margin-bottom: 6px;
-    }
-
-    .stat span {
-      color: var(--muted);
-      font-size: 14px;
-    }
-
     section {
       padding: 34px 0 28px;
     }
@@ -484,136 +531,6 @@
       margin-top: 0;
       margin-bottom: 12px;
       font-size: 30px;
-    }
-
-    .quote-grid {
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 22px;
-      align-items: stretch;
-    }
-
-    .contact-list {
-      margin: 16px 0 0;
-      padding: 0;
-      list-style: none;
-    }
-
-    .contact-list li + li {
-      margin-top: 10px;
-    }
-
-    .contact-list a {
-      color: var(--white);
-      font-weight: 700;
-    }
-
-    .mini-note {
-      margin-top: 16px;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .reviews-section {
-      text-align: center;
-    }
-
-    .reviews-title {
-      font-family: "Agbalumo", system-ui;
-      font-size: 48px;
-      color: white;
-      margin-bottom: 28px;
-      text-shadow: 0 2px 10px rgba(255,255,255,0.25);
-    }
-
-    .reviews-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 18px;
-      max-width: 100%;
-      margin: auto;
-    }
-
-    .review-card {
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.14);
-      border-radius: 22px;
-      padding: 24px;
-      text-align: left;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-      transition: 0.3s;
-    }
-
-    .review-card:hover {
-      transform: translateY(-6px);
-      box-shadow:
-        0 0 18px rgba(255,255,255,0.3),
-        0 20px 40px rgba(0,0,0,0.35);
-    }
-
-    .review-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 8px;
-      color: white;
-      align-items: center;
-    }
-
-    .google {
-      color: #7fd8ff;
-      font-size: 14px;
-      font-weight: 600;
-      flex-shrink: 0;
-    }
-
-    .stars {
-      color: #ffd34d;
-      font-size: 20px;
-      letter-spacing: 2px;
-      margin-bottom: 10px;
-    }
-
-    .review-card p {
-      color: rgba(255,255,255,0.9);
-      line-height: 1.5;
-      margin: 0;
-    }
-
-    .review-buttons {
-      margin-top: 28px;
-      display: flex;
-      gap: 16px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .review-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 52px;
-      padding: 14px 28px;
-      border-radius: 999px;
-      background: #6fd3ff;
-      color: #06233a;
-      text-decoration: none;
-      font-weight: 700;
-      box-shadow: 0 10px 25px rgba(111,211,255,0.35);
-      transition: 0.3s;
-    }
-
-    .review-btn:hover {
-      transform: translateY(-2px);
-      box-shadow:
-        0 0 16px rgba(255,255,255,0.7),
-        0 0 30px rgba(111,211,255,0.4);
-    }
-
-    .review-btn.leave {
-      background: #ffffff;
-      color: #0a2a45;
     }
 
     .footer {
@@ -871,14 +788,13 @@
 
     @media (max-width: 980px) {
       .hero-grid,
-      .quote-grid,
-      .highlight,
+      .services,
       .why-grid,
-      .services {
+      .highlight {
         grid-template-columns: 1fr;
       }
 
-      .stats {
+      .hero-content-grid {
         grid-template-columns: 1fr;
       }
 
@@ -888,6 +804,10 @@
 
       .hero {
         padding-top: 54px;
+      }
+
+      .hero-contact-card {
+        top: 0;
       }
     }
 
@@ -905,11 +825,12 @@
       .feature-card,
       .quote-card,
       .highlight-copy,
-      .reviews-section {
+      .reviews-section,
+      .hero-contact-card {
         padding: 22px;
       }
 
-      .hero p,
+      .hero-main p,
       .section-head p {
         font-size: 16px;
       }
@@ -925,15 +846,6 @@
 
       .logo-subtitle {
         font-size: 10px;
-      }
-
-      .reviews-title {
-        font-size: 36px;
-      }
-
-      .review-top {
-        flex-direction: column;
-        align-items: flex-start;
       }
 
       .social-banner {
@@ -973,6 +885,11 @@
         font-size: 26px;
       }
 
+      #quote-reviews .review-top {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
       #quote-reviews .review-top strong {
         font-size: 18px;
       }
@@ -1006,49 +923,85 @@
   <main>
     <section class="hero">
       <div class="container hero-grid">
-        <div>
-          <div class="eyebrow">Calgary Exterior Cleaning</div>
-          <h1>Why Choose White5</h1>
+        <div class="hero-content-grid">
+          <div class="hero-main">
+            <div class="eyebrow">Calgary Exterior Cleaning</div>
+            <h1>Why Choose White5</h1>
 
-          <p>
-            I focus on doing honest, careful work and treating every home with respect.
-            My goal is simple—quality results and customers who feel comfortable calling again.
-          </p>
+            <p>
+              I focus on doing honest, careful work and treating every home with respect.
+              My goal is simple—quality results and customers who feel comfortable calling again.
+            </p>
 
-          <h3>✔ Purified Water Window Cleaning</h3>
-          <p>
-            Spot-free cleaning using a water-fed pole system that removes dirt without leaving residue or streaks.
-          </p>
+            <h3>✔ Purified Water Window Cleaning</h3>
+            <p>
+              Spot-free cleaning using a water-fed pole system that removes dirt without leaving residue or streaks.
+            </p>
 
-          <h3>✔ Careful Gutter Maintenance</h3>
-          <p>
-            Thorough gutter and downspout cleaning to help prevent overflow, foundation issues, and water damage.
-          </p>
+            <h3>✔ Careful Gutter Maintenance</h3>
+            <p>
+              Thorough gutter and downspout cleaning to help prevent overflow, foundation issues, and water damage.
+            </p>
 
-          <h3>✔ Honest & Straightforward Service</h3>
-          <p>
-            Clear communication, fair pricing, and no unnecessary upselling. You know what to expect before the work starts.
-          </p>
+            <h3>✔ Honest & Straightforward Service</h3>
+            <p>
+              Clear communication, fair pricing, and no unnecessary upselling. You know what to expect before the work starts.
+            </p>
 
-          <h3>✔ Attention to Detail</h3>
-          <p>
-            Frames, corners, tracks, and small areas that are often missed receive the same level of care as the main surfaces.
-          </p>
+            <h3>✔ Attention to Detail</h3>
+            <p>
+              Frames, corners, tracks, and small areas that are often missed receive the same level of care as the main surfaces.
+            </p>
 
-          <h3>✔ Local Owner-Operated Service</h3>
-          <p>
-            You deal directly with the person doing the work. No crews, no shortcuts—just consistent quality.
-          </p>
+            <h3>✔ Local Owner-Operated Service</h3>
+            <p>
+              You deal directly with the person doing the work. No crews, no shortcuts—just consistent quality.
+            </p>
 
-          <h3>✔ Going the Extra Mile</h3>
-          <p>
-            When customers are respectful and easy to work with, I naturally try to help beyond the basic scope whenever possible.
-          </p>
+            <h3>✔ Going the Extra Mile</h3>
+            <p>
+              When customers are respectful and easy to work with, I naturally try to help beyond the basic scope whenever possible.
+            </p>
 
-          <div class="hero-actions">
-            <a class="btn btn-primary" href="#quote-reviews">Get a Free Quote</a>
-            <a class="btn btn-secondary" href="#services">Explore Services</a>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="#quote-reviews">Get a Free Quote</a>
+              <a class="btn btn-secondary" href="#services">Explore Services</a>
+            </div>
           </div>
+
+          <aside class="hero-contact-card">
+            <h3>Contact White5</h3>
+            <p>
+              Need window cleaning, gutter cleaning, or power washing in Calgary?
+              Reach out directly for a quick estimate.
+            </p>
+
+            <ul class="hero-contact-list">
+              <li>
+                <strong>Phone</strong>
+                <a href="tel:14034793905">403-479-3905</a>
+              </li>
+
+              <li>
+                <strong>Email</strong>
+                <a href="mailto:info@white5.ca">info@white5.ca</a>
+              </li>
+
+              <li>
+                <strong>Location</strong>
+                Calgary, Alberta
+              </li>
+
+              <li>
+                <strong>Hours</strong>
+                Monday to Saturday
+              </li>
+            </ul>
+
+            <div class="hero-contact-note">
+              Fast replies. Clear communication. No nonsense, just clean work.
+            </div>
+          </aside>
         </div>
 
         <div class="hero-card">
@@ -1066,19 +1019,19 @@
 
             <div class="social-icons">
               <a href="https://www.facebook.com/profile.php?id=61567083181842" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-                <img src="https://cdn.simpleicons.org/facebook/ffffff" alt="Facebook">
+                <img src="https://cdn.simpleicons.org/facebook/ffffff" alt="Facebook" />
               </a>
 
               <a href="https://www.instagram.com/white5calgary/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-                <img src="https://cdn.simpleicons.org/instagram/ffffff" alt="Instagram">
+                <img src="https://cdn.simpleicons.org/instagram/ffffff" alt="Instagram" />
               </a>
 
               <a href="https://wa.me/14034793905" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
-                <img src="https://cdn.simpleicons.org/whatsapp/ffffff" alt="WhatsApp">
+                <img src="https://cdn.simpleicons.org/whatsapp/ffffff" alt="WhatsApp" />
               </a>
 
               <a href="https://www.youtube.com/@White5-d8f" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
-                <img src="https://cdn.simpleicons.org/youtube/ffffff" alt="YouTube">
+                <img src="https://cdn.simpleicons.org/youtube/ffffff" alt="YouTube" />
               </a>
             </div>
           </div>
