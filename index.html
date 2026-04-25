@@ -64,40 +64,12 @@
       margin: 0 auto;
     }
 
-    /* GLOW STYLE ONLY FOR HEADINGS */
-    h1,
-    h2,
-    h3,
-    .logo-title,
-    .reviews-title,
-    #quote-reviews .quote-card .section-head h2 {
-      font-family: 'White5', sans-serif;
-      background: linear-gradient(
-        180deg,
-        #ffffff 0%,
-        #d8f8ff 22%,
-        #8eeaff 45%,
-        #38b6ff 72%,
-        #0d8fe8 100%
-      );
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent !important;
-      text-shadow:
-        0 0 2px rgba(255, 255, 255, 0.95),
-        0 0 5px rgba(138, 240, 255, 0.95),
-        0 0 9px rgba(94, 203, 255, 0.9),
-        0 0 16px rgba(56, 182, 255, 0.75),
-        0 3px 0 rgba(255, 255, 255, 0.28);
-      filter: drop-shadow(0 5px 2px rgba(94, 203, 255, 0.24));
-    }
-
     .topbar {
       position: sticky;
       top: 0;
       z-index: 50;
       backdrop-filter: blur(10px);
-      background: rgba(5, 16, 29, 0.55);
+      background: rgba(5, 16, 29, 0.72);
       border-bottom: 1px solid rgba(255,255,255,0.08);
     }
 
@@ -105,20 +77,20 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 8px;
-      padding: 5px 0;
+      gap: 28px;
+      padding: 24px 0;
     }
 
     .logo {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 18px;
       font-weight: 700;
       letter-spacing: 0.4px;
     }
 
     .logo-img {
-      width: 300px;
+      width: 190px;
       height: auto;
       object-fit: contain;
       display: block;
@@ -133,13 +105,30 @@
     }
 
     .logo-title {
-      font-size: 40px;
+      font-family: 'White5', sans-serif;
+      font-size: 32px;
       font-weight: 800;
-      letter-spacing: 0.2px;
+      letter-spacing: 1px;
+      background: linear-gradient(
+        180deg,
+        #ffffff 0%,
+        #d8f8ff 22%,
+        #8eeaff 45%,
+        #38b6ff 72%,
+        #0d8fe8 100%
+      );
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow:
+        0 0 2px rgba(255, 255, 255, 0.9),
+        0 0 5px rgba(138, 240, 255, 0.8),
+        0 0 9px rgba(94, 203, 255, 0.55);
+      filter: drop-shadow(0 3px 2px rgba(94, 203, 255, 0.18));
     }
 
     .logo-subtitle {
-      margin-top: 4px;
+      margin-top: 8px;
       font-size: 11px;
       color: var(--muted);
       letter-spacing: 1.4px;
@@ -156,6 +145,7 @@
     .nav a {
       color: var(--muted);
       font-size: 14px;
+      font-weight: 700;
     }
 
     .nav a:hover {
@@ -163,11 +153,11 @@
     }
 
     .nav-cta {
-      padding: 11px 18px;
+      padding: 13px 22px;
       border-radius: 999px;
       background: linear-gradient(135deg, var(--accent), var(--accent-2));
       color: #06203a !important;
-      font-weight: 700;
+      font-weight: 800;
     }
 
     .hero {
@@ -209,22 +199,28 @@
 
     h1 {
       margin: 0 0 18px;
-      font-size: clamp(38px, 6vw, 74px);
-      line-height: 0.98;
-      letter-spacing: 1px;
+      font-family: Arial, sans-serif;
+      font-size: clamp(42px, 6vw, 72px);
+      line-height: 1.05;
+      letter-spacing: -1px;
+      color: var(--white);
     }
 
     h2 {
+      font-family: Arial, sans-serif;
       font-size: clamp(28px, 4vw, 46px);
-      letter-spacing: 0.8px;
+      letter-spacing: 0.2px;
       margin: 0 0 10px;
+      color: var(--white);
     }
 
     h3 {
+      font-family: Arial, sans-serif;
       font-size: 22px;
       margin-top: 28px;
       margin-bottom: 6px;
-      letter-spacing: 0.6px;
+      letter-spacing: 0.2px;
+      color: var(--white);
     }
 
     p {
@@ -258,12 +254,11 @@
       transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
       position: relative;
       overflow: hidden;
-      font-family: 'White5', sans-serif;
     }
 
-    /* GLOW STYLE FOR BUTTONS */
     .btn-primary {
-      font-size: 26px;
+      font-family: 'White5', sans-serif;
+      font-size: 22px;
       line-height: 1;
       padding: 14px 28px;
       background-image: url("water.png");
@@ -279,9 +274,9 @@
         0 0 9px rgba(94,203,255,0.9),
         0 0 16px rgba(56,182,255,0.75);
       box-shadow:
-        0 0 10px rgba(255,255,255,0.42),
-        0 0 24px rgba(56,182,255,0.55),
-        0 14px 34px rgba(56,182,255,0.35),
+        0 0 10px rgba(255,255,255,0.35),
+        0 0 24px rgba(56,182,255,0.48),
+        0 14px 34px rgba(56,182,255,0.32),
         inset 0 1px 0 rgba(255,255,255,0.45);
     }
 
@@ -294,9 +289,9 @@
     .btn-primary:hover {
       border: 1px solid rgba(255,255,255,0.7);
       box-shadow:
-        0 0 14px rgba(255,255,255,0.95),
-        0 0 28px rgba(56,182,255,0.85),
-        0 0 46px rgba(56,182,255,0.65),
+        0 0 14px rgba(255,255,255,0.85),
+        0 0 28px rgba(56,182,255,0.75),
+        0 0 46px rgba(56,182,255,0.55),
         inset 0 1px 0 rgba(255,255,255,0.7);
       transform: translateY(-2px);
     }
@@ -305,16 +300,15 @@
       border: 1px solid rgba(255,255,255,0.16);
       background: rgba(255,255,255,0.05);
       color: var(--white);
-      text-shadow:
-        0 0 4px rgba(94,203,255,0.7),
-        0 0 10px rgba(56,182,255,0.4);
+      font-family: Arial, sans-serif;
+      text-shadow: none;
     }
 
     .btn-secondary:hover {
       border-color: rgba(94,203,255,0.5);
       box-shadow:
-        0 0 12px rgba(94,203,255,0.35),
-        0 0 22px rgba(94,203,255,0.2);
+        0 0 12px rgba(94,203,255,0.25),
+        0 0 22px rgba(94,203,255,0.16);
       transform: translateY(-2px);
     }
 
@@ -626,9 +620,11 @@
     }
 
     #quote-reviews .quote-card .section-head h2 {
+      font-family: Arial, sans-serif;
       font-size: 54px;
       line-height: 0.95;
       margin: 0 0 16px;
+      color: #111 !important;
     }
 
     #quote-reviews .quote-card .section-head p {
@@ -665,7 +661,7 @@
 
     #quote-reviews .quote-calculator button {
       padding: 15px 18px;
-      font-size: 22px;
+      font-size: 20px;
       background: linear-gradient(135deg, #bdf2ff, #38b6ff, #0d8fe8);
       color: #00304f;
       border: none;
@@ -677,18 +673,18 @@
       text-shadow:
         0 0 2px rgba(255,255,255,1),
         0 0 6px rgba(255,255,255,0.85),
-        0 0 12px rgba(94,203,255,0.75);
+        0 0 12px rgba(94,203,255,0.65);
       box-shadow:
-        0 0 12px rgba(94,203,255,0.35),
-        0 10px 22px rgba(56,182,255,0.24);
+        0 0 12px rgba(94,203,255,0.28),
+        0 10px 22px rgba(56,182,255,0.22);
     }
 
     #quote-reviews .quote-calculator button:hover {
       background: linear-gradient(135deg, #ffffff, #69d1ff, #2499db);
       transform: translateY(-1px);
       box-shadow:
-        0 0 15px rgba(255,255,255,0.75),
-        0 0 28px rgba(56,182,255,0.65);
+        0 0 15px rgba(255,255,255,0.65),
+        0 0 28px rgba(56,182,255,0.55);
     }
 
     #quote-reviews .quote-result {
@@ -739,6 +735,7 @@
     #quote-reviews .reviews-title {
       margin: 0 0 22px;
       font-size: 32px;
+      color: #fff;
     }
 
     #quote-reviews .reviews-grid {
@@ -805,36 +802,25 @@
       border-radius: 999px;
       text-decoration: none;
       font-weight: 700;
-      font-size: 20px;
+      font-size: 16px;
       transition: 0.2s ease;
-      font-family: 'White5', sans-serif;
-      text-shadow:
-        0 0 2px rgba(255,255,255,1),
-        0 0 6px rgba(255,255,255,0.8),
-        0 0 12px rgba(94,203,255,0.7);
+      font-family: Arial, sans-serif;
     }
 
     #quote-reviews .review-btn:first-child {
-      background: linear-gradient(135deg, #bdf2ff, #69d1ff, #38b6ff);
+      background: #69d1ff;
       color: #06203b;
-      box-shadow:
-        0 0 12px rgba(105,209,255,0.55),
-        0 12px 24px rgba(105,209,255,0.25);
+      box-shadow: 0 12px 24px rgba(105,209,255,0.25);
     }
 
     #quote-reviews .review-btn.leave {
       background: #fff;
       color: #0f172a;
-      box-shadow:
-        0 0 12px rgba(255,255,255,0.45),
-        0 12px 24px rgba(255,255,255,0.18);
+      box-shadow: 0 12px 24px rgba(255,255,255,0.18);
     }
 
     #quote-reviews .review-btn:hover {
       transform: translateY(-2px);
-      box-shadow:
-        0 0 15px rgba(255,255,255,0.75),
-        0 0 28px rgba(56,182,255,0.65);
     }
 
     @media (max-width: 1100px) {
@@ -897,16 +883,16 @@
       }
 
       .logo-img {
-        width: 160px;
+        width: 140px;
         height: auto;
       }
 
       .logo-title {
-        font-size: 20px;
+        font-size: 22px;
       }
 
       .logo-subtitle {
-        font-size: 10px;
+        font-size: 9px;
       }
 
       .social-banner {
