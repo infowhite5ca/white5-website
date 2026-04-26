@@ -64,11 +64,6 @@
       margin: 0 auto;
     }
 
-    .white5-font {
-      font-family: 'White5', sans-serif;
-      letter-spacing: -2pt;
-    }
-
     .topbar {
       position: sticky;
       top: 0;
@@ -114,22 +109,7 @@
       font-size: 32px;
       font-weight: 800;
       letter-spacing: -2pt;
-      background: linear-gradient(
-        180deg,
-        #ffffff 0%,
-        #d8f8ff 22%,
-        #8eeaff 45%,
-        #38b6ff 72%,
-        #0d8fe8 100%
-      );
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      text-shadow:
-        0 0 2px rgba(255, 255, 255, 0.9),
-        0 0 5px rgba(138, 240, 255, 0.8),
-        0 0 9px rgba(94, 203, 255, 0.55);
-      filter: drop-shadow(0 3px 2px rgba(94, 203, 255, 0.18));
+      color: var(--white);
     }
 
     .logo-subtitle {
@@ -159,26 +139,21 @@
       min-height: 52px;
       padding: 0 24px;
       border-radius: 999px;
-      background-image: url("water.png");
-      background-size: 180%;
-      background-position: top;
-      background-repeat: no-repeat;
-      animation: waterMove 8s ease-in-out infinite;
-      color: #00304f !important;
-      border: 1px solid rgba(255,255,255,0.25);
-      text-shadow:
-        0 0 2px rgba(255,255,255,1),
-        0 0 5px rgba(255,255,255,0.95),
-        0 0 9px rgba(94,203,255,0.9),
-        0 0 16px rgba(56,182,255,0.75);
-      box-shadow:
-        0 0 10px rgba(255,255,255,0.35),
-        0 0 24px rgba(56,182,255,0.48),
-        0 14px 34px rgba(56,182,255,0.32),
-        inset 0 1px 0 rgba(255,255,255,0.45);
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #06203a !important;
+      font-weight: 800;
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      box-shadow: 0 14px 34px rgba(56,182,255,0.28);
+    }
+
+    .nav-cta:hover {
+      border: 1px solid rgba(255,255,255,0.55);
+      box-shadow:
+        0 0 18px rgba(56,182,255,0.45),
+        0 14px 34px rgba(56,182,255,0.32);
+      transform: translateY(-2px);
     }
 
     .hero {
@@ -274,40 +249,18 @@
       font-size: 22px;
       line-height: 1;
       padding: 14px 28px;
-      background-image: url("water.png");
-      background-size: 180%;
-      background-position: top;
-      background-repeat: no-repeat;
-      animation: waterMove 8s ease-in-out infinite;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
       color: #00304f;
       border: 1px solid rgba(255,255,255,0.25);
-      text-shadow:
-        0 0 2px rgba(255,255,255,1),
-        0 0 5px rgba(255,255,255,0.95),
-        0 0 9px rgba(94,203,255,0.9),
-        0 0 16px rgba(56,182,255,0.75);
-      box-shadow:
-        0 0 10px rgba(255,255,255,0.35),
-        0 0 24px rgba(56,182,255,0.48),
-        0 14px 34px rgba(56,182,255,0.32),
-        inset 0 1px 0 rgba(255,255,255,0.45);
-    }
-
-    @keyframes waterMove {
-      0% { background-position: top left; }
-      50% { background-position: top right; }
-      100% { background-position: top left; }
+      box-shadow: 0 14px 34px rgba(56,182,255,0.28);
     }
 
     .btn-primary:hover,
-    .btn-secondary:hover,
-    .nav-cta:hover {
-      border: 1px solid rgba(255,255,255,0.7);
+    .btn-secondary:hover {
+      border: 1px solid rgba(255,255,255,0.55);
       box-shadow:
-        0 0 14px rgba(255,255,255,0.85),
-        0 0 28px rgba(56,182,255,0.75),
-        0 0 46px rgba(56,182,255,0.55),
-        inset 0 1px 0 rgba(255,255,255,0.7);
+        0 0 18px rgba(56,182,255,0.45),
+        0 14px 34px rgba(56,182,255,0.32);
       transform: translateY(-2px);
     }
 
@@ -665,11 +618,7 @@
     #quote-reviews .quote-calculator button {
       padding: 15px 18px;
       font-size: 22px;
-      background-image: url("water.png");
-      background-size: 180%;
-      background-position: top;
-      background-repeat: no-repeat;
-      animation: waterMove 8s ease-in-out infinite;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
       color: #00304f;
       border: 1px solid rgba(255,255,255,0.25);
       border-radius: 10px;
@@ -678,10 +627,6 @@
       transition: 0.2s ease;
       font-family: 'White5', sans-serif;
       letter-spacing: -2pt;
-      text-shadow:
-        0 0 2px rgba(255,255,255,1),
-        0 0 6px rgba(255,255,255,0.85),
-        0 0 12px rgba(94,203,255,0.65);
       box-shadow:
         0 0 12px rgba(94,203,255,0.28),
         0 10px 22px rgba(56,182,255,0.22);
@@ -690,8 +635,8 @@
     #quote-reviews .quote-calculator button:hover {
       transform: translateY(-1px);
       box-shadow:
-        0 0 15px rgba(255,255,255,0.65),
-        0 0 28px rgba(56,182,255,0.55);
+        0 0 15px rgba(255,255,255,0.55),
+        0 0 28px rgba(56,182,255,0.45);
     }
 
     #quote-reviews .quote-result {
