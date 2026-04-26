@@ -64,6 +64,11 @@
       margin: 0 auto;
     }
 
+    .white5-font {
+      font-family: 'White5', sans-serif;
+      letter-spacing: -2pt;
+    }
+
     .topbar {
       position: sticky;
       top: 0;
@@ -108,7 +113,7 @@
       font-family: 'White5', sans-serif;
       font-size: 32px;
       font-weight: 800;
-      letter-spacing: 1px;
+      letter-spacing: -2pt;
       background: linear-gradient(
         180deg,
         #ffffff 0%,
@@ -128,11 +133,7 @@
     }
 
     .logo-subtitle {
-      margin-top: 8px;
-      font-size: 11px;
-      color: var(--muted);
-      letter-spacing: 1.4px;
-      text-transform: uppercase;
+      display: none;
     }
 
     .nav {
@@ -143,8 +144,10 @@
     }
 
     .nav a {
+      font-family: 'White5', sans-serif;
+      letter-spacing: -2pt;
       color: var(--muted);
-      font-size: 14px;
+      font-size: 18px;
       font-weight: 700;
     }
 
@@ -153,11 +156,29 @@
     }
 
     .nav-cta {
-      padding: 13px 22px;
+      min-height: 52px;
+      padding: 0 24px;
       border-radius: 999px;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      color: #06203a !important;
-      font-weight: 800;
+      background-image: url("water.png");
+      background-size: 180%;
+      background-position: top;
+      background-repeat: no-repeat;
+      animation: waterMove 8s ease-in-out infinite;
+      color: #00304f !important;
+      border: 1px solid rgba(255,255,255,0.25);
+      text-shadow:
+        0 0 2px rgba(255,255,255,1),
+        0 0 5px rgba(255,255,255,0.95),
+        0 0 9px rgba(94,203,255,0.9),
+        0 0 16px rgba(56,182,255,0.75);
+      box-shadow:
+        0 0 10px rgba(255,255,255,0.35),
+        0 0 24px rgba(56,182,255,0.48),
+        0 14px 34px rgba(56,182,255,0.32),
+        inset 0 1px 0 rgba(255,255,255,0.45);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .hero {
@@ -185,24 +206,15 @@
     }
 
     .eyebrow {
-      display: inline-block;
-      padding: 8px 14px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.12);
-      color: var(--accent-2);
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 0.4px;
-      margin-bottom: 18px;
+      display: none;
     }
 
     h1 {
       margin: 0 0 18px;
-      font-family: Arial, sans-serif;
-      font-size: clamp(42px, 6vw, 72px);
-      line-height: 1.05;
-      letter-spacing: -1px;
+      font-family: 'White5', sans-serif;
+      font-size: clamp(54px, 7vw, 92px);
+      line-height: 0.95;
+      letter-spacing: -2pt;
       color: var(--white);
     }
 
@@ -215,11 +227,11 @@
     }
 
     h3 {
-      font-family: Arial, sans-serif;
-      font-size: 22px;
+      font-family: 'White5', sans-serif;
+      font-size: 30px;
       margin-top: 28px;
       margin-bottom: 6px;
-      letter-spacing: 0.2px;
+      letter-spacing: -2pt;
       color: var(--white);
     }
 
@@ -250,13 +262,14 @@
       border-radius: 999px;
       font-weight: 700;
       font-size: 16px;
-      letter-spacing: 0.3px;
+      letter-spacing: -2pt;
       transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
       position: relative;
       overflow: hidden;
     }
 
-    .btn-primary {
+    .btn-primary,
+    .btn-secondary {
       font-family: 'White5', sans-serif;
       font-size: 22px;
       line-height: 1;
@@ -286,29 +299,15 @@
       100% { background-position: top left; }
     }
 
-    .btn-primary:hover {
+    .btn-primary:hover,
+    .btn-secondary:hover,
+    .nav-cta:hover {
       border: 1px solid rgba(255,255,255,0.7);
       box-shadow:
         0 0 14px rgba(255,255,255,0.85),
         0 0 28px rgba(56,182,255,0.75),
         0 0 46px rgba(56,182,255,0.55),
         inset 0 1px 0 rgba(255,255,255,0.7);
-      transform: translateY(-2px);
-    }
-
-    .btn-secondary {
-      border: 1px solid rgba(255,255,255,0.16);
-      background: rgba(255,255,255,0.05);
-      color: var(--white);
-      font-family: Arial, sans-serif;
-      text-shadow: none;
-    }
-
-    .btn-secondary:hover {
-      border-color: rgba(94,203,255,0.5);
-      box-shadow:
-        0 0 12px rgba(94,203,255,0.25),
-        0 0 22px rgba(94,203,255,0.16);
       transform: translateY(-2px);
     }
 
@@ -325,7 +324,7 @@
 
     .hero-contact-card h3 {
       margin: 0 0 12px;
-      font-size: 26px;
+      font-size: 34px;
       line-height: 1.1;
     }
 
@@ -408,7 +407,8 @@
 
     .hero-overlay-box h3 {
       margin: 0 0 8px;
-      font-size: 22px;
+      font-size: 28px;
+      line-height: 1.1;
     }
 
     .hero-overlay-box p {
@@ -428,9 +428,11 @@
     }
 
     .social-title {
+      font-family: 'White5', sans-serif;
+      letter-spacing: -2pt;
       font-weight: 700;
       color: white;
-      font-size: 16px;
+      font-size: 22px;
       white-space: nowrap;
       flex-shrink: 0;
     }
@@ -620,7 +622,8 @@
     }
 
     #quote-reviews .quote-card .section-head h2 {
-      font-family: Arial, sans-serif;
+      font-family: 'White5', sans-serif;
+      letter-spacing: -2pt;
       font-size: 54px;
       line-height: 0.95;
       margin: 0 0 16px;
@@ -661,15 +664,20 @@
 
     #quote-reviews .quote-calculator button {
       padding: 15px 18px;
-      font-size: 20px;
-      background: linear-gradient(135deg, #bdf2ff, #38b6ff, #0d8fe8);
+      font-size: 22px;
+      background-image: url("water.png");
+      background-size: 180%;
+      background-position: top;
+      background-repeat: no-repeat;
+      animation: waterMove 8s ease-in-out infinite;
       color: #00304f;
-      border: none;
+      border: 1px solid rgba(255,255,255,0.25);
       border-radius: 10px;
       font-weight: 700;
       cursor: pointer;
       transition: 0.2s ease;
       font-family: 'White5', sans-serif;
+      letter-spacing: -2pt;
       text-shadow:
         0 0 2px rgba(255,255,255,1),
         0 0 6px rgba(255,255,255,0.85),
@@ -680,7 +688,6 @@
     }
 
     #quote-reviews .quote-calculator button:hover {
-      background: linear-gradient(135deg, #ffffff, #69d1ff, #2499db);
       transform: translateY(-1px);
       box-shadow:
         0 0 15px rgba(255,255,255,0.65),
@@ -733,8 +740,10 @@
     }
 
     #quote-reviews .reviews-title {
+      font-family: 'White5', sans-serif;
+      letter-spacing: -2pt;
       margin: 0 0 22px;
-      font-size: 32px;
+      font-size: 38px;
       color: #fff;
     }
 
@@ -891,8 +900,12 @@
         font-size: 22px;
       }
 
-      .logo-subtitle {
-        font-size: 9px;
+      .nav a {
+        font-size: 16px;
+      }
+
+      h1 {
+        font-size: 54px;
       }
 
       .social-banner {
@@ -929,7 +942,7 @@
       }
 
       #quote-reviews .reviews-title {
-        font-size: 26px;
+        font-size: 30px;
       }
 
       #quote-reviews .review-top {
