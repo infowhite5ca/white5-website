@@ -202,24 +202,24 @@
     }
 
    .hero-grid {
-  grid-template-columns: 1fr 360px 360px;
-  gap: 28px;
-  align-items: stretch;
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 36px;
+  align-items: start;
 }
 
 .hero-content-grid {
-  display: contents;
-}
-
-.hero-main {
-  align-self: center;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 28px;
+  align-items: start;
 }
 
 .hero-contact-card,
 .hero-card {
   width: 100%;
-  min-height: 430px;
-  height: 430px;
+  height: 450px;
+  min-height: 450px;
   border-radius: 28px;
 }
 
@@ -236,9 +236,8 @@
 }
 
 .hero-visual {
-  min-height: 0;
-  height: 100%;
   flex: 1;
+  min-height: 0;
 }
 
 .social-banner {
