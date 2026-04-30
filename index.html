@@ -188,13 +188,6 @@
       justify-content: center;
     }
 
-    .eyebrow {
-      margin-bottom: 8px;
-      color: #ffffff;
-      font-size: 16px;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.5);
-    }
-
     h1 {
       font-weight: 700;
       margin: 0 0 22px;
@@ -369,13 +362,6 @@
       color: #ffffff;
     }
 
-    .hero-contact-note {
-      margin-top: 16px;
-      font-size: 13px;
-      color: var(--muted);
-      opacity: 0.95;
-    }
-
     .hero-quote-card {
       display: flex;
       flex-direction: column;
@@ -500,25 +486,23 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 40px;
-      height: 40px;
+      min-width: 40px;
+      min-height: 40px;
+      padding: 0 12px;
       border-radius: 12px;
       background: rgba(255,255,255,0.08);
       border: 1px solid rgba(255,255,255,0.12);
       transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+      color: #9be7ff;
+      font-size: 13px;
+      font-weight: 700;
     }
 
     .hero-social a:hover {
-      transform: translateY(-2px) scale(1.05);
+      transform: translateY(-2px) scale(1.03);
       background: rgba(255,255,255,0.12);
       box-shadow: 0 0 14px rgba(255,255,255,0.18);
-    }
-
-    .hero-social img {
-      width: 20px;
-      height: 20px;
-      object-fit: contain;
-      display: block;
+      color: #ffffff;
     }
 
     section {
@@ -554,7 +538,7 @@
     }
 
     .service-card {
-      min-height: 235px;
+      min-height: 305px;
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
@@ -585,6 +569,70 @@
 
     .service-card li + li {
       margin-top: 7px;
+    }
+
+    .service-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: auto;
+      padding-top: 20px;
+    }
+
+    .service-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-family: 'White5', sans-serif;
+      font-size: 24px;
+      line-height: 1;
+      letter-spacing: -1pt;
+      color: #00304f;
+      background-image: url("water.png");
+      background-size: 180%;
+      background-position: top;
+      background-repeat: no-repeat;
+      animation: waterMove 8s ease-in-out infinite;
+      border: 1px solid rgba(255,255,255,0.28);
+      text-shadow:
+        0 0 2px rgba(255,255,255,1),
+        0 0 6px rgba(255,255,255,0.8),
+        0 0 12px rgba(94,203,255,0.65);
+      box-shadow:
+        0 0 10px rgba(255,255,255,0.24),
+        0 8px 20px rgba(56,182,255,0.24),
+        inset 0 1px 0 rgba(255,255,255,0.45);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .service-btn:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,0.65);
+      box-shadow:
+        0 0 14px rgba(255,255,255,0.7),
+        0 0 28px rgba(56,182,255,0.55),
+        0 12px 28px rgba(56,182,255,0.3),
+        inset 0 1px 0 rgba(255,255,255,0.65);
+    }
+
+    .service-btn.outline {
+      color: #ffffff;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.22);
+      text-shadow:
+        0 1px 2px rgba(0,0,0,0.65),
+        0 0 8px rgba(0,234,255,0.45);
+      box-shadow: none;
+    }
+
+    .service-btn.outline:hover {
+      background: rgba(255,255,255,0.13);
+      box-shadow:
+        0 0 14px rgba(94,203,255,0.28),
+        0 10px 24px rgba(0,0,0,0.18);
     }
 
     #reviews {
@@ -779,6 +827,11 @@
         font-size: 25px;
       }
 
+      .service-btn {
+        font-size: 22px;
+        flex: 1;
+      }
+
       .hero-contact-card,
       .hero-quote-card,
       .service-card,
@@ -825,315 +878,11 @@
         <a href="#services">Gutters Cleaning</a>
         <a href="#services">Power Washing</a>
         <a href="#services">Window Cleaning</a>
-        <a class="nav-cta" href="#quote">Call Now</a>
+        <a href="gallery.html">Gallery</a>
+        <a class="nav-cta" href="tel:14034793905">Call Now</a>
       </nav>
     </div>
   </header>
 
   <main>
-    <section class="hero">
-      <div class="container hero-grid">
-        <div class="hero-main">
-
-          <h1 class="hero-glow-title">Reliable Exterior Cleaning for Calgary Homes</h1>
-
-          <p>
-            I focus on doing honest, careful work and treating every home with respect.
-            My goal is simple—quality results and customers who feel comfortable calling again.
-          </p>
-
-          <div class="hero-actions">
-            <a class="btn btn-primary" href="#quote">Get a Free Quote</a>
-            <a class="btn btn-secondary" href="#services">Explore Services</a>
-          </div>
-        </div>
-
-        <aside class="hero-contact-card">
-          <h3>Contact White5</h3>
-
-          <p>
-            Need window cleaning, gutter cleaning, or power washing in Calgary?
-            Reach out directly for a quick estimate.
-          </p>
-
-          <ul class="hero-contact-list">
-            <li>
-              <strong>Phone</strong>
-              <a href="tel:14034793905">403-479-3905</a>
-            </li>
-
-            <li>
-              <strong>Email</strong>
-              <a href="mailto:info@white5.ca">info@white5.ca</a>
-            </li>
-
-            <li>
-              <strong>Location</strong>
-              Calgary, Alberta
-            </li>
-
-            <li>
-              <strong>Hours</strong>
-              Monday to Saturday
-            </li>
-          </ul>
-
-          <div class="hero-social">
-            <a
-              href="https://www.facebook.com/profile.php?id=61567083181842"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Facebook"
-            >
-              <img src="https://cdn.simpleicons.org/facebook/ffffff" alt="Facebook" />
-            </a>
-
-            <a
-              href="https://www.instagram.com/white5calgary/"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Instagram"
-            >
-              <img src="https://cdn.simpleicons.org/instagram/ffffff" alt="Instagram" />
-            </a>
-
-            <a
-              href="https://wa.me/14034793905"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="WhatsApp"
-            >
-              <img src="https://cdn.simpleicons.org/whatsapp/ffffff" alt="WhatsApp" />
-            </a>
-
-            <a
-              href="https://www.youtube.com/@White5-d8f"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="YouTube"
-            >
-              <img src="https://cdn.simpleicons.org/youtube/ffffff" alt="YouTube" />
-            </a>
-          </div>
-
-          <div class="hero-contact-note">
-            Fast replies. Clear communication. No nonsense, just clean work.
-          </div>
-        </aside>
-
-        <article class="hero-quote-card" id="quote">
-          <h3>Get a Free Quote</h3>
-
-          <p>
-            Enter the approximate size of your house to get a quick starting estimate.
-          </p>
-
-          <div class="quote-calculator">
-            <label for="sqft">House size (sq ft)</label>
-
-            <input
-              type="number"
-              id="sqft"
-              placeholder="Example: 2000"
-            />
-
-            <button type="button" onclick="calculateQuote()">
-              Calculate Estimate
-            </button>
-
-            <div class="quote-result">
-              Estimated starting price:
-              <strong id="price">$0</strong>
-            </div>
-          </div>
-
-          <p class="mini-note">
-            Final price may vary depending on building height, accessibility and service type.
-          </p>
-        </article>
-      </div>
-    </section>
-
-    <section id="services">
-      <div class="container">
-        <div class="section-head">
-          <h2>Services</h2>
-
-          <p>
-            Focused exterior cleaning for homes that need clarity, protection and a better first impression.
-          </p>
-        </div>
-
-        <div class="services">
-          <article class="service-card">
-            <h3>Window Cleaning</h3>
-
-            <p>
-              Exterior and interior window cleaning for a brighter, cleaner look.
-            </p>
-
-            <ul>
-              <li>Exterior window cleaning</li>
-              <li>Interior window cleaning</li>
-              <li>Track and detail cleaning</li>
-            </ul>
-          </article>
-
-          <article class="service-card">
-            <h3>Power Washing</h3>
-
-            <p>
-              Dirt, buildup and weather stains removed from hard exterior surfaces.
-            </p>
-
-            <ul>
-              <li>Driveways and walkways</li>
-              <li>Patios and concrete</li>
-              <li>Siding and exterior surfaces</li>
-            </ul>
-          </article>
-
-          <article class="service-card">
-            <h3>Gutter Cleaning</h3>
-
-            <p>
-              Debris removal and flow checks to help reduce overflow and water issues.
-            </p>
-
-            <ul>
-              <li>Debris removal</li>
-              <li>Downspout flow check</li>
-              <li>Seasonal maintenance support</li>
-            </ul>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="reviews">
-      <div class="container">
-        <section class="reviews-section">
-          <h2 class="reviews-title">Customer Reviews</h2>
-
-          <div class="reviews-grid">
-            <div class="review-card">
-              <div class="review-top">
-                <strong>Demetrius Lloyd</strong>
-
-                <a
-                  class="google"
-                  href="https://share.google/1fQlufbSsUMOv4vaP"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Google
-                </a>
-              </div>
-
-              <div class="stars">★★★★★</div>
-
-              <p>
-                Great service! Had my gutters cleaned fast, professionally, and thoroughly.
-                Everything was cleaned properly and left tidy. Highly recommend.
-              </p>
-            </div>
-
-            <div class="review-card">
-              <div class="review-top">
-                <strong>Margaret Stewart</strong>
-
-                <a
-                  class="google"
-                  href="https://share.google/1fQlufbSsUMOv4vaP"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Google
-                </a>
-              </div>
-
-              <div class="stars">★★★★★</div>
-
-              <p>
-                I had Volodymyr pressure wash my house with 40 years of build up!
-                He was amazing to get it back to looking new!
-                My neighbours are amazed at how clean it looks!
-                He worked very hard scrubbing it down with a solution and elbow grease.
-              </p>
-            </div>
-
-            <div class="review-card">
-              <div class="review-top">
-                <strong>Qasim S</strong>
-
-                <a
-                  class="google"
-                  href="https://share.google/1fQlufbSsUMOv4vaP"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Google
-                </a>
-              </div>
-
-              <div class="stars">★★★★★</div>
-
-              <p>
-                He cleaned the gutters on the backside of our home. He was polite,
-                competent, thorough and showed the result of his work by making a video
-                of the gutters after the cleaning. I have no hesitation in recommending him to others.
-              </p>
-            </div>
-          </div>
-
-          <div class="review-buttons">
-            <a
-              class="review-btn"
-              href="https://share.google/1fQlufbSsUMOv4vaP"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Read More on Google
-            </a>
-
-            <a
-              class="review-btn leave"
-              href="https://g.page/r/CSF5A4laimnNEAI/review"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Leave a Review
-            </a>
-          </div>
-        </section>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-line"></div>
-      <div>© 2026 White5 Exterior Cleaning. All rights reserved.</div>
-    </div>
-  </footer>
-
-  <script>
-    function calculateQuote() {
-      const sqftInput = document.getElementById("sqft");
-      const priceOutput = document.getElementById("price");
-
-      if (!sqftInput || !priceOutput) return;
-
-      const sqft = parseFloat(sqftInput.value);
-
-      if (isNaN(sqft) || sqft <= 0) {
-        priceOutput.textContent = "Please enter a valid number";
-        return;
-      }
-
-      const price = sqft * 0.125;
-      priceOutput.textContent = "$" + price.toFixed(2);
-    }
-  </script>
-</body>
-</html>
+    <secti
