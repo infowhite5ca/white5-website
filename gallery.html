@@ -3,94 +3,342 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gallery | White5</title>
+
+  <title>Gallery | White5 Exterior Cleaning</title>
+
+  <meta
+    name="description"
+    content="White5 exterior cleaning gallery: window cleaning, gutter cleaning and power washing results in Calgary."
+  />
 
   <style>
+    @font-face {
+      font-family: 'White5';
+      src: url('White5-Regular Font.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+
     :root {
-      --bg: #f7fbff;
-      --card: #ffffff;
-      --text: #123047;
-      --muted: #5f7485;
-      --blue: #2b8fd8;
-      --blue-dark: #1269a8;
-      --border: rgba(18, 48, 71, 0.12);
-      --shadow: 0 18px 45px rgba(18, 48, 71, 0.12);
+      --bg: #071a2f;
+      --bg-soft: #0d2744;
+      --card: rgba(255, 255, 255, 0.08);
+      --card-border: rgba(255, 255, 255, 0.14);
+      --text: #eef7ff;
+      --muted: #d6eaff;
+      --accent: #5ecbff;
+      --accent-2: #8af0ff;
+      --white: #ffffff;
+      --shadow: 0 18px 46px rgba(0, 0, 0, 0.24);
+      --radius: 22px;
+      --max: 1180px;
     }
 
     * {
       box-sizing: border-box;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background:
-        radial-gradient(circle at top left, rgba(43,143,216,0.14), transparent 34%),
-        linear-gradient(180deg, #ffffff 0%, var(--bg) 100%);
       color: var(--text);
+      background:
+        radial-gradient(circle at top right, rgba(94, 203, 255, 0.18), transparent 26%),
+        radial-gradient(circle at left center, rgba(138, 240, 255, 0.12), transparent 24%),
+        linear-gradient(180deg, #0c4990 0%, #2a5035 42%, #86854d 100%);
+      min-height: 100vh;
     }
 
-    .gallery-page {
-      width: min(1180px, 92%);
+    a {
+      color: #ffffff;
+      text-decoration: none;
+    }
+
+    p {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+
+    .container {
+      width: min(100% - 32px, var(--max));
       margin: 0 auto;
-      padding: 70px 0;
     }
 
-    .gallery-hero {
-      text-align: center;
-      margin-bottom: 45px;
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(10px);
+      background: rgba(5, 16, 29, 0.78);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 28px;
+      padding: 18px 0;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+    }
+
+    .logo-img {
+      width: 150px;
+      height: auto;
+      object-fit: contain;
+      display: block;
+      filter: drop-shadow(0 10px 22px rgba(94, 203, 255, 0.18));
+      flex-shrink: 0;
+    }
+
+    .nav {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      align-items: center;
+      font-family: 'White5', sans-serif;
+      letter-spacing: -1.3pt;
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .nav a {
+      color: #ffffff;
+      -webkit-text-stroke: 0.4px rgba(0, 0, 0, 0.65);
+      text-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.75),
+        0 0 8px rgba(0, 234, 255, 0.55);
+      transition: color 0.2s ease, text-shadow 0.2s ease, transform 0.2s ease;
+    }
+
+    .nav a:hover {
+      color: var(--white);
+      text-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.8),
+        0 0 12px rgba(0, 234, 255, 0.85);
+      transform: translateY(-1px);
+    }
+
+    .nav-cta {
+      min-height: 52px;
+      padding: 0 24px;
+      border-radius: 999px;
+      background-image: url("water.png");
+      background-size: 180%;
+      background-position: top;
+      background-repeat: no-repeat;
+      animation: waterMove 8s ease-in-out infinite;
+      color: #ffffff !important;
+      border: 1px solid rgba(255,255,255,0.25);
+      text-shadow:
+        0 0 2px rgba(255,255,255,1),
+        0 0 5px rgba(255,255,255,0.95),
+        0 0 9px rgba(94,203,255,0.9),
+        0 0 16px rgba(56,182,255,0.75);
+      box-shadow:
+        0 0 10px rgba(255,255,255,0.35),
+        0 0 24px rgba(56,182,255,0.48),
+        0 14px 34px rgba(56,182,255,0.32),
+        inset 0 1px 0 rgba(255,255,255,0.45);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @keyframes waterMove {
+      0% { background-position: top left; }
+      50% { background-position: top right; }
+      100% { background-position: top left; }
+    }
+
+    .page-hero {
+      padding: 86px 0 46px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page-hero-inner {
+      max-width: 880px;
     }
 
     .eyebrow {
-      display: inline-block;
-      padding: 8px 16px;
-      border-radius: 999px;
-      background: rgba(43,143,216,0.12);
-      color: var(--blue-dark);
+      margin: 0 0 10px;
+      color: #ffffff;
+      font-size: 16px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    }
+
+    h1 {
       font-weight: 700;
-      font-size: 14px;
-      margin-bottom: 16px;
+      margin: 0 0 22px;
+      font-family: 'White5', sans-serif;
+      font-size: clamp(58px, 8vw, 104px);
+      line-height: 0.9;
+      letter-spacing: 0.5px;
+
+      background: linear-gradient(180deg, #fff2a8, #ffd700, #caa400);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+
+      -webkit-text-stroke: 0.45px rgba(0, 0, 0, 0.55);
+      text-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.55),
+        0 0 10px rgba(255, 214, 0, 0.24);
     }
 
-    .gallery-hero h1 {
+    h2 {
+      font-family: Arial, sans-serif;
+      font-size: clamp(30px, 4vw, 46px);
+      letter-spacing: 0px;
+      margin: 0 0 10px;
+      color: var(--white);
+      text-shadow: 0 2px 5px rgba(0,0,0,0.35);
+    }
+
+    h3 {
+      font-family: 'White5', sans-serif;
+      font-size: 34px;
+      margin: 0 0 12px;
+      letter-spacing: 0pt;
+      color: var(--white);
+      -webkit-text-stroke: 0.35px rgba(0,0,0,0.45);
+      text-shadow:
+        0 2px 4px rgba(0,0,0,0.55),
+        0 0 8px rgba(255,255,255,0.18);
+    }
+
+    .page-hero p {
       margin: 0;
-      font-size: clamp(36px, 6vw, 68px);
-      line-height: 1;
-      letter-spacing: -1.5px;
+      max-width: 760px;
+      color: var(--muted);
+      font-size: 18px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.35);
     }
 
-    .gallery-hero p {
-      max-width: 720px;
-      margin: 18px auto 0;
-      font-size: 18px;
-      line-height: 1.6;
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 58px;
+      padding: 0 32px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: 0pt;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+      font-family: 'White5', sans-serif;
+      font-size: 30px;
+      line-height: 1;
+      padding: 14px 28px;
+      background-image: url("water.png");
+      background-size: 180%;
+      background-position: top;
+      background-repeat: no-repeat;
+      animation: waterMove 8s ease-in-out infinite;
+      color: #00304f;
+      border: 1px solid rgba(255,255,255,0.25);
+      text-shadow:
+        0 0 2px rgba(255,255,255,1),
+        0 0 5px rgba(255,255,255,0.95),
+        0 0 9px rgba(94,203,255,0.9),
+        0 0 16px rgba(56,182,255,0.75);
+      box-shadow:
+        0 0 10px rgba(255,255,255,0.35),
+        0 0 24px rgba(56,182,255,0.48),
+        0 14px 34px rgba(56,182,255,0.32),
+        inset 0 1px 0 rgba(255,255,255,0.45);
+    }
+
+    .btn-primary:hover,
+    .btn-secondary:hover,
+    .nav-cta:hover {
+      border: 1px solid rgba(255,255,255,0.7);
+      box-shadow:
+        0 0 14px rgba(255,255,255,0.85),
+        0 0 28px rgba(56,182,255,0.75),
+        0 0 46px rgba(56,182,255,0.55),
+        inset 0 1px 0 rgba(255,255,255,0.7);
+      transform: translateY(-2px);
+    }
+
+    .gallery-section {
+      padding: 20px 0 80px;
+    }
+
+    .section-head {
+      max-width: 760px;
+      margin-bottom: 24px;
+    }
+
+    .section-head p {
+      margin: 0;
       color: var(--muted);
+      font-size: 17px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.35);
     }
 
     .gallery-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
+      gap: 22px;
     }
 
     .gallery-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 26px;
+      min-height: 420px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.13);
+      border-radius: var(--radius);
       overflow: hidden;
       box-shadow: var(--shadow);
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      backdrop-filter: blur(6px);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
     }
 
     .gallery-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 24px 55px rgba(18, 48, 71, 0.18);
+      transform: translateY(-4px);
+      border-color: rgba(255,255,255,0.22);
+      box-shadow:
+        0 22px 54px rgba(0,0,0,0.28),
+        0 0 20px rgba(94,203,255,0.16);
     }
 
     .image-wrap {
       position: relative;
       aspect-ratio: 4 / 3;
-      background: #dcecf7;
+      background:
+        radial-gradient(circle at top right, rgba(94,203,255,0.16), transparent 36%),
+        rgba(255,255,255,0.08);
       overflow: hidden;
     }
 
@@ -101,189 +349,371 @@
       object-fit: cover;
     }
 
+    .image-placeholder {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      text-align: center;
+      color: rgba(255,255,255,0.78);
+      font-size: 14px;
+      line-height: 1.5;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
     .badge {
       position: absolute;
       top: 14px;
       left: 14px;
       padding: 7px 12px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.9);
-      color: var(--blue-dark);
+      background: rgba(5, 16, 29, 0.72);
+      border: 1px solid rgba(255,255,255,0.16);
+      color: #9be7ff;
       font-size: 13px;
       font-weight: 700;
       backdrop-filter: blur(8px);
+      text-shadow: 0 1px 2px rgba(0,0,0,0.55);
     }
 
     .gallery-content {
-      padding: 20px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
     }
 
     .gallery-content h3 {
-      margin: 0 0 8px;
-      font-size: 21px;
-      color: var(--text);
+      font-size: 34px;
+      line-height: 0.95;
+      margin-bottom: 14px;
     }
 
     .gallery-content p {
       margin: 0;
       color: var(--muted);
       line-height: 1.5;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.28);
       font-size: 15px;
     }
 
-    .gallery-cta {
-      margin-top: 50px;
-      padding: 32px;
-      border-radius: 28px;
-      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
-      color: white;
-      text-align: center;
-      box-shadow: var(--shadow);
+    .gallery-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: auto;
+      padding-top: 20px;
     }
 
-    .gallery-cta h2 {
-      margin: 0 0 10px;
-      font-size: clamp(26px, 4vw, 42px);
-    }
-
-    .gallery-cta p {
-      margin: 0 auto 24px;
-      max-width: 620px;
-      line-height: 1.6;
-      opacity: 0.92;
-    }
-
-    .btn {
-      display: inline-block;
-      text-decoration: none;
-      background: white;
-      color: var(--blue-dark);
-      padding: 14px 24px;
+    .gallery-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 10px 18px;
       border-radius: 999px;
-      font-weight: 800;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      font-family: 'White5', sans-serif;
+      font-size: 24px;
+      line-height: 1;
+      letter-spacing: -1pt;
+      color: #00304f;
+      background-image: url("water.png");
+      background-size: 180%;
+      background-position: top;
+      background-repeat: no-repeat;
+      animation: waterMove 8s ease-in-out infinite;
+      border: 1px solid rgba(255,255,255,0.28);
+      text-shadow:
+        0 0 2px rgba(255,255,255,1),
+        0 0 6px rgba(255,255,255,0.8),
+        0 0 12px rgba(94,203,255,0.65);
+      box-shadow:
+        0 0 10px rgba(255,255,255,0.24),
+        0 8px 20px rgba(56,182,255,0.24),
+        inset 0 1px 0 rgba(255,255,255,0.45);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     }
 
-    .btn:hover {
+    .gallery-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 12px 25px rgba(0,0,0,0.18);
+      border-color: rgba(255,255,255,0.65);
+      box-shadow:
+        0 0 14px rgba(255,255,255,0.7),
+        0 0 28px rgba(56,182,255,0.55),
+        0 12px 28px rgba(56,182,255,0.3),
+        inset 0 1px 0 rgba(255,255,255,0.65);
     }
 
-    @media (max-width: 900px) {
-      .gallery-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
+    .gallery-btn.outline {
+      color: #ffffff;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.22);
+      text-shadow:
+        0 1px 2px rgba(0,0,0,0.65),
+        0 0 8px rgba(0,234,255,0.45);
+      box-shadow: none;
     }
 
-    @media (max-width: 620px) {
-      .gallery-page {
-        padding: 45px 0;
-      }
+    .gallery-btn.outline:hover {
+      background: rgba(255,255,255,0.13);
+      box-shadow:
+        0 0 14px rgba(94,203,255,0.28),
+        0 10px 24px rgba(0,0,0,0.18);
+    }
 
+    .footer {
+      padding: 28px 0 44px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .footer-line {
+      height: 1px;
+      background: rgba(255,255,255,0.08);
+      margin-bottom: 18px;
+    }
+
+    @media (max-width: 1060px) {
       .gallery-grid {
         grid-template-columns: 1fr;
       }
 
+      .nav {
+        display: none;
+      }
+
+      .page-hero {
+        padding-top: 54px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .topbar-inner {
+        padding: 14px 0;
+      }
+
+      .logo-img {
+        width: 130px;
+      }
+
+      h1 {
+        font-size: 58px;
+      }
+
+      h2 {
+        font-size: 34px;
+      }
+
+      h3,
+      .gallery-content h3 {
+        font-size: 30px;
+      }
+
+      .page-hero p,
+      .section-head p {
+        font-size: 16px;
+      }
+
+      .btn-primary,
+      .btn-secondary {
+        font-size: 25px;
+      }
+
       .gallery-card {
-        border-radius: 22px;
+        min-height: auto;
+      }
+
+      .gallery-content {
+        padding: 22px;
+      }
+
+      .gallery-btn {
+        font-size: 22px;
+        flex: 1;
       }
     }
   </style>
 </head>
 
 <body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <div class="logo">
+        <a href="index.html">
+          <img src="logo.png" alt="White5 logo" class="logo-img" />
+        </a>
+      </div>
 
-  <main class="gallery-page">
+      <nav class="nav">
+        <a href="index.html#services">Gutters Cleaning</a>
+        <a href="index.html#services">Power Washing</a>
+        <a href="index.html#services">Window Cleaning</a>
+        <a href="gallery.html">Gallery</a>
+        <a class="nav-cta" href="tel:14034793905">Call Now</a>
+      </nav>
+    </div>
+  </header>
 
-    <section class="gallery-hero">
-      <span class="eyebrow">White5 Gallery</span>
-      <h1>Before & After Work</h1>
-      <p>
-        A simple look at our exterior cleaning results — window cleaning,
-        gutter cleaning, and pressure washing around Calgary.
-      </p>
+  <main>
+    <section class="page-hero">
+      <div class="container page-hero-inner">
+        <p class="eyebrow">White5 Exterior Cleaning | Calgary</p>
+
+        <h1>Gallery</h1>
+
+        <p>
+          A place to show real White5 exterior cleaning work: window cleaning,
+          gutter cleaning, power washing, tracks, and before-and-after results.
+        </p>
+
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="services.html#quote">Get a Free Quote</a>
+          <a class="btn btn-secondary" href="index.html#services">Back to Services</a>
+        </div>
+      </div>
     </section>
 
-    <section class="gallery-grid">
+    <section class="gallery-section">
+      <div class="container">
+        <div class="section-head">
+          <h2>Before & After Work</h2>
+          <p>
+            Replace the image paths below with your real job photos when you are ready.
+          </p>
+        </div>
 
-      <article class="gallery-card">
-        <div class="image-wrap">
-          <span class="badge">Window Cleaning</span>
-          <img src="images/window-cleaning-1.jpg" alt="Window cleaning result">
-        </div>
-        <div class="gallery-content">
-          <h3>Exterior Window Cleaning</h3>
-          <p>Spot-free glass cleaning using purified water for a clean finish.</p>
-        </div>
-      </article>
+        <div class="gallery-grid">
+          <article class="gallery-card">
+            <div class="image-wrap">
+              <span class="badge">Window Cleaning</span>
+              <img src="images/window-cleaning-1.jpg" alt="Window cleaning result">
+            </div>
 
-      <article class="gallery-card">
-        <div class="image-wrap">
-          <span class="badge">Gutter Cleaning</span>
-          <img src="images/gutter-cleaning-1.jpg" alt="Gutter cleaning result">
-        </div>
-        <div class="gallery-content">
-          <h3>Gutter Maintenance</h3>
-          <p>Removing leaves, dirt, and buildup to help water flow properly.</p>
-        </div>
-      </article>
+            <div class="gallery-content">
+              <h3>Window Cleaning</h3>
+              <p>
+                Exterior glass cleaning using purified water for a cleaner,
+                spot-free finish.
+              </p>
 
-      <article class="gallery-card">
-        <div class="image-wrap">
-          <span class="badge">Power Washing</span>
-          <img src="images/power-washing-1.jpg" alt="Power washing result">
-        </div>
-        <div class="gallery-content">
-          <h3>Surface Cleaning</h3>
-          <p>Cleaning exterior surfaces with careful pressure and proper distance.</p>
-        </div>
-      </article>
+              <div class="gallery-actions">
+                <a class="gallery-btn outline" href="index.html#services">Services</a>
+                <a class="gallery-btn" href="services.html#quote">Get Quote</a>
+              </div>
+            </div>
+          </article>
 
-      <article class="gallery-card">
-        <div class="image-wrap">
-          <span class="badge">Before / After</span>
-          <img src="images/before-after-1.jpg" alt="Before and after cleaning">
-        </div>
-        <div class="gallery-content">
-          <h3>Before & After</h3>
-          <p>Real cleaning results from residential exterior cleaning jobs.</p>
-        </div>
-      </article>
+          <article class="gallery-card">
+            <div class="image-wrap">
+              <span class="badge">Gutter Cleaning</span>
+              <img src="images/gutter-cleaning-1.jpg" alt="Gutter cleaning result">
+            </div>
 
-      <article class="gallery-card">
-        <div class="image-wrap">
-          <span class="badge">Tracks</span>
-          <img src="images/track-cleaning-1.jpg" alt="Window track cleaning">
-        </div>
-        <div class="gallery-content">
-          <h3>Track Deep Cleaning</h3>
-          <p>Detailed cleaning for window tracks, corners, and hard-to-reach areas.</p>
-        </div>
-      </article>
+            <div class="gallery-content">
+              <h3>Gutter Cleaning</h3>
+              <p>
+                Cleaning leaves, dirt, and debris to help water flow properly
+                through the gutter system.
+              </p>
 
-      <article class="gallery-card">
-        <div class="image-wrap">
-          <span class="badge">Residential</span>
-          <img src="images/house-cleaning-1.jpg" alt="Residential exterior cleaning">
-        </div>
-        <div class="gallery-content">
-          <h3>Residential Exterior Cleaning</h3>
-          <p>Careful, owner-operated service for Calgary homes.</p>
-        </div>
-      </article>
+              <div class="gallery-actions">
+                <a class="gallery-btn outline" href="index.html#services">Services</a>
+                <a class="gallery-btn" href="services.html#quote">Get Quote</a>
+              </div>
+            </div>
+          </article>
 
+          <article class="gallery-card">
+            <div class="image-wrap">
+              <span class="badge">Power Washing</span>
+              <img src="images/power-washing-1.jpg" alt="Power washing result">
+            </div>
+
+            <div class="gallery-content">
+              <h3>Power Washing</h3>
+              <p>
+                Exterior surface cleaning with careful pressure, distance,
+                and attention to the surface condition.
+              </p>
+
+              <div class="gallery-actions">
+                <a class="gallery-btn outline" href="index.html#services">Services</a>
+                <a class="gallery-btn" href="services.html#quote">Get Quote</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="gallery-card">
+            <div class="image-wrap">
+              <span class="badge">Before / After</span>
+              <img src="images/before-after-1.jpg" alt="Before and after exterior cleaning result">
+            </div>
+
+            <div class="gallery-content">
+              <h3>Before & After</h3>
+              <p>
+                Use this card for clear comparison photos from real jobs.
+              </p>
+
+              <div class="gallery-actions">
+                <a class="gallery-btn outline" href="index.html#services">Services</a>
+                <a class="gallery-btn" href="services.html#quote">Get Quote</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="gallery-card">
+            <div class="image-wrap">
+              <span class="badge">Tracks</span>
+              <img src="images/track-cleaning-1.jpg" alt="Window track cleaning result">
+            </div>
+
+            <div class="gallery-content">
+              <h3>Track Cleaning</h3>
+              <p>
+                Detailed cleaning for tracks, corners, and areas where dirt
+                often builds up.
+              </p>
+
+              <div class="gallery-actions">
+                <a class="gallery-btn outline" href="index.html#services">Services</a>
+                <a class="gallery-btn" href="services.html#quote">Get Quote</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="gallery-card">
+            <div class="image-wrap">
+              <span class="badge">Residential</span>
+              <img src="images/residential-cleaning-1.jpg" alt="Residential exterior cleaning result">
+            </div>
+
+            <div class="gallery-content">
+              <h3>Residential Work</h3>
+              <p>
+                Owner-operated exterior cleaning for Calgary homes with
+                honest and careful service.
+              </p>
+
+              <div class="gallery-actions">
+                <a class="gallery-btn outline" href="index.html#services">Services</a>
+                <a class="gallery-btn" href="services.html#quote">Get Quote</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
     </section>
-
-    <section class="gallery-cta">
-      <h2>Want your home cleaned?</h2>
-      <p>
-        Send a few photos or basic details about your property and we’ll prepare
-        a straightforward estimate.
-      </p>
-      <a class="btn" href="mailto:info@white5.ca">Get a Free Quote</a>
-    </section>
-
   </main>
 
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-line"></div>
+      © 2026 White5 Exterior Cleaning | Calgary, Alberta |
+      <a href="mailto:info@white5.ca">info@white5.ca</a> |
+      <a href="tel:14034793905">403-479-3905</a>
+    </div>
+  </footer>
 </body>
 </html>
