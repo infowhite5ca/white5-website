@@ -87,14 +87,6 @@
       padding: 18px 0;
     }
 
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      font-weight: 700;
-      letter-spacing: 0.4px;
-    }
-
     .logo-img {
       width: 150px;
       height: auto;
@@ -188,13 +180,11 @@
       font-size: clamp(58px, 8vw, 104px);
       line-height: 0.9;
       letter-spacing: 0.5px;
-
       background: linear-gradient(180deg, #fff2a8, #ffd700, #caa400);
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
       color: transparent;
-
       -webkit-text-stroke: 0.45px rgba(0, 0, 0, 0.55);
       text-shadow:
         0 2px 4px rgba(0, 0, 0, 0.55),
@@ -349,19 +339,6 @@
       object-fit: cover;
     }
 
-    .image-placeholder {
-      width: 100%;
-      height: 100%;
-      display: grid;
-      place-items: center;
-      padding: 24px;
-      text-align: center;
-      color: rgba(255,255,255,0.78);
-      font-size: 14px;
-      line-height: 1.5;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-    }
-
     .badge {
       position: absolute;
       top: 14px;
@@ -433,6 +410,7 @@
         0 8px 20px rgba(56,182,255,0.24),
         inset 0 1px 0 rgba(255,255,255,0.45);
       transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      cursor: pointer;
     }
 
     .gallery-btn:hover {
@@ -460,6 +438,85 @@
       box-shadow:
         0 0 14px rgba(94,203,255,0.28),
         0 10px 24px rgba(0,0,0,0.18);
+    }
+
+    button.gallery-btn {
+      border: 1px solid rgba(255,255,255,0.22);
+    }
+
+    .image-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 22px;
+      background: rgba(3, 12, 22, 0.82);
+      backdrop-filter: blur(10px);
+    }
+
+    .image-modal.active {
+      display: flex;
+    }
+
+    .image-modal-box {
+      width: min(100%, 980px);
+      max-height: 92vh;
+      background:
+        radial-gradient(circle at top right, rgba(94,203,255,0.18), transparent 34%),
+        rgba(12, 33, 55, 0.96);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 26px;
+      box-shadow:
+        0 24px 70px rgba(0,0,0,0.45),
+        0 0 28px rgba(94,203,255,0.18);
+      overflow: hidden;
+    }
+
+    .image-modal-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .image-modal-top h3 {
+      margin: 0;
+      font-size: 30px;
+    }
+
+    .modal-close {
+      width: 44px;
+      height: 44px;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      color: #ffffff;
+      font-size: 30px;
+      line-height: 1;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .modal-close:hover {
+      background: rgba(255,255,255,0.16);
+      transform: scale(1.05);
+    }
+
+    .image-modal-content {
+      padding: 20px;
+    }
+
+    .image-modal-content img {
+      width: 100%;
+      max-height: 72vh;
+      display: block;
+      object-fit: contain;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.06);
     }
 
     .footer {
@@ -532,6 +589,22 @@
         font-size: 22px;
         flex: 1;
       }
+
+      .image-modal {
+        padding: 12px;
+      }
+
+      .image-modal-box {
+        border-radius: 22px;
+      }
+
+      .image-modal-top h3 {
+        font-size: 26px;
+      }
+
+      .image-modal-content {
+        padding: 12px;
+      }
     }
   </style>
 </head>
@@ -546,12 +619,13 @@
       </div>
 
       <nav class="nav">
-        <a href="index.html#services">Gutters Cleaning</a>
-        <a href="index.html#services">Power Washing</a>
-        <a href="index.html#services">Window Cleaning</a>
-        <a href="gallery.html">Gallery</a>
-        <a class="nav-cta" href="tel:14034793905">Call Now</a>
-      </nav>
+  <a href="index.html">Home</a>
+  <a href="index.html#services">Gutters Cleaning</a>
+  <a href="index.html#services">Power Washing</a>
+  <a href="index.html#services">Window Cleaning</a>
+  <a href="gallery.html">Gallery</a>
+  <a class="nav-cta" href="tel:14034793905">Call Now</a>
+</nav>
     </div>
   </header>
 
@@ -579,11 +653,12 @@
         <div class="section-head">
           <h2>Before & After Work</h2>
           <p>
-            Replace the image paths below with your real job photos when you are ready.
+            Click “View Images” to preview the photo. Click “Get Quote” to go to the services quote page.
           </p>
         </div>
 
         <div class="gallery-grid">
+
           <article class="gallery-card">
             <div class="image-wrap">
               <span class="badge">Window Cleaning</span>
@@ -598,7 +673,14 @@
               </p>
 
               <div class="gallery-actions">
-                <a class="gallery-btn outline" href="index.html#services">Services</a>
+                <button
+                  class="gallery-btn outline"
+                  type="button"
+                  onclick="openImageModal('images/window-cleaning-1.jpg', 'Window Cleaning')"
+                >
+                  View Images
+                </button>
+
                 <a class="gallery-btn" href="services.html#quote">Get Quote</a>
               </div>
             </div>
@@ -618,7 +700,14 @@
               </p>
 
               <div class="gallery-actions">
-                <a class="gallery-btn outline" href="index.html#services">Services</a>
+                <button
+                  class="gallery-btn outline"
+                  type="button"
+                  onclick="openImageModal('images/gutter-cleaning-1.jpg', 'Gutter Cleaning')"
+                >
+                  View Images
+                </button>
+
                 <a class="gallery-btn" href="services.html#quote">Get Quote</a>
               </div>
             </div>
@@ -638,7 +727,14 @@
               </p>
 
               <div class="gallery-actions">
-                <a class="gallery-btn outline" href="index.html#services">Services</a>
+                <button
+                  class="gallery-btn outline"
+                  type="button"
+                  onclick="openImageModal('images/power-washing-1.jpg', 'Power Washing')"
+                >
+                  View Images
+                </button>
+
                 <a class="gallery-btn" href="services.html#quote">Get Quote</a>
               </div>
             </div>
@@ -657,7 +753,14 @@
               </p>
 
               <div class="gallery-actions">
-                <a class="gallery-btn outline" href="index.html#services">Services</a>
+                <button
+                  class="gallery-btn outline"
+                  type="button"
+                  onclick="openImageModal('images/before-after-1.jpg', 'Before & After')"
+                >
+                  View Images
+                </button>
+
                 <a class="gallery-btn" href="services.html#quote">Get Quote</a>
               </div>
             </div>
@@ -677,7 +780,14 @@
               </p>
 
               <div class="gallery-actions">
-                <a class="gallery-btn outline" href="index.html#services">Services</a>
+                <button
+                  class="gallery-btn outline"
+                  type="button"
+                  onclick="openImageModal('images/track-cleaning-1.jpg', 'Track Cleaning')"
+                >
+                  View Images
+                </button>
+
                 <a class="gallery-btn" href="services.html#quote">Get Quote</a>
               </div>
             </div>
@@ -697,15 +807,39 @@
               </p>
 
               <div class="gallery-actions">
-                <a class="gallery-btn outline" href="index.html#services">Services</a>
+                <button
+                  class="gallery-btn outline"
+                  type="button"
+                  onclick="openImageModal('images/residential-cleaning-1.jpg', 'Residential Work')"
+                >
+                  View Images
+                </button>
+
                 <a class="gallery-btn" href="services.html#quote">Get Quote</a>
               </div>
             </div>
           </article>
+
         </div>
       </div>
     </section>
   </main>
+
+  <div class="image-modal" id="imageModal">
+    <div class="image-modal-box">
+      <div class="image-modal-top">
+        <h3 id="modalTitle">Image Preview</h3>
+
+        <button class="modal-close" type="button" onclick="closeImageModal()">
+          ×
+        </button>
+      </div>
+
+      <div class="image-modal-content">
+        <img id="modalImage" src="" alt="White5 gallery image">
+      </div>
+    </div>
+  </div>
 
   <footer class="footer">
     <div class="container">
@@ -715,5 +849,41 @@
       <a href="tel:14034793905">403-479-3905</a>
     </div>
   </footer>
+
+  <script>
+    function openImageModal(imageSrc, imageTitle) {
+      const modal = document.getElementById("imageModal");
+      const modalImage = document.getElementById("modalImage");
+      const modalTitle = document.getElementById("modalTitle");
+
+      modalImage.src = imageSrc;
+      modalImage.alt = imageTitle;
+      modalTitle.textContent = imageTitle;
+
+      modal.classList.add("active");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeImageModal() {
+      const modal = document.getElementById("imageModal");
+      const modalImage = document.getElementById("modalImage");
+
+      modal.classList.remove("active");
+      modalImage.src = "";
+      document.body.style.overflow = "";
+    }
+
+    document.addEventListener("keydown", function(event) {
+      if (event.key === "Escape") {
+        closeImageModal();
+      }
+    });
+
+    document.getElementById("imageModal").addEventListener("click", function(event) {
+      if (event.target === this) {
+        closeImageModal();
+      }
+    });
+  </script>
 </body>
 </html>
