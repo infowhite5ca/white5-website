@@ -1556,7 +1556,7 @@
                 <div class="single-counter">
                   <div class="counter">
                     <button type="button" onclick="changeValue('gutterLength', -10)">−</button>
-                    <strong id="gutterLength">200</strong>
+                    <strong id="gutterLength">0</strong>
                     <button type="button" onclick="changeValue('gutterLength', 10)">+</button>
                   </div>
                   <span class="unit">ft</span>
@@ -1714,9 +1714,9 @@
           </div>
         </div>
 
-        <div class="result-box active" id="resultBox">
+        <div class="result-box" id="resultBox">
           <h3>Your Estimated Price</h3>
-          <div class="price" id="finalPrice">$270</div>
+          <div class="price" id="finalPrice">$0</div>
           <p id="estimateNote">
             This is a starting estimate. Final price may change depending on access,
             dirt level, height, photos, and job details.
@@ -1785,9 +1785,10 @@
 
   <script>
     const state = {
-      windowStories: 1,
-      gutterStories: 1,
+      windowStories: 2,
+      gutterStories: 2,
       selectedSurface: "Driveway",
+      roofFactor: 0.25,
       lastEstimate: 0
     };
 
@@ -1795,11 +1796,19 @@
       return Number(document.getElementById(id).textContent) || 0;
     }
 
+    function hideResultBox() {
+      const resultBox = document.getElementById("resultBox");
+      if (resultBox) {
+        resultBox.classList.remove("active");
+      }
+    }
+
     function changeValue(id, amount) {
       const element = document.getElementById(id);
       let value = Number(element.textContent) || 0;
       value = Math.max(0, value + amount);
       element.textContent = value;
+      hideResultBox();
     }
 
     function selectStory(group, value, button) {
@@ -1810,6 +1819,16 @@
 
       buttons.forEach(btn => btn.classList.remove("active"));
       button.classList.add("active");
+      hideResultBox();
+    }
+
+    function selectRoofType(factor, button) {
+      state.roofFactor = factor;
+
+      const buttons = document.querySelectorAll(".roof-btn");
+      buttons.forEach(btn => btn.classList.remove("active"));
+      button.classList.add("active");
+      hideResultBox();
     }
 
     function selectSurface(surface, button) {
@@ -1818,9 +1837,10 @@
       const buttons = document.querySelectorAll(".surface-btn");
       buttons.forEach(btn => btn.classList.remove("active"));
       button.classList.add("active");
+      hideResultBox();
     }
 
-    function calculateEstimate() {
+    function calculateEstimate(showResult = true) {
       const smallWindows = getNumber("smallWindows");
       const standardWindows = getNumber("standardWindows");
       const largeWindows = getNumber("largeWindows");
@@ -1869,7 +1889,7 @@
       }
 
       if (gutterLength > 0 || gutterSqft > 0) {
-        gutterPrice = gutterLength * 1.2;
+        gutterPrice = gutterLength * (1.2 + state.roofFactor);
 
         if (gutterSqft > 0) {
           gutterPrice += gutterSqft * 0.035;
@@ -1915,20 +1935,20 @@
       const resultBox = document.getElementById("resultBox");
       const finalPrice = document.getElementById("finalPrice");
 
-      resultBox.classList.add("active");
       finalPrice.textContent = "$" + state.lastEstimate;
 
-      resultBox.scrollIntoView({
-        behavior: "smooth",
-        block: "center"
-      });
+      if (showResult) {
+        resultBox.classList.add("active");
+        resultBox.scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
+      }
 
       return state.lastEstimate;
     }
 
     function openRequestModal() {
-      calculateEstimate();
-
       const modal = document.getElementById("requestModal");
       modal.classList.add("active");
       document.body.style.overflow = "hidden";
@@ -2006,7 +2026,7 @@ This is a starting estimate. Final price may change depending on access, dirt le
     }
 
     function sendRequestEmail() {
-      calculateEstimate();
+      calculateEstimate(false);
 
       const customerEmail = document.getElementById("customerEmail").value.trim();
       const customerPhone = document.getElementById("customerPhone").value.trim();
