@@ -1,15 +1,611 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<html lang="en" data-qb-installed="true"><style>.app-crx-show-flight-price-compare {
+  width: 320px;
+  overflow: hidden;
+  position: fixed;
+  border-radius: 8px;
+  right: 20px;
+  top: 20px;
+  background: #fff;
+  z-index: 999;
+  box-shadow: 0px 8px 16px 0px rgba(69, 88, 115, 0.12);
+  color: #8592a6;
+  font-size: 14px;
+  font-weight: normal;
+  letter-spacing: 0px;
+  font-family: system-ui;
+  text-align: left;
+}
+.app-crx-show-flight-price-compare .flex,
+.app-crx-show-flight-price-compare .flex-column,
+.app-crx-show-flight-price-compare .v-center,
+.app-crx-show-flight-price-compare .h-center,
+.app-crx-show-flight-price-compare .flex-column-center,
+.app-crx-show-flight-price-compare .flex-center {
+  display: -webkit-flex;
+  display: flex;
+}
+.app-crx-show-flight-price-compare .flex1 {
+  flex: 1 1 auto;
+}
+.app-crx-show-flight-price-compare .h-flex-center,
+.app-crx-show-flight-price-compare .h-center,
+.app-crx-show-flight-price-compare .flex-column-center,
+.app-crx-show-flight-price-compare .flex-center {
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+.app-crx-show-flight-price-compare .v-flex-center,
+.app-crx-show-flight-price-compare .v-center,
+.app-crx-show-flight-price-compare .flex-center {
+  -webkit-align-items: center;
+  align-items: center;
+}
+.app-crx-show-flight-price-compare .flex-between {
+  justify-content: space-between;
+}
+.app-crx-show-flight-price-compare .flex-column {
+  flex-direction: column;
+}
+.app-crx-show-flight-price-compare .flex-column-center {
+  flex-direction: column;
+}
+.app-crx-show-flight-price-compare .ml-4 {
+  margin-left: 4px;
+}
+.app-crx-show-flight-price-compare .mr-4 {
+  margin-right: 4px;
+}
+.app-crx-show-flight-price-compare .mr-16 {
+  margin-right: 16px;
+}
+.app-crx-show-flight-price-compare .ft-12 {
+  font-size: 12px;
+  line-height: 18px;
+}
+.app-crx-show-flight-price-compare .align-center {
+  align-items: center;
+}
+.app-crx-show-flight-price-compare .justify-around {
+  justify-content: space-around;
+}
+.app-crx-show-flight-price-compare .flex-wrap {
+  flex-wrap: wrap;
+}
+.app-crx-show-flight-price-compare .color-black {
+  color: #0f294d;
+}
+.app-crx-show-flight-price-compare .color-cyan {
+  color: #06aebd;
+}
+.app-crx-show-flight-price-compare .flex {
+  display: flex;
+}
+.app-crx-show-flight-price-compare .color-tertiaryBlack {
+  color: #8592a6;
+}
+.app-crx-show-flight-price-compare .color-brandBlue {
+  color: #3264ff;
+}
+.app-crx-show-flight-price-compare .f-bold {
+  font-weight: bold;
+}
+.app-crx-show-flight-price-compare .mt-4 {
+  margin-top: 4px;
+}
+.app-crx-show-flight-price-compare .mb-4 {
+  margin-bottom: 4px;
+}
+.app-crx-show-flight-price-compare .f-12 {
+  font-size: 12px;
+}
+.app-crx-show-flight-price-compare .divider {
+  width: 100%;
+  height: 1px;
+  background-color: #dadfe6;
+  transform: scaleY(0.5);
+}
+.app-crx-show-flight-price-compare .mh-8 {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+.app-crx-show-flight-price-compare .mh-16 {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+.app-crx-show-flight-price-compare .mt-8 {
+  margin-top: 8px;
+}
+.app-crx-show-flight-price-compare .mt-16 {
+  margin-top: 16px;
+}
+.app-crx-show-flight-price-compare .mb-8 {
+  margin-bottom: 8px;
+}
+.app-crx-show-flight-price-compare .header-wrapper {
+  display: flex;
+  align-items: center;
+  margin: 16px 16px 0;
+}
+.app-crx-show-flight-price-compare .header-wrapper.bold {
+  justify-content: flex-start;
+}
+.app-crx-show-flight-price-compare .header-wrapper.bold .header-text {
+  font-size: 16px;
+}
+.app-crx-show-flight-price-compare .header-wrapper .header-icon {
+  width: 44px;
+  height: 44px;
+}
+.app-crx-show-flight-price-compare .header-wrapper .header-icon .img {
+  transform: scale(0.5, 0.5);
+  max-width: 100%;
+  border-radius: 50%;
+}
+.app-crx-show-flight-price-compare .header-wrapper .header-text {
+  color: #3264ff;
+  font-size: 14px;
+  text-align: center;
+  font-weight: bold;
+  height: 22px;
+  letter-spacing: 0px;
+  line-height: 22px;
+}
+.app-crx-show-flight-price-compare .header-wrapper .header-close {
+  cursor: pointer;
+  position: absolute;
+  right: 6px;
+  top: 6px;
+}
+.app-crx-show-flight-price-compare .header-wrapper .header-close span {
+  text-align: center;
+  color: #ced2d9;
+  font-size: 22px;
+}
+.app-crx-show-flight-price-compare .header-wrapper .header-close path {
+  fill: #8592a6;
+}
+.app-crx-show-flight-price-compare .flex {
+  display: flex;
+}
+.app-crx-show-flight-price-compare .color-tertiaryBlack {
+  color: #8592a6;
+}
+.app-crx-show-flight-price-compare .color-brandBlue {
+  color: #3264ff;
+}
+.app-crx-show-flight-price-compare .f-bold {
+  font-weight: bold;
+}
+.app-crx-show-flight-price-compare .mt-4 {
+  margin-top: 4px;
+}
+.app-crx-show-flight-price-compare .mb-4 {
+  margin-bottom: 4px;
+}
+.app-crx-show-flight-price-compare .f-12 {
+  font-size: 12px;
+}
+.app-crx-show-flight-price-compare .divider {
+  width: 100%;
+  height: 1px;
+  background-color: #dadfe6;
+  transform: scaleY(0.5);
+}
+.app-crx-show-flight-price-compare .mh-8 {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+.app-crx-show-flight-price-compare .mh-16 {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+.app-crx-show-flight-price-compare .mt-8 {
+  margin-top: 8px;
+}
+.app-crx-show-flight-price-compare .mt-16 {
+  margin-top: 16px;
+}
+.app-crx-show-flight-price-compare .mb-8 {
+  margin-bottom: 8px;
+}
+.app-crx-show-flight-price-compare .flightdetail-wrapper {
+  border-radius: 0px 0px 4px 4px;
+}
+.app-crx-show-flight-price-compare .tags {
+  display: flex;
+  font-size: 12px;
+}
+.app-crx-show-flight-price-compare .tags .flight-tag {
+  background-color: rgba(50, 100, 255, 0.08);
+  color: #3264ff;
+  padding: 4px;
+  flex: 1;
+  text-align: center;
+  font-weight: bold;
+  letter-spacing: 0px;
+  line-height: 18px;
+  border-radius: 4px 4px 0px 0px;
+}
+.app-crx-show-flight-price-compare .tags .compare-tag {
+  padding: 2px 4px;
+  background: rgba(50, 100, 255, 0.08);
+  color: #3264ff;
+  border-radius: 1px;
+}
+.app-crx-show-flight-price-compare .flightdetail {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.app-crx-show-flight-price-compare .flightdetail .from-wrapper .date,
+.app-crx-show-flight-price-compare .flightdetail .to-wrapper .date {
+  margin-bottom: 4px;
+}
+.app-crx-show-flight-price-compare .flightdetail .from-wrapper .time,
+.app-crx-show-flight-price-compare .flightdetail .to-wrapper .time {
+  color: #0f294d;
+  font-weight: 700;
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+.app-crx-show-flight-price-compare .flightdetail .to-wrapper {
+  text-align: right;
+}
+.app-crx-show-flight-price-compare .flightdetail-wrapper {
+  background-color: #f5f7fa;
+  padding: 8px;
+}
+.app-crx-show-flight-price-compare .flightdetail-wrapper .airplane-icon-wrapper .airline-dashed {
+  width: 80px;
+  height: 2px;
+  background-color: #dadfe6;
+  position: relative;
+}
+.app-crx-show-flight-price-compare .flightdetail-wrapper .airplane-icon-wrapper .airline-dashed::before,
+.app-crx-show-flight-price-compare .flightdetail-wrapper .airplane-icon-wrapper .airline-dashed::after {
+  content: '';
+  display: block;
+  width: 4px;
+  height: 4px;
+  position: absolute;
+  top: -1px;
+  background-color: #dadfe6;
+}
+.app-crx-show-flight-price-compare .flightdetail-wrapper .airplane-icon-wrapper .airline-dashed::before {
+  left: 0;
+}
+.app-crx-show-flight-price-compare .flightdetail-wrapper .airplane-icon-wrapper .airline-dashed::after {
+  right: 0;
+}
+.app-crx-show-flight-price-compare .flightdetail-wrapper .airplane-icon-wrapper img {
+  height: 32px;
+  width: 32px;
+}
+.app-crx-show-flight-price-compare .flightdetail-wrapper .passangerInfo {
+  margin-top: 8px;
+}
+.app-crx-show-flight-price-compare .flightdetail-wrapper .passangerInfo path {
+  fill: #06aebd !important;
+}
+.app-crx-show-flight-price-compare .flex {
+  display: flex;
+}
+.app-crx-show-flight-price-compare .color-tertiaryBlack {
+  color: #8592a6;
+}
+.app-crx-show-flight-price-compare .color-brandBlue {
+  color: #3264ff;
+}
+.app-crx-show-flight-price-compare .f-bold {
+  font-weight: bold;
+}
+.app-crx-show-flight-price-compare .mt-4 {
+  margin-top: 4px;
+}
+.app-crx-show-flight-price-compare .mb-4 {
+  margin-bottom: 4px;
+}
+.app-crx-show-flight-price-compare .f-12 {
+  font-size: 12px;
+}
+.app-crx-show-flight-price-compare .divider {
+  width: 100%;
+  height: 1px;
+  background-color: #dadfe6;
+  transform: scaleY(0.5);
+}
+.app-crx-show-flight-price-compare .mh-8 {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+.app-crx-show-flight-price-compare .mh-16 {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+.app-crx-show-flight-price-compare .mt-8 {
+  margin-top: 8px;
+}
+.app-crx-show-flight-price-compare .mt-16 {
+  margin-top: 16px;
+}
+.app-crx-show-flight-price-compare .mb-8 {
+  margin-bottom: 8px;
+}
+.app-crx-show-flight-price-compare .flightinfo-wrapper {
+  max-height: 50vh;
+  overflow: auto;
+}
+.app-crx-show-flight-price-compare .flightinfo-wrapper .compare-tag {
+  font-size: 14px;
+  color: #455873;
+  margin-top: 8px;
+}
+.app-crx-show-flight-price-compare .flightinfo-wrapper .compare-tag span {
+  color: #F94C86;
+  font-weight: bold;
+}
+.app-crx-show-flight-price-compare .flightinfo-wrapper .compare-tag.higher span {
+  color: #06aebd;
+}
+.app-crx-show-flight-price-compare .flex {
+  display: flex;
+}
+.app-crx-show-flight-price-compare .color-tertiaryBlack {
+  color: #8592a6;
+}
+.app-crx-show-flight-price-compare .color-brandBlue {
+  color: #3264ff;
+}
+.app-crx-show-flight-price-compare .f-bold {
+  font-weight: bold;
+}
+.app-crx-show-flight-price-compare .mt-4 {
+  margin-top: 4px;
+}
+.app-crx-show-flight-price-compare .mb-4 {
+  margin-bottom: 4px;
+}
+.app-crx-show-flight-price-compare .f-12 {
+  font-size: 12px;
+}
+.app-crx-show-flight-price-compare .divider {
+  width: 100%;
+  height: 1px;
+  background-color: #dadfe6;
+  transform: scaleY(0.5);
+}
+.app-crx-show-flight-price-compare .mh-8 {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+.app-crx-show-flight-price-compare .mh-16 {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+.app-crx-show-flight-price-compare .mt-8 {
+  margin-top: 8px;
+}
+.app-crx-show-flight-price-compare .mt-16 {
+  margin-top: 16px;
+}
+.app-crx-show-flight-price-compare .mb-8 {
+  margin-bottom: 8px;
+}
+.app-crx-show-flight-price-compare .compare-wrapper {
+  margin: 0 16px 8px;
+}
+.app-crx-show-flight-price-compare .compare-wrapper .book-btn {
+  background: #3264ff;
+  border-radius: 2px;
+  height: 38px;
+  width: 100%;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0px;
+  text-align: center;
+}
+.app-crx-show-flight-price-compare .compare-wrapper .book-btn:hover {
+  background-color: #2D5AE5;
+}
+.app-crx-show-flight-price-compare .flex {
+  display: flex;
+}
+.app-crx-show-flight-price-compare .color-tertiaryBlack {
+  color: #8592a6;
+}
+.app-crx-show-flight-price-compare .color-brandBlue {
+  color: #3264ff;
+}
+.app-crx-show-flight-price-compare .f-bold {
+  font-weight: bold;
+}
+.app-crx-show-flight-price-compare .mt-4 {
+  margin-top: 4px;
+}
+.app-crx-show-flight-price-compare .mb-4 {
+  margin-bottom: 4px;
+}
+.app-crx-show-flight-price-compare .f-12 {
+  font-size: 12px;
+}
+.app-crx-show-flight-price-compare .divider {
+  width: 100%;
+  height: 1px;
+  background-color: #dadfe6;
+  transform: scaleY(0.5);
+}
+.app-crx-show-flight-price-compare .mh-8 {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+.app-crx-show-flight-price-compare .mh-16 {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+.app-crx-show-flight-price-compare .mt-8 {
+  margin-top: 8px;
+}
+.app-crx-show-flight-price-compare .mt-16 {
+  margin-top: 16px;
+}
+.app-crx-show-flight-price-compare .mb-8 {
+  margin-bottom: 8px;
+}
+.m-chromePluginV2__content-leftimg {
+  width: 66px;
+  height: 16px;
+  background-size: cover;
+}
+.m-chromePluginV2__content-leftimg-wrapper {
+  width: 66px;
+  height: 16px;
+}
+.m-chromePluginV2__price-item {
+  justify-content: flex-end;
+  flex: 1;
+  text-align: center;
+}
+.m-chromePluginV2__price-text {
+  word-break: break-all;
+  width: 100%;
+}
+.m-chromePluginV2__price-otherbar,
+.m-chromePluginV2__price-tripbar,
+.m-chromePluginV2__price-tripbar-loading {
+  width: 32px;
+  border-radius: 4px 4px 0 0;
+}
+.m-chromePluginV2__price-otherbar {
+  height: 60px;
+  background: rgba(50, 100, 255, 0.32);
+}
+.m-chromePluginV2__price-tripbar {
+  height: 40px;
+  background: #3264ff;
+}
+.m-chromePluginV2__price-tripbar-loading {
+  height: 60px;
+  background: #3264ff;
+}
+.app-crx-show-flight-price-compare .loading-wrapper .loading-text {
+  padding: 0 16px 16px;
+}
+.app-crx-show-flight-price-compare .loading-wrapper .header-icon {
+  width: 16px;
+  height: 16px;
+}
+.app-crx-show-flight-price-compare .loading-wrapper .header-icon path {
+  fill: #3264FF !important;
+}
+.app-crx-show-flight-price-compare .loading-wrapper .loading-loadgif {
+  display: flex;
+  flex-direction: column;
+  margin-left: 4px;
+  justify-content: center;
+  align-items: center;
+}
+.app-crx-show-flight-price-compare .noflight-wrapper .noflight-text {
+  margin-top: 4px;
+  overflow: hidden;
+  color: #455873;
+  font-size: 13px;
+  font-weight: normal;
+  letter-spacing: 0px;
+  line-height: 18px;
+  width: 288px;
+  margin: 0 16px 16px 16px;
+}
+.app-crx-show-flight-price-compare .flex {
+  display: flex;
+}
+.app-crx-show-flight-price-compare .color-tertiaryBlack {
+  color: #8592a6;
+}
+.app-crx-show-flight-price-compare .color-brandBlue {
+  color: #3264ff;
+}
+.app-crx-show-flight-price-compare .f-bold {
+  font-weight: bold;
+}
+.app-crx-show-flight-price-compare .mt-4 {
+  margin-top: 4px;
+}
+.app-crx-show-flight-price-compare .mb-4 {
+  margin-bottom: 4px;
+}
+.app-crx-show-flight-price-compare .f-12 {
+  font-size: 12px;
+}
+.app-crx-show-flight-price-compare .divider {
+  width: 100%;
+  height: 1px;
+  background-color: #dadfe6;
+  transform: scaleY(0.5);
+}
+.app-crx-show-flight-price-compare .mh-8 {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+.app-crx-show-flight-price-compare .mh-16 {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+.app-crx-show-flight-price-compare .mt-8 {
+  margin-top: 8px;
+}
+.app-crx-show-flight-price-compare .mt-16 {
+  margin-top: 16px;
+}
+.app-crx-show-flight-price-compare .mb-8 {
+  margin-bottom: 8px;
+}
+.app-crx-show-flight-price-compare .welcome-inject-wrapper {
+  color: #fff;
+  background: #3264ff;
+}
+.app-crx-show-flight-price-compare .welcome-inject-wrapper .header-wrapper {
+  color: #fff;
+  background: #3264ff;
+}
+.app-crx-show-flight-price-compare .welcome-inject-wrapper .header-wrapper .header-icon .img {
+  display: none;
+}
+.app-crx-show-flight-price-compare .welcome-inject-wrapper .header-wrapper .header-text {
+  color: #fff;
+}
+.app-crx-show-flight-price-compare .welcome-inject-wrapper .header-wrapper .header-close span {
+  color: #fff;
+}
+.app-crx-show-flight-price-compare .welcome-inject-wrapper .content-1 {
+  margin: 16px 16px 8px 16px;
+}
+.app-crx-show-flight-price-compare .welcome-inject-wrapper .content-2 {
+  margin: 0 16px 8px 16px;
+}
+.app-crx-show-flight-price-compare .welcome-inject-wrapper .content-2 span {
+  text-decoration: underline;
+}
+.app-crx-show-flight-price-compare .welcome-inject-wrapper .trip-com-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 24px 16px 24px;
+}
+.app-crx-show-flight-price-compare .welcome-inject-wrapper .trip-com-wrapper .trip-com-logo {
+  height: 18px;
+  width: 73px;
+}
+</style><div id="save-fly-plugin-inject-element"></div><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Services & Estimate | White5 Exterior Cleaning</title>
+  <title>Services &amp; Estimate | White5 Exterior Cleaning</title>
 
-  <meta
-    name="description"
-    content="Get an estimate for White5 window cleaning, gutter cleaning, and power washing services in Calgary."
-  />
+  <meta name="description" content="Get an estimate for White5 window cleaning, gutter cleaning, and power washing services in Calgary.">
 
   <style>
     @font-face {
@@ -814,7 +1410,7 @@
   <header class="topbar">
     <div class="container topbar-inner">
       <a href="index.html">
-        <img src="logo.png" alt="White5 logo" class="logo-img" />
+        <img src="logo.png" alt="White5 logo" class="logo-img">
       </a>
 
       <nav class="nav">
@@ -924,8 +1520,8 @@
                 <p>How many stories is your property?</p>
 
                 <div class="story-buttons" data-group="windowStories">
-                  <button class="story-btn active" type="button" onclick="selectStory('windowStories', 1, this)">1 Story</button>
-                  <button class="story-btn" type="button" onclick="selectStory('windowStories', 2, this)">2 Stories</button>
+                  <button class="story-btn" type="button" onclick="selectStory('windowStories', 1, this)">1 Story</button>
+                  <button class="story-btn active" type="button" onclick="selectStory('windowStories', 2, this)">2 Stories</button>
                   <button class="story-btn" type="button" onclick="selectStory('windowStories', 3, this)">3+ Stories</button>
                 </div>
               </div>
@@ -960,7 +1556,7 @@
                 <div class="single-counter">
                   <div class="counter">
                     <button type="button" onclick="changeValue('gutterLength', -10)">−</button>
-                    <strong id="gutterLength">0</strong>
+                    <strong id="gutterLength">200</strong>
                     <button type="button" onclick="changeValue('gutterLength', 10)">+</button>
                   </div>
                   <span class="unit">ft</span>
@@ -968,19 +1564,17 @@
               </div>
 
               <div class="option-card">
-                <div class="icon green">⌂</div>
-                <h4>Property Size</h4>
-                <p>Enter the total square footage of your home.</p>
-
-                <div class="single-counter">
-                  <div class="counter">
-                    <button type="button" onclick="changeValue('gutterSqft', -100)">−</button>
-                    <strong id="gutterSqft">0</strong>
-                    <button type="button" onclick="changeValue('gutterSqft', 100)">+</button>
-                  </div>
-                  <span class="unit">sq ft</span>
-                </div>
-              </div>
+      <div class="icon green">🏠</div>
+      <h4>Roof Type</h4>
+      <p>Select your roof design.</p>
+      <div class="story-buttons" style="display: flex; flex-wrap: wrap; gap: 8px;">
+        <button class="story-btn roof-btn active" type="button" onclick="selectRoofType(0.25, this)">Gable</button>
+        <button class="story-btn roof-btn" type="button" onclick="selectRoofType(0.25, this)">Hip</button>
+        <button class="story-btn roof-btn" type="button" onclick="selectRoofType(0.25, this)">Front Gable</button>
+        <button class="story-btn roof-btn" type="button" onclick="selectRoofType(0, this)">Dormer</button>
+        <button class="story-btn roof-btn" type="button" onclick="selectRoofType(0, this)">Flat</button>
+      </div>
+    </div>
 
               <div class="option-card">
                 <div class="icon green">▥</div>
@@ -988,8 +1582,8 @@
                 <p>How many stories is your property?</p>
 
                 <div class="story-buttons" data-group="gutterStories">
-                  <button class="story-btn active" type="button" onclick="selectStory('gutterStories', 1, this)">1 Story</button>
-                  <button class="story-btn" type="button" onclick="selectStory('gutterStories', 2, this)">2 Stories</button>
+                  <button class="story-btn" type="button" onclick="selectStory('gutterStories', 1, this)">1 Story</button>
+                  <button class="story-btn active" type="button" onclick="selectStory('gutterStories', 2, this)">2 Stories</button>
                   <button class="story-btn" type="button" onclick="selectStory('gutterStories', 3, this)">3+ Stories</button>
                 </div>
               </div>
@@ -1120,9 +1714,9 @@
           </div>
         </div>
 
-        <div class="result-box" id="resultBox">
+        <div class="result-box active" id="resultBox">
           <h3>Your Estimated Price</h3>
-          <div class="price" id="finalPrice">$0</div>
+          <div class="price" id="finalPrice">$270</div>
           <p id="estimateNote">
             This is a starting estimate. Final price may change depending on access,
             dirt level, height, photos, and job details.
@@ -1146,7 +1740,7 @@
       <form class="request-form" onsubmit="event.preventDefault(); sendRequestEmail();">
         <div class="request-field">
           <label for="customerName">Your Name</label>
-          <input id="customerName" type="text" placeholder="Your name" required>
+          <input id="customerName" type="text" placeholder="Your name" required="">
         </div>
 
         <div class="request-field">
@@ -1445,5 +2039,6 @@ This is a starting estimate. Final price may change depending on access, dirt le
       }
     });
   </script>
-</body>
-</html>
+<script defer="" src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon="{&quot;version&quot;:&quot;2024.11.0&quot;,&quot;token&quot;:&quot;2f4cfb85299144f790195bad7ff78d64&quot;,&quot;r&quot;:1,&quot;server_timing&quot;:{&quot;name&quot;:{&quot;cfCacheStatus&quot;:true,&quot;cfEdge&quot;:true,&quot;cfExtPri&quot;:true,&quot;cfL4&quot;:true,&quot;cfOrigin&quot;:true,&quot;cfSpeedBrain&quot;:true},&quot;location_startswith&quot;:null}}" crossorigin="anonymous"></script>
+
+</body></html>
