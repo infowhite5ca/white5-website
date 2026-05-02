@@ -1837,56 +1837,84 @@
       });
     }
 
-    function setCardError(titleText, hasError) {
-      const card = findOptionCard(titleText);
+    function getOptionCardByElementId(id) {
+      const element = document.getElementById(id);
+      return element ? element.closest(".option-card") : null;
+    }
 
+    function getOptionCardByButtonSelector(selector) {
+      const button = document.querySelector(selector);
+      return button ? button.closest(".option-card") : null;
+    }
+
+    function setCardError(card, hasError) {
       if (card) {
         card.classList.toggle("field-error", hasError);
       }
     }
 
     function clearCardError(titleText) {
-      setCardError(titleText, false);
+      setCardError(findOptionCard(titleText), false);
     }
 
-    function hasActiveButton(titleText, selector) {
-      const card = findOptionCard(titleText);
-      return Boolean(card && card.querySelector(selector));
+    function hasActiveButton(selector) {
+      return Boolean(document.querySelector(selector));
     }
 
     function validateRequiredFields() {
       let isValid = true;
       const missingFields = [];
 
-      const windowSqft = getNumber("windowSqft");
+      function requireNumbers(label, ids) {
+        const card = getOptionCardByElementId(ids[0]);
+        const failed = ids.some(id => getNumber(id) <= 0);
+        setCardError(card, failed);
 
-      if (windowSqft <= 0) {
-        setCardError("Property Size", true);
-        missingFields.push("Property Size");
-        isValid = false;
-      } else {
-        setCardError("Property Size", false);
-      }
-
-      const requiredButtonGroups = [
-        { title: "Roof Type", selector: ".roof-btn.active", label: "Roof Type" },
-        { title: "Choose Surface", selector: ".surface-btn.active", label: "Choose Surface" },
-        { title: "Stories", selector: ".story-btn.active", label: "Stories" }
-      ];
-
-      requiredButtonGroups.forEach(group => {
-        const hasSelection = hasActiveButton(group.title, group.selector);
-        setCardError(group.title, !hasSelection);
-
-        if (!hasSelection) {
-          missingFields.push(group.label);
+        if (failed) {
+          missingFields.push(label);
           isValid = false;
         }
-      });
+      }
+
+      function requireButton(label, activeSelector, cardSelector) {
+        const card = getOptionCardByButtonSelector(cardSelector || activeSelector);
+        const failed = !hasActiveButton(activeSelector);
+        setCardError(card, failed);
+
+        if (failed) {
+          missingFields.push(label);
+          isValid = false;
+        }
+      }
+
+      // W.C required fields
+      requireNumbers("Window Quantity: small, standard, large, and extra large", [
+        "smallWindows",
+        "standardWindows",
+        "largeWindows",
+        "xlWindows"
+      ]);
+      requireNumbers("Property Size", ["windowSqft"]);
+      requireButton("Window Stories", '[data-group="windowStories"] .story-btn.active', '[data-group="windowStories"] .story-btn');
+
+      // G.C required fields
+      requireNumbers("Gutter Length", ["gutterLength"]);
+      requireButton("Roof Type", ".roof-btn.active", ".roof-btn");
+      requireButton("Gutter Stories", '[data-group="gutterStories"] .story-btn.active', '[data-group="gutterStories"] .story-btn');
+
+      // P.W required fields
+      requireButton("Choose Surface", ".surface-btn.active", ".surface-btn");
+      requireNumbers("Surface Size: driveway, siding, fence, deck, and patio", [
+        "drivewaySqft",
+        "sidingSqft",
+        "fenceSqft",
+        "deckSqft",
+        "patioSqft"
+      ]);
 
       if (!isValid) {
         hideResultBox();
-        alert("Please complete required fields: " + missingFields.join(", ") + ".");
+        alert("Please complete all required fields before calculating: " + missingFields.join(", ") + ".");
       }
 
       return isValid;
@@ -1903,8 +1931,9 @@
       value = Math.max(0, value + amount);
       element.textContent = value;
 
-      if (id === "windowSqft" && value > 0) {
-        clearCardError("Property Size");
+      const card = element.closest(".option-card");
+      if (card && value > 0) {
+        card.classList.remove("field-error");
       }
 
       hideResultBox();
@@ -1918,7 +1947,10 @@
 
       buttons.forEach(btn => btn.classList.remove("active"));
       button.classList.add("active");
-      clearCardError("Stories");
+      const card = button.closest(".option-card");
+      if (card) {
+        card.classList.remove("field-error");
+      }
       hideResultBox();
     }
 
@@ -1929,7 +1961,10 @@
       const buttons = document.querySelectorAll(".roof-btn");
       buttons.forEach(btn => btn.classList.remove("active"));
       button.classList.add("active");
-      clearCardError("Roof Type");
+      const card = button.closest(".option-card");
+      if (card) {
+        card.classList.remove("field-error");
+      }
       hideResultBox();
     }
 
@@ -1939,7 +1974,10 @@
       const buttons = document.querySelectorAll(".surface-btn");
       buttons.forEach(btn => btn.classList.remove("active"));
       button.classList.add("active");
-      clearCardError("Choose Surface");
+      const card = button.closest(".option-card");
+      if (card) {
+        card.classList.remove("field-error");
+      }
       hideResultBox();
     }
 
