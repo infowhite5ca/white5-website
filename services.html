@@ -842,7 +842,7 @@
 
     .service-title {
       display: grid;
-      grid-template-columns: auto 1fr;
+      grid-template-columns: auto 1fr auto;
       gap: 22px;
       align-items: end;
     }
@@ -1128,6 +1128,36 @@
       box-shadow:
         0 0 14px rgba(94,203,255,0.22),
         0 10px 24px rgba(0,0,0,0.18);
+    }
+
+
+
+    .service-toggle {
+      min-height: 42px;
+      padding: 0 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.22);
+      background: rgba(255,255,255,0.08);
+      color: #ffffff;
+      font-weight: 900;
+      cursor: pointer;
+      white-space: nowrap;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.45);
+      transition: 0.2s ease;
+    }
+
+    .service-toggle.active {
+      border-color: rgba(94,203,255,0.9);
+      background: rgba(94,203,255,0.18);
+      box-shadow: 0 0 18px rgba(94,203,255,0.28);
+    }
+
+    .service-toggle:not(.active)::before {
+      content: "+ ";
+    }
+
+    .service-toggle.active::before {
+      content: "✓ ";
     }
 
     .result-box {
@@ -1470,6 +1500,7 @@
                 </div>
               </div>
               <div class="title-line"></div>
+              <button class="service-toggle active" id="toggleWindow" type="button" onclick="toggleService('window')">Included</button>
             </div>
 
             <div class="option-grid">
@@ -1563,6 +1594,7 @@
                 </div>
               </div>
               <div class="title-line green"></div>
+              <button class="service-toggle" id="toggleGutter" type="button" onclick="toggleService('gutter')">Add service</button>
             </div>
 
             <div class="option-grid">
@@ -1625,6 +1657,7 @@
                 </div>
               </div>
               <div class="title-line"></div>
+              <button class="service-toggle" id="togglePower" type="button" onclick="toggleService('power')">Add service</button>
             </div>
 
             <div class="option-grid">
@@ -1803,12 +1836,29 @@
 
   <script>
     const state = {
+      includeWindow: true,
+      includeGutter: false,
+      includePower: false,
       windowStories: 2,
       gutterStories: 2,
       selectedSurface: "Driveway",
       roofFactor: 0.25,
       roofType: "Gable",
       lastEstimate: 0
+    };
+
+    const serviceFields = {
+      window: ["smallWindows", "standardWindows", "largeWindows", "xlWindows", "windowSqft"],
+      gutter: ["gutterLength", "gutterSqft"],
+      power: ["drivewaySqft", "sidingSqft", "fenceSqft", "deckSqft", "patioSqft"]
+    };
+
+    const surfaceIds = {
+      Driveway: "drivewaySqft",
+      Siding: "sidingSqft",
+      Fence: "fenceSqft",
+      Deck: "deckSqft",
+      Patio: "patioSqft"
     };
 
     function getNumber(id) {
@@ -1853,21 +1903,66 @@
       }
     }
 
-    function clearCardError(titleText) {
-      setCardError(findOptionCard(titleText), false);
+    function clearAllErrors() {
+      document.querySelectorAll(".field-error").forEach(card => {
+        card.classList.remove("field-error");
+      });
     }
 
     function hasActiveButton(selector) {
       return Boolean(document.querySelector(selector));
     }
 
-    function validateRequiredFields() {
+    function getServiceKeyFromField(id) {
+      return Object.keys(serviceFields).find(service => serviceFields[service].includes(id));
+    }
+
+    function setServiceIncluded(service, included) {
+      const key = service.charAt(0).toUpperCase() + service.slice(1);
+      state["include" + key] = included;
+
+      const toggle = document.getElementById("toggle" + key);
+      if (toggle) {
+        toggle.classList.toggle("active", included);
+        toggle.textContent = included ? "Included" : "Add service";
+      }
+
+      hideResultBox();
+    }
+
+    function toggleService(service) {
+      const key = service.charAt(0).toUpperCase() + service.slice(1);
+      setServiceIncluded(service, !state["include" + key]);
+      clearAllErrors();
+    }
+
+    function autoIncludeServiceFromField(id) {
+      const service = getServiceKeyFromField(id);
+      if (service) {
+        setServiceIncluded(service, true);
+      }
+    }
+
+    function validateSelectedServices() {
+      clearAllErrors();
+
       let isValid = true;
       const missingFields = [];
 
-      function requireNumbers(label, ids) {
+      function requireNumber(label, id) {
+        const card = getOptionCardByElementId(id);
+        const failed = getNumber(id) <= 0;
+        setCardError(card, failed);
+
+        if (failed) {
+          missingFields.push(label);
+          isValid = false;
+        }
+      }
+
+      function requireAnyNumber(label, ids) {
         const card = getOptionCardByElementId(ids[0]);
-        const failed = ids.some(id => getNumber(id) <= 0);
+        const failed = ids.every(id => getNumber(id) <= 0);
         setCardError(card, failed);
 
         if (failed) {
@@ -1887,34 +1982,43 @@
         }
       }
 
-      // W.C required fields
-      requireNumbers("Window Quantity: small, standard, large, and extra large", [
-        "smallWindows",
-        "standardWindows",
-        "largeWindows",
-        "xlWindows"
-      ]);
-      requireNumbers("Property Size", ["windowSqft"]);
-      requireButton("Window Stories", '[data-group="windowStories"] .story-btn.active', '[data-group="windowStories"] .story-btn');
+      if (!state.includeWindow && !state.includeGutter && !state.includePower) {
+        hideResultBox();
+        alert("Please select at least one service: Window Cleaning, Gutter Cleaning, or Power Washing.");
+        return false;
+      }
 
-      // G.C required fields
-      requireNumbers("Gutter Length", ["gutterLength"]);
-      requireButton("Roof Type", ".roof-btn.active", ".roof-btn");
-      requireButton("Gutter Stories", '[data-group="gutterStories"] .story-btn.active', '[data-group="gutterStories"] .story-btn');
+      if (state.includeWindow) {
+        requireAnyNumber("Window Quantity: add at least one window", [
+          "smallWindows",
+          "standardWindows",
+          "largeWindows",
+          "xlWindows"
+        ]);
+        requireNumber("Window Cleaning Property Size", "windowSqft");
+        requireButton("Window Cleaning Stories", '[data-group="windowStories"] .story-btn.active', '[data-group="windowStories"] .story-btn');
+      }
 
-      // P.W required fields
-      requireButton("Choose Surface", ".surface-btn.active", ".surface-btn");
-      requireNumbers("Surface Size: driveway, siding, fence, deck, and patio", [
-        "drivewaySqft",
-        "sidingSqft",
-        "fenceSqft",
-        "deckSqft",
-        "patioSqft"
-      ]);
+      if (state.includeGutter) {
+        requireNumber("Gutter Length", "gutterLength");
+        requireButton("Roof Type", ".roof-btn.active", ".roof-btn");
+        requireButton("Gutter Stories", '[data-group="gutterStories"] .story-btn.active', '[data-group="gutterStories"] .story-btn');
+      }
+
+      if (state.includePower) {
+        requireButton("Choose Surface", ".surface-btn.active", ".surface-btn");
+        requireAnyNumber("Surface Size: add at least one surface size", [
+          "drivewaySqft",
+          "sidingSqft",
+          "fenceSqft",
+          "deckSqft",
+          "patioSqft"
+        ]);
+      }
 
       if (!isValid) {
         hideResultBox();
-        alert("Please complete all required fields before calculating: " + missingFields.join(", ") + ".");
+        alert("Please complete the required fields for the selected service sections only: " + missingFields.join(", ") + ".");
       }
 
       return isValid;
@@ -1931,6 +2035,10 @@
       value = Math.max(0, value + amount);
       element.textContent = value;
 
+      if (value > 0) {
+        autoIncludeServiceFromField(id);
+      }
+
       const card = element.closest(".option-card");
       if (card && value > 0) {
         card.classList.remove("field-error");
@@ -1942,47 +2050,63 @@
     function selectStory(group, value, button) {
       state[group] = value;
 
+      if (group === "windowStories") {
+        setServiceIncluded("window", true);
+      }
+
+      if (group === "gutterStories") {
+        setServiceIncluded("gutter", true);
+      }
+
       const parent = button.parentElement;
       const buttons = parent.querySelectorAll(".story-btn");
 
       buttons.forEach(btn => btn.classList.remove("active"));
       button.classList.add("active");
+
       const card = button.closest(".option-card");
       if (card) {
         card.classList.remove("field-error");
       }
+
       hideResultBox();
     }
 
     function selectRoofType(factor, button) {
+      setServiceIncluded("gutter", true);
       state.roofFactor = Number(factor) || 0;
       state.roofType = button.textContent.trim();
 
       const buttons = document.querySelectorAll(".roof-btn");
       buttons.forEach(btn => btn.classList.remove("active"));
       button.classList.add("active");
+
       const card = button.closest(".option-card");
       if (card) {
         card.classList.remove("field-error");
       }
+
       hideResultBox();
     }
 
     function selectSurface(surface, button) {
+      setServiceIncluded("power", true);
       state.selectedSurface = surface;
 
       const buttons = document.querySelectorAll(".surface-btn");
       buttons.forEach(btn => btn.classList.remove("active"));
       button.classList.add("active");
+
       const card = button.closest(".option-card");
       if (card) {
         card.classList.remove("field-error");
       }
+
       hideResultBox();
     }
 
     function calculateEstimate(showResult = true) {
-      if (!validateRequiredFields()) {
+      if (!validateSelectedServices()) {
         return null;
       }
 
@@ -2011,16 +2135,14 @@
         largeWindows +
         xlWindows;
 
-      if (totalWindows > 0 || windowSqft > 0) {
+      if (state.includeWindow) {
         windowPrice =
           smallWindows * 5 +
           standardWindows * 8 +
           largeWindows * 12 +
           xlWindows * 18;
 
-        if (windowSqft > 0) {
-          windowPrice += windowSqft * 0.015;
-        }
+        windowPrice += windowSqft * 0.015;
 
         if (state.windowStories === 2) {
           windowPrice += 35;
@@ -2033,7 +2155,7 @@
         windowPrice = Math.max(windowPrice, 120);
       }
 
-      if (gutterLength > 0 || gutterSqft > 0) {
+      if (state.includeGutter) {
         gutterPrice = gutterLength * (1.2 + state.roofFactor);
 
         if (gutterSqft > 0) {
@@ -2058,7 +2180,7 @@
         deckSqft +
         patioSqft;
 
-      if (totalPowerSqft > 0) {
+      if (state.includePower) {
         powerPrice =
           drivewaySqft * 0.18 +
           sidingSqft * 0.22 +
@@ -2068,6 +2190,11 @@
 
         powerPrice = Math.max(powerPrice, 140);
       }
+
+      const selectedServices = [];
+      if (state.includeWindow) selectedServices.push("Window Cleaning");
+      if (state.includeGutter) selectedServices.push("Gutter Cleaning");
+      if (state.includePower) selectedServices.push("Power Washing");
 
       let total = windowPrice + gutterPrice + powerPrice;
 
@@ -2079,9 +2206,14 @@
 
       const resultBox = document.getElementById("resultBox");
       const finalPrice = document.getElementById("finalPrice");
+      const estimateNote = document.getElementById("estimateNote");
 
       if (finalPrice) {
         finalPrice.textContent = "$" + state.lastEstimate;
+      }
+
+      if (estimateNote) {
+        estimateNote.textContent = "Included services: " + selectedServices.join(", ") + ". This is a starting estimate. Final price may change depending on access, dirt level, height, photos, and job details.";
       }
 
       if (showResult && resultBox) {
@@ -2097,7 +2229,7 @@
     }
 
     function openRequestModal() {
-      if (!validateRequiredFields()) {
+      if (!validateSelectedServices()) {
         return;
       }
 
@@ -2134,6 +2266,11 @@
       const customerPhone = document.getElementById("customerPhone").value.trim();
       const customerNotes = document.getElementById("customerNotes").value.trim();
 
+      const selectedServices = [];
+      if (state.includeWindow) selectedServices.push("Window Cleaning");
+      if (state.includeGutter) selectedServices.push("Gutter Cleaning");
+      if (state.includePower) selectedServices.push("Power Washing");
+
       const body = `
 White5 Service Request
 
@@ -2143,10 +2280,14 @@ Address: ${customerAddress}
 Email: ${customerEmail}
 Phone: ${customerPhone}
 
+SELECTED SERVICES
+${selectedServices.join(", ")}
+
 ESTIMATED PRICE
 Estimated starting price: $${state.lastEstimate}
 
 WINDOW CLEANING
+Included: ${state.includeWindow ? "Yes" : "No"}
 Small windows: ${smallWindows}
 Standard windows: ${standardWindows}
 Large windows: ${largeWindows}
@@ -2155,12 +2296,14 @@ Property size for windows: ${windowSqft} sq ft
 Window stories: ${state.windowStories}
 
 GUTTER CLEANING
+Included: ${state.includeGutter ? "Yes" : "No"}
 Gutter length: ${gutterLength} ft
 Property size for gutters: ${gutterSqft} sq ft
 Roof type: ${state.roofType}
 Gutter stories: ${state.gutterStories}
 
 POWER WASHING
+Included: ${state.includePower ? "Yes" : "No"}
 Selected surface: ${state.selectedSurface}
 Driveway: ${drivewaySqft} sq ft
 Siding: ${sidingSqft} sq ft
