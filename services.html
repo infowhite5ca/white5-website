@@ -1335,6 +1335,105 @@
       color: var(--muted);
     }
 
+
+
+    .reviews-section {
+      margin-top: 34px;
+      padding: 28px;
+      border-radius: var(--radius);
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.18), transparent 30%),
+        rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
+      box-shadow: var(--shadow);
+    }
+
+    .reviews-title {
+      margin-bottom: 18px;
+      font-family: 'White5', sans-serif;
+      letter-spacing: -1.5pt;
+    }
+
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .review-card {
+      padding: 20px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.14);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.16);
+    }
+
+    .review-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .review-top strong {
+      color: #ffffff;
+      font-size: 16px;
+    }
+
+    .review-top .google {
+      color: #9be7ff;
+      font-size: 13px;
+      font-weight: 800;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .stars {
+      color: var(--gold);
+      letter-spacing: 2px;
+      font-size: 20px;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.45);
+      margin-bottom: 10px;
+    }
+
+    .review-card p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .review-buttons {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .review-btn {
+      min-height: 48px;
+      padding: 0 20px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.22);
+      color: #ffffff;
+      font-weight: 800;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.18);
+    }
+
+    .review-btn.leave {
+      background-image: url("water.png");
+      background-size: 180%;
+      background-position: top;
+      background-repeat: no-repeat;
+      animation: waterMove 8s ease-in-out infinite;
+      color: #00304f;
+      text-shadow: 0 0 2px rgba(255,255,255,1), 0 0 8px rgba(255,255,255,0.85);
+    }
+
     .footer {
       padding: 28px 0 44px;
       color: var(--muted);
@@ -1451,6 +1550,23 @@
         font-size: 28px;
       }
     }
+
+
+    @media (max-width: 640px) {
+      .reviews-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .review-top {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .review-btn {
+        width: 100%;
+      }
+    }
+
   </style>
 </head>
 
@@ -1774,6 +1890,50 @@
           </p>
         </div>
 
+        <div class="reviews-section">
+          <h2 class="reviews-title">Customer Reviews</h2>
+
+          <div class="reviews-grid">
+            <article class="review-card">
+              <div class="review-top">
+                <strong>White5 Customer</strong>
+                <a class="google" href="#" target="_blank" rel="noopener noreferrer">Google Review</a>
+              </div>
+
+              <div class="stars">★★★★★</div>
+
+              <p>
+                Replace this text with a real customer review when you are ready.
+                This section can show trust, quality, and honest work.
+              </p>
+            </article>
+
+            <article class="review-card">
+              <div class="review-top">
+                <strong>White5 Customer</strong>
+                <a class="google" href="#" target="_blank" rel="noopener noreferrer">Google Review</a>
+              </div>
+
+              <div class="stars">★★★★★</div>
+
+              <p>
+                Add another review here. Keep it short and natural so the page
+                feels clean and easy to read.
+              </p>
+            </article>
+          </div>
+
+          <div class="review-buttons">
+            <a class="review-btn" href="#" target="_blank" rel="noopener noreferrer">
+              Read More on Google
+            </a>
+
+            <a class="review-btn leave" href="#" target="_blank" rel="noopener noreferrer">
+              Leave a Review
+            </a>
+          </div>
+        </div>
+
       </div>
     </section>
   </main>
@@ -2007,13 +2167,16 @@
 
       if (state.includePower) {
         requireButton("Choose Surface", ".surface-btn.active", ".surface-btn");
-        requireAnyNumber("Surface Size: add at least one surface size", [
-          "drivewaySqft",
-          "sidingSqft",
-          "fenceSqft",
-          "deckSqft",
-          "patioSqft"
-        ]);
+
+        const selectedSurfaceId = surfaceIds[state.selectedSurface];
+        if (selectedSurfaceId) {
+          requireNumber(state.selectedSurface + " Surface Size", selectedSurfaceId);
+        } else {
+          const surfaceCard = findOptionCard("Choose Surface");
+          setCardError(surfaceCard, true);
+          missingFields.push("Choose Surface");
+          isValid = false;
+        }
       }
 
       if (!isValid) {
@@ -2022,6 +2185,20 @@
       }
 
       return isValid;
+    }
+
+    function syncSelectedSurfaceFromField(id) {
+      const matchingSurface = Object.keys(surfaceIds).find(surface => surfaceIds[surface] === id);
+
+      if (!matchingSurface) {
+        return;
+      }
+
+      state.selectedSurface = matchingSurface;
+
+      document.querySelectorAll(".surface-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.textContent.trim() === matchingSurface);
+      });
     }
 
     function changeValue(id, amount) {
@@ -2037,6 +2214,7 @@
 
       if (value > 0) {
         autoIncludeServiceFromField(id);
+        syncSelectedSurfaceFromField(id);
       }
 
       const card = element.closest(".option-card");
@@ -2100,6 +2278,11 @@
       const card = button.closest(".option-card");
       if (card) {
         card.classList.remove("field-error");
+      }
+
+      const selectedSurfaceCard = getOptionCardByElementId(surfaceIds[surface]);
+      if (selectedSurfaceCard && getNumber(surfaceIds[surface]) > 0) {
+        selectedSurfaceCard.classList.remove("field-error");
       }
 
       hideResultBox();
