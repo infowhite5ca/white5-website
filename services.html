@@ -1,3 +1,4 @@
+<!DOCTYPE html> <html lang="en" data-qb-installed="true"><style>.app-crx-show-flight-price-compare { width:
 <!DOCTYPE html>
 <html lang="en" data-qb-installed="true"><style>.app-crx-show-flight-price-compare {
   width: 320px;
@@ -1161,6 +1162,23 @@
       margin: 0;
     }
 
+    .option-card.field-error {
+      border-color: rgba(255, 74, 74, 0.95);
+      background: rgba(255, 74, 74, 0.16);
+      box-shadow:
+        0 0 0 2px rgba(255, 74, 74, 0.28),
+        0 12px 28px rgba(0,0,0,0.16);
+    }
+
+    .option-card.field-error h4::after {
+      content: " required";
+      color: #ffb3b3;
+      font-size: 12px;
+      font-family: Arial, sans-serif;
+      letter-spacing: 0;
+      margin-left: 6px;
+    }
+
     .request-modal {
       position: fixed;
       inset: 0;
@@ -1789,25 +1807,106 @@
       gutterStories: 2,
       selectedSurface: "Driveway",
       roofFactor: 0.25,
+      roofType: "Gable",
       lastEstimate: 0
     };
 
     function getNumber(id) {
-      return Number(document.getElementById(id).textContent) || 0;
+      const element = document.getElementById(id);
+
+      if (!element) {
+        return 0;
+      }
+
+      const rawValue = element.value !== undefined ? element.value : element.textContent;
+      return Number(rawValue) || 0;
     }
 
     function hideResultBox() {
       const resultBox = document.getElementById("resultBox");
+
       if (resultBox) {
         resultBox.classList.remove("active");
       }
     }
 
+    function findOptionCard(titleText) {
+      return Array.from(document.querySelectorAll(".option-card")).find(card => {
+        const title = card.querySelector("h4");
+        return title && title.textContent.trim().includes(titleText);
+      });
+    }
+
+    function setCardError(titleText, hasError) {
+      const card = findOptionCard(titleText);
+
+      if (card) {
+        card.classList.toggle("field-error", hasError);
+      }
+    }
+
+    function clearCardError(titleText) {
+      setCardError(titleText, false);
+    }
+
+    function hasActiveButton(titleText, selector) {
+      const card = findOptionCard(titleText);
+      return Boolean(card && card.querySelector(selector));
+    }
+
+    function validateRequiredFields() {
+      let isValid = true;
+      const missingFields = [];
+
+      const windowSqft = getNumber("windowSqft");
+
+      if (windowSqft <= 0) {
+        setCardError("Property Size", true);
+        missingFields.push("Property Size");
+        isValid = false;
+      } else {
+        setCardError("Property Size", false);
+      }
+
+      const requiredButtonGroups = [
+        { title: "Roof Type", selector: ".roof-btn.active", label: "Roof Type" },
+        { title: "Choose Surface", selector: ".surface-btn.active", label: "Choose Surface" },
+        { title: "Stories", selector: ".story-btn.active", label: "Stories" }
+      ];
+
+      requiredButtonGroups.forEach(group => {
+        const hasSelection = hasActiveButton(group.title, group.selector);
+        setCardError(group.title, !hasSelection);
+
+        if (!hasSelection) {
+          missingFields.push(group.label);
+          isValid = false;
+        }
+      });
+
+      if (!isValid) {
+        hideResultBox();
+        alert("Please complete required fields: " + missingFields.join(", ") + ".");
+      }
+
+      return isValid;
+    }
+
     function changeValue(id, amount) {
       const element = document.getElementById(id);
+
+      if (!element) {
+        return;
+      }
+
       let value = Number(element.textContent) || 0;
       value = Math.max(0, value + amount);
       element.textContent = value;
+
+      if (id === "windowSqft" && value > 0) {
+        clearCardError("Property Size");
+      }
+
       hideResultBox();
     }
 
@@ -1819,15 +1918,18 @@
 
       buttons.forEach(btn => btn.classList.remove("active"));
       button.classList.add("active");
+      clearCardError("Stories");
       hideResultBox();
     }
 
     function selectRoofType(factor, button) {
-      state.roofFactor = factor;
+      state.roofFactor = Number(factor) || 0;
+      state.roofType = button.textContent.trim();
 
       const buttons = document.querySelectorAll(".roof-btn");
       buttons.forEach(btn => btn.classList.remove("active"));
       button.classList.add("active");
+      clearCardError("Roof Type");
       hideResultBox();
     }
 
@@ -1837,10 +1939,15 @@
       const buttons = document.querySelectorAll(".surface-btn");
       buttons.forEach(btn => btn.classList.remove("active"));
       button.classList.add("active");
+      clearCardError("Choose Surface");
       hideResultBox();
     }
 
     function calculateEstimate(showResult = true) {
+      if (!validateRequiredFields()) {
+        return null;
+      }
+
       const smallWindows = getNumber("smallWindows");
       const standardWindows = getNumber("standardWindows");
       const largeWindows = getNumber("largeWindows");
@@ -1935,10 +2042,13 @@
       const resultBox = document.getElementById("resultBox");
       const finalPrice = document.getElementById("finalPrice");
 
-      finalPrice.textContent = "$" + state.lastEstimate;
+      if (finalPrice) {
+        finalPrice.textContent = "$" + state.lastEstimate;
+      }
 
-      if (showResult) {
+      if (showResult && resultBox) {
         resultBox.classList.add("active");
+
         resultBox.scrollIntoView({
           behavior: "smooth",
           block: "center"
@@ -1949,6 +2059,10 @@
     }
 
     function openRequestModal() {
+      if (!validateRequiredFields()) {
+        return;
+      }
+
       const modal = document.getElementById("requestModal");
       modal.classList.add("active");
       document.body.style.overflow = "hidden";
@@ -2005,6 +2119,7 @@ Window stories: ${state.windowStories}
 GUTTER CLEANING
 Gutter length: ${gutterLength} ft
 Property size for gutters: ${gutterSqft} sq ft
+Roof type: ${state.roofType}
 Gutter stories: ${state.gutterStories}
 
 POWER WASHING
@@ -2026,7 +2141,11 @@ This is a starting estimate. Final price may change depending on access, dirt le
     }
 
     function sendRequestEmail() {
-      calculateEstimate(false);
+      const estimate = calculateEstimate(false);
+
+      if (estimate === null) {
+        return;
+      }
 
       const customerEmail = document.getElementById("customerEmail").value.trim();
       const customerPhone = document.getElementById("customerPhone").value.trim();
