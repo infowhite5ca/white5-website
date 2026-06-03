@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,7 +9,7 @@
 
   <meta
     name="description"
-    content="White5 exterior cleaning gallery: window cleaning, gutter cleaning and power washing results in Calgary."
+    content="White5 exterior cleaning gallery: window cleaning and gutter cleaning results in Calgary."
   />
 
   <style>
@@ -163,7 +164,7 @@
     }
 
     .page-hero-inner {
-      max-width: 880px;
+      max-width: 900px;
     }
 
     .eyebrow {
@@ -194,7 +195,7 @@
     h2 {
       font-family: Arial, sans-serif;
       font-size: clamp(30px, 4vw, 46px);
-      letter-spacing: 0px;
+      letter-spacing: 0;
       margin: 0 0 10px;
       color: var(--white);
       text-shadow: 0 2px 5px rgba(0,0,0,0.35);
@@ -204,7 +205,7 @@
       font-family: 'White5', sans-serif;
       font-size: 34px;
       margin: 0 0 12px;
-      letter-spacing: 0pt;
+      letter-spacing: 0;
       color: var(--white);
       -webkit-text-stroke: 0.35px rgba(0,0,0,0.45);
       text-shadow:
@@ -214,7 +215,7 @@
 
     .page-hero p {
       margin: 0;
-      max-width: 760px;
+      max-width: 780px;
       color: var(--muted);
       font-size: 18px;
       text-shadow: 0 1px 2px rgba(0,0,0,0.35);
@@ -236,7 +237,7 @@
       border-radius: 999px;
       font-weight: 700;
       font-size: 16px;
-      letter-spacing: 0pt;
+      letter-spacing: 0;
       transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
       position: relative;
       overflow: hidden;
@@ -295,153 +296,99 @@
       text-shadow: 0 1px 2px rgba(0,0,0,0.35);
     }
 
-    .gallery-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 22px;
+    .gallery-category {
+      margin-top: 44px;
     }
 
-    .gallery-card {
-      min-height: 420px;
+    .gallery-category:first-child {
+      margin-top: 0;
+    }
+
+    .category-title-row {
       display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.13);
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .category-title-row p {
+      margin: 0;
+      max-width: 640px;
+      font-size: 16px;
+    }
+
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .photo-card {
+      position: relative;
+      min-height: 260px;
       border-radius: var(--radius);
       overflow: hidden;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.13);
       box-shadow: var(--shadow);
-      backdrop-filter: blur(6px);
+      cursor: pointer;
       transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
     }
 
-    .gallery-card:hover {
+    .photo-card:hover {
       transform: translateY(-4px);
-      border-color: rgba(255,255,255,0.22);
+      border-color: rgba(255,255,255,0.25);
       box-shadow:
         0 22px 54px rgba(0,0,0,0.28),
         0 0 20px rgba(94,203,255,0.16);
     }
 
-    .image-wrap {
-      position: relative;
-      aspect-ratio: 4 / 3;
-      background:
-        radial-gradient(circle at top right, rgba(94,203,255,0.16), transparent 36%),
-        rgba(255,255,255,0.08);
-      overflow: hidden;
-    }
-
-    .image-wrap img {
+    .photo-card img {
       width: 100%;
       height: 100%;
+      min-height: 260px;
       display: block;
       object-fit: cover;
     }
 
-    .badge {
+    .photo-card.tall {
+      grid-row: span 2;
+    }
+
+    .photo-card.tall img {
+      min-height: 540px;
+    }
+
+    .photo-card.wide {
+      grid-column: span 2;
+    }
+
+    .photo-label {
       position: absolute;
-      top: 14px;
       left: 14px;
-      padding: 7px 12px;
+      bottom: 14px;
+      padding: 8px 13px;
       border-radius: 999px;
-      background: rgba(5, 16, 29, 0.72);
+      background: rgba(5, 16, 29, 0.74);
       border: 1px solid rgba(255,255,255,0.16);
-      color: #9be7ff;
+      color: #ffffff;
       font-size: 13px;
       font-weight: 700;
       backdrop-filter: blur(8px);
-      text-shadow: 0 1px 2px rgba(0,0,0,0.55);
+      text-shadow: 0 1px 2px rgba(0,0,0,0.65);
     }
 
-    .gallery-content {
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-    }
-
-    .gallery-content h3 {
-      font-size: 34px;
-      line-height: 0.95;
-      margin-bottom: 14px;
-    }
-
-    .gallery-content p {
-      margin: 0;
+    .footer {
+      padding: 28px 0 44px;
       color: var(--muted);
-      line-height: 1.5;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.28);
-      font-size: 15px;
+      font-size: 14px;
     }
 
-    .gallery-actions {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: auto;
-      padding-top: 20px;
-    }
-
-    .gallery-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 44px;
-      padding: 10px 18px;
-      border-radius: 999px;
-      font-family: 'White5', sans-serif;
-      font-size: 24px;
-      line-height: 1;
-      letter-spacing: -1pt;
-      color: #00304f;
-      background-image: url("water.png");
-      background-size: 180%;
-      background-position: top;
-      background-repeat: no-repeat;
-      animation: waterMove 8s ease-in-out infinite;
-      border: 1px solid rgba(255,255,255,0.28);
-      text-shadow:
-        0 0 2px rgba(255,255,255,1),
-        0 0 6px rgba(255,255,255,0.8),
-        0 0 12px rgba(94,203,255,0.65);
-      box-shadow:
-        0 0 10px rgba(255,255,255,0.24),
-        0 8px 20px rgba(56,182,255,0.24),
-        inset 0 1px 0 rgba(255,255,255,0.45);
-      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-      cursor: pointer;
-    }
-
-    .gallery-btn:hover {
-      transform: translateY(-2px);
-      border-color: rgba(255,255,255,0.65);
-      box-shadow:
-        0 0 14px rgba(255,255,255,0.7),
-        0 0 28px rgba(56,182,255,0.55),
-        0 12px 28px rgba(56,182,255,0.3),
-        inset 0 1px 0 rgba(255,255,255,0.65);
-    }
-
-    .gallery-btn.outline {
-      color: #ffffff;
+    .footer-line {
+      height: 1px;
       background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.22);
-      text-shadow:
-        0 1px 2px rgba(0,0,0,0.65),
-        0 0 8px rgba(0,234,255,0.45);
-      box-shadow: none;
-    }
-
-    .gallery-btn.outline:hover {
-      background: rgba(255,255,255,0.13);
-      box-shadow:
-        0 0 14px rgba(94,203,255,0.28),
-        0 10px 24px rgba(0,0,0,0.18);
-    }
-
-    button.gallery-btn {
-      border: 1px solid rgba(255,255,255,0.22);
+      margin-bottom: 18px;
     }
 
     .image-modal {
@@ -452,7 +399,7 @@
       align-items: center;
       justify-content: center;
       padding: 22px;
-      background: rgba(3, 12, 22, 0.82);
+      background: rgba(3, 12, 22, 0.86);
       backdrop-filter: blur(10px);
     }
 
@@ -461,7 +408,7 @@
     }
 
     .image-modal-box {
-      width: min(100%, 980px);
+      width: min(100%, 1080px);
       max-height: 92vh;
       background:
         radial-gradient(circle at top right, rgba(94,203,255,0.18), transparent 34%),
@@ -519,29 +466,21 @@
       background: rgba(255,255,255,0.06);
     }
 
-    .footer {
-      padding: 28px 0 44px;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .footer-line {
-      height: 1px;
-      background: rgba(255,255,255,0.08);
-      margin-bottom: 18px;
-    }
-
     @media (max-width: 1060px) {
-      .gallery-grid {
-        grid-template-columns: 1fr;
-      }
-
       .nav {
         display: none;
       }
 
       .page-hero {
         padding-top: 54px;
+      }
+
+      .photo-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .photo-card.wide {
+        grid-column: span 2;
       }
     }
 
@@ -562,13 +501,13 @@
         font-size: 34px;
       }
 
-      h3,
-      .gallery-content h3 {
+      h3 {
         font-size: 30px;
       }
 
       .page-hero p,
-      .section-head p {
+      .section-head p,
+      .category-title-row p {
         font-size: 16px;
       }
 
@@ -577,17 +516,28 @@
         font-size: 25px;
       }
 
-      .gallery-card {
-        min-height: auto;
+      .category-title-row {
+        display: block;
       }
 
-      .gallery-content {
-        padding: 22px;
+      .category-title-row p {
+        margin-top: 8px;
       }
 
-      .gallery-btn {
-        font-size: 22px;
-        flex: 1;
+      .photo-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .photo-card,
+      .photo-card.tall,
+      .photo-card.wide {
+        grid-column: auto;
+        grid-row: auto;
+      }
+
+      .photo-card img,
+      .photo-card.tall img {
+        min-height: 320px;
       }
 
       .image-modal {
@@ -619,13 +569,13 @@
       </div>
 
       <nav class="nav">
-  <a href="index.html">Home</a>
-  <a href="index.html#services">Gutters Cleaning</a>
-  <a href="index.html#services">Power Washing</a>
-  <a href="index.html#services">Window Cleaning</a>
-  <a href="gallery.html">Gallery</a>
-  <a class="nav-cta" href="tel:14034793905">Call Now</a>
-</nav>
+        <a href="index.html">Home</a>
+        <a href="index.html#services">Gutters Cleaning</a>
+        <a href="index.html#services">Power Washing</a>
+        <a href="index.html#services">Window Cleaning</a>
+        <a href="gallery.html">Gallery</a>
+        <a class="nav-cta" href="tel:14034793905">Call Now</a>
+      </nav>
     </div>
   </header>
 
@@ -637,8 +587,8 @@
         <h1>Gallery</h1>
 
         <p>
-          A place to show real White5 exterior cleaning work: window cleaning,
-          gutter cleaning, power washing, tracks, and before-and-after results.
+          Real White5 exterior cleaning work in Calgary: window cleaning,
+          purified water cleaning, before-and-after glass results, and gutter cleaning views.
         </p>
 
         <div class="hero-actions">
@@ -651,95 +601,132 @@
     <section class="gallery-section">
       <div class="container">
         <div class="section-head">
-          <h2>Before & After Work</h2>
+          <h2>Our Work</h2>
           <p>
-            Click “View Images” to preview the photo. Click “Get Quote” to go to the services quote page.
+            Click any photo to view it larger.
           </p>
         </div>
 
-        <div class="gallery-grid">
+        <div class="gallery-category">
+          <div class="category-title-row">
+            <h2>Window Cleaning</h2>
+            <p>
+              Before-and-after window cleaning, clean glass results, and purified water cleaning on exterior windows.
+            </p>
+          </div>
 
-          <article class="gallery-card">
-            <div class="image-wrap">
-              <span class="badge">Window Cleaning</span>
-              <img src="images/window-cleaning-1.png" alt="Window cleaning result">
-            </div>
+          <div class="photo-grid">
+            <button class="photo-card tall" type="button" onclick="openImageModal('images/window-cleaning-0.png', 'Window Cleaning Before and After')">
+              <img src="images/window-cleaning-0.png" alt="Window cleaning before and after">
+              <span class="photo-label">Before / After</span>
+            </button>
 
-            <div class="gallery-content">
-              <h3>Window Cleaning</h3>
-              <p>
-                Exterior glass cleaning using purified water for a cleaner,
-                spot-free finish.
-              </p>
+            <button class="photo-card tall" type="button" onclick="openImageModal('images/window-cleaning-1.jpg', 'Exterior Window Cleaning')">
+              <img src="images/window-cleaning-1.jpg" alt="Exterior window cleaning">
+              <span class="photo-label">Exterior Windows</span>
+            </button>
 
-              <div class="gallery-actions">
-                <button
-                  class="gallery-btn outline"
-                  type="button"
-                  onclick="openImageModal('images/window-cleaning-1.jpg', 'Window Cleaning')"
-                >
-                  View Images
-                </button>
+            <button class="photo-card wide" type="button" onclick="openImageModal('images/window-cleaning-2.jpg', 'Clean Window Results')">
+              <img src="images/window-cleaning-2.jpg" alt="Clean window results">
+              <span class="photo-label">Clean Results</span>
+            </button>
 
-                <a class="gallery-btn" href="services.html#quote">Get Quote</a>
-              </div>
-            </div>
-          </article>
+            <button class="photo-card tall" type="button" onclick="openImageModal('images/window-cleaning-3.jpg', 'Second Floor Window Cleaning')">
+              <img src="images/window-cleaning-3.jpg" alt="Second floor window cleaning">
+              <span class="photo-label">Second Floor</span>
+            </button>
 
-          <article class="gallery-card">
-            <div class="image-wrap">
-              <span class="badge">Gutter Cleaning</span>
-              <img src="images/gutter-cleaning-1.jpg" alt="Gutter cleaning result">
-            </div>
+            <button class="photo-card tall" type="button" onclick="openImageModal('images/window-cleaning-4.jpg', 'Tall Window Cleaning')">
+              <img src="images/window-cleaning-4.jpg" alt="Tall window cleaning">
+              <span class="photo-label">Tall Windows</span>
+            </button>
 
-            <div class="gallery-content">
-              <h3>Gutter Cleaning</h3>
-              <p>
-                Cleaning leaves, dirt, and debris to help water flow properly
-                through the gutter system.
-              </p>
+            <button class="photo-card wide" type="button" onclick="openImageModal('images/window-cleaning-5.png', 'Window Cleaning Before and After')">
+              <img src="images/window-cleaning-5.png" alt="Window cleaning before and after">
+              <span class="photo-label">Before / After</span>
+            </button>
 
-              <div class="gallery-actions">
-                <button
-                  class="gallery-btn outline"
-                  type="button"
-                  onclick="openImageModal('images/gutter-cleaning-1.jpg', 'Gutter Cleaning')"
-                >
-                  View Images
-                </button>
+            <button class="photo-card wide" type="button" onclick="openImageModal('images/window-cleaning-6.png', 'Window Cleaning Before and After')">
+              <img src="images/window-cleaning-6.png" alt="Window cleaning before and after">
+              <span class="photo-label">Before / After</span>
+            </button>
 
-                <a class="gallery-btn" href="services.html#quote">Get Quote</a>
-              </div>
-            </div>
-          </article>
+            <button class="photo-card wide" type="button" onclick="openImageModal('images/window-cleaning-7.png', 'Window Cleaning Before and After')">
+              <img src="images/window-cleaning-7.png" alt="Window cleaning before and after">
+              <span class="photo-label">Before / After</span>
+            </button>
 
-          <article class="gallery-card">
-            <div class="image-wrap">
-              <span class="badge">Power Washing</span>
-              <img src="images/power-washing-1.jpg" alt="Power washing result">
-            </div>
+            <button class="photo-card wide" type="button" onclick="openImageModal('images/window-cleaning-8.png', 'Clean Backyard Window View')">
+              <img src="images/window-cleaning-8.png" alt="Clean backyard window view">
+              <span class="photo-label">Clear View</span>
+            </button>
 
-            <div class="gallery-content">
-              <h3>Power Washing</h3>
-              <p>
-                Exterior surface cleaning with careful pressure, distance,
-                and attention to the surface condition.
-              </p>
+            <button class="photo-card wide" type="button" onclick="openImageModal('images/window-cleaning-9.png', 'Window Cleaning Before and After')">
+              <img src="images/window-cleaning-9.png" alt="Window cleaning before and after">
+              <span class="photo-label">Before / After</span>
+            </button>
 
-              <div class="gallery-actions">
-                <button
-                  class="gallery-btn outline"
-                  type="button"
-                  onclick="openImageModal('images/power-washing-1.jpg', 'Power Washing')"
-                >
-                  View Images
-                </button>
+            <button class="photo-card wide" type="button" onclick="openImageModal('images/window-cleaning-10.png', 'Clean Window View')">
+              <img src="images/window-cleaning-10.png" alt="Clean window view">
+              <span class="photo-label">Clear Glass</span>
+            </button>
 
-                <a class="gallery-btn" href="services.html#quote">Get Quote</a>
-              </div>
-            </div>
-          </article>
+            <button class="photo-card tall" type="button" onclick="openImageModal('images/window-cleaning-11.jpg', 'Water Fed Pole Window Cleaning')">
+              <img src="images/window-cleaning-11.jpg" alt="Water fed pole window cleaning">
+              <span class="photo-label">Purified Water System</span>
+            </button>
+          </div>
+        </div>
 
+        <div class="gallery-category">
+          <div class="category-title-row">
+            <h2>Gutter Cleaning</h2>
+            <p>
+              Gutter cleaning work, roofline access, and gutter inspection views from White5 jobs.
+            </p>
+          </div>
+
+          <div class="photo-grid">
+            <button class="photo-card wide" type="button" onclick="openImageModal('images/gutter-cleaning-6.jpg', 'Gutter Cleaning View')">
+              <img src="images/gutter-cleaning-6.jpg" alt="Gutter cleaning view">
+              <span class="photo-label">Gutter Cleaning</span>
+            </button>
+
+            <button class="photo-card tall" type="button" onclick="openImageModal('images/gutter-cleaning-7.jpg', 'Gutter Cleaning Roofline')">
+              <img src="images/gutter-cleaning-7.jpg" alt="Gutter cleaning roofline">
+              <span class="photo-label">Roofline View</span>
+            </button>
+
+            <button class="photo-card wide" type="button" onclick="openImageModal('images/gutter-cleaning-8.jpg', 'Gutter Cleaning from Roof')">
+              <img src="images/gutter-cleaning-8.jpg" alt="Gutter cleaning from roof">
+              <span class="photo-label">Inspection View</span>
+            </button>
+
+            <button class="photo-card tall" type="button" onclick="openImageModal('images/gutter-cleaning-9.jpg', 'High Gutter Cleaning')">
+              <img src="images/gutter-cleaning-9.jpg" alt="High gutter cleaning">
+              <span class="photo-label">High Gutters</span>
+            </button>
+
+            <button class="photo-card wide" type="button" onclick="openImageModal('images/gutter-cleaning-10.jpg', 'Gutter Cleaning Top View')">
+              <img src="images/gutter-cleaning-10.jpg" alt="Gutter cleaning top view">
+              <span class="photo-label">Top View</span>
+            </button>
+
+            <button class="photo-card wide" type="button" onclick="openImageModal('images/gutter-cleaning-3.jpg', 'Gutter Cleaning Roof View')">
+              <img src="images/gutter-cleaning-3.jpg" alt="Gutter cleaning roof view">
+              <span class="photo-label">Roof View</span>
+            </button>
+
+            <button class="photo-card tall" type="button" onclick="openImageModal('images/gutter-cleaning-4.jpg', 'Gutter Cleaning Long Roofline')">
+              <img src="images/gutter-cleaning-4.jpg" alt="Gutter cleaning long roofline">
+              <span class="photo-label">Long Roofline</span>
+            </button>
+
+            <button class="photo-card tall" type="button" onclick="openImageModal('images/gutter-cleaning-5.jpg', 'Gutter Cleaning Side Roofline')">
+              <img src="images/gutter-cleaning-5.jpg" alt="Gutter cleaning side roofline">
+              <span class="photo-label">Side Roofline</span>
+            </button>
+          </div>
         </div>
       </div>
     </section>
@@ -807,3 +794,4 @@
   </script>
 </body>
 </html>
+```
