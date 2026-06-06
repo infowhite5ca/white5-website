@@ -3,8 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gallery | White5 Exterior Cleaning</title>
-  <meta name="description" content="White5 exterior cleaning gallery with window cleaning, gutter cleaning, and power washing work in Calgary." />
+  <title>Gallery | White5 Window Cleaning, Gutter Cleaning & Power Washing Calgary</title>
+  <meta name="description" content="View White5 exterior cleaning work in Calgary, including window cleaning, gutter cleaning, and power washing results for local homes." />
+  <link rel="canonical" href="https://www.white5.ca/gallery.html">
+  <meta property="og:title" content="Gallery | White5 Exterior Cleaning Calgary">
+  <meta property="og:description" content="View White5 window cleaning, gutter cleaning, and power washing work in Calgary.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.white5.ca/gallery.html">
+  <meta property="og:image" content="https://www.white5.ca/white5-logo.png">
   <style>
     @font-face {
       font-family: 'White5';
@@ -83,16 +89,14 @@
     }
 
     .nav a,
-    .water-btn,
-    .mobile-bottom-bar a {
+    .water-btn {
       text-shadow: 0 1px 2px rgba(0,0,0,0.75), 0 0 8px rgba(0,234,255,0.45);
     }
 
     .nav a:hover { transform: translateY(-1px); }
 
     .nav-cta,
-    .water-btn,
-    .mobile-bottom-bar a:first-child {
+    .water-btn {
       color: #00304f;
       background-image: url("water.png");
       background-size: 180%;
@@ -229,8 +233,6 @@
       font-size: 14px;
     }
 
-    .mobile-bottom-bar { display: none; }
-
     .image-modal {
       position: fixed;
       inset: 0;
@@ -296,7 +298,7 @@
     }
 
     @media (max-width: 640px) {
-      body { overflow-x: hidden; padding-bottom: 92px; }
+      body { overflow-x: hidden; }
       .container { width: min(100% - 22px, var(--max)); }
       .topbar-inner { justify-content: center; padding: 10px 0; }
       .logo-img { width: 118px; }
@@ -315,63 +317,28 @@
       .gallery-item { border-radius: 18px; }
       .gallery-caption { font-size: 13.5px; }
       footer { padding: 24px 0 30px; text-align: center; line-height: 1.7; }
-      .mobile-bottom-bar {
-        position: fixed;
-        left: 10px;
-        right: 10px;
-        bottom: 10px;
-        z-index: 999;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-        padding: 10px;
-        border-radius: 18px;
-        background: rgba(5,16,29,0.92);
-        border: 1px solid rgba(255,255,255,0.18);
-        box-shadow: 0 12px 34px rgba(0,0,0,0.35);
-        backdrop-filter: blur(12px);
-      }
-      .mobile-bottom-bar a {
-        min-height: 50px;
-        border-radius: 999px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-family: 'White5', Arial, sans-serif;
-        font-size: 22px;
-        font-weight: 700;
-      }
-      .mobile-bottom-bar a.secondary {
-        color: #fff;
-        background: rgba(255,255,255,0.1);
-        border: 1px solid rgba(255,255,255,0.18);
-      }
     }
 
     @media (max-width: 390px) {
       h1 { font-size: 36px; }
-      .water-btn, .ghost-btn, .mobile-bottom-bar a { font-size: 19px; }
+      .water-btn, .ghost-btn { font-size: 19px; }
     }
   </style>
 </head>
 <body>
   <header class="topbar">
     <div class="container topbar-inner">
-      <a href="index.html" aria-label="White5 home"><img src="logo.png" alt="White5 logo" class="logo-img" /></a>
+      <a href="index.html" aria-label="White5 home"><img src="logo.png" alt="White5 Exterior Cleaning logo" class="logo-img" /></a>
       <nav class="nav" aria-label="Main navigation">
         <a href="index.html">Home</a>
-        <a href="services.html">Services</a>
-        <a href="#window-cleaning">Window Cleaning</a>
-        <a href="#gutter-cleaning">Gutter Cleaning</a>
+        <a href="index.html#services">Services</a>
+        <a href="index.html#window-cleaning">Window Cleaning</a>
+        <a href="index.html#gutter-cleaning">Gutter Cleaning</a>
+        <a href="index.html#power-washing">Power Washing</a>
         <a class="nav-cta" href="tel:14034793905">Call Now</a>
       </nav>
     </div>
   </header>
-
-  <div class="mobile-bottom-bar">
-    <a href="tel:14034793905">Call</a>
-    <a class="secondary" href="services.html#quote">Quote</a>
-  </div>
 
   <main>
     <section class="page-hero">
@@ -380,7 +347,7 @@
         <h1>Gallery</h1>
         <p>See recent White5 exterior cleaning work, including window cleaning, gutter cleaning, and power washing results around Calgary.</p>
         <div class="hero-actions">
-          <a class="water-btn" href="services.html#quote">Get a Free Quote</a>
+          <a class="water-btn" href="index.html#quote">Get a Free Quote</a>
           <a class="ghost-btn" href="tel:14034793905">Call 403-479-3905</a>
         </div>
       </div>
@@ -389,23 +356,23 @@
     <section id="window-cleaning">
       <div class="container">
         <div class="section-head">
-          <h2>Window Cleaning</h2>
+          <h2>Window Cleaning Gallery</h2>
           <p>Clean glass, exterior window work, and purified water cleaning results.</p>
         </div>
         <div class="gallery-grid">
-          <button class="gallery-item" type="button" onclick="openImage('images/window-cleaning.png','Window Cleaning')"><img src="images/window-cleaning.png" alt="Window cleaning result" loading="lazy"><div class="gallery-caption">Window cleaning result</div></button>
-          <button class="gallery-item" type="button" onclick="openImage('images/window-cleaning-0.png','Window Cleaning')"><img src="images/window-cleaning-0.png" alt="Window cleaning work" loading="lazy"><div class="gallery-caption">Window cleaning work</div></button>
-          <button class="gallery-item" type="button" onclick="openImage('images/window-cleaning-1.jpg','Window Cleaning')"><img src="images/window-cleaning-1.jpg" alt="Exterior window cleaning" loading="lazy"><div class="gallery-caption">Exterior window cleaning</div></button>
-          <button class="gallery-item" type="button" onclick="openImage('images/window-cleaning-2.jpg','Window Cleaning')"><img src="images/window-cleaning-2.jpg" alt="Clean exterior glass" loading="lazy"><div class="gallery-caption">Clean exterior glass</div></button>
-          <button class="gallery-item" type="button" onclick="openImage('images/window-cleaning-3.jpg','Window Cleaning')"><img src="images/window-cleaning-3.jpg" alt="Window cleaning detail" loading="lazy"><div class="gallery-caption">Window cleaning detail</div></button>
-          <button class="gallery-item" type="button" onclick="openImage('images/window-cleaning-4.jpg','Window Cleaning')"><img src="images/window-cleaning-4.jpg" alt="Residential window cleaning" loading="lazy"><div class="gallery-caption">Residential window cleaning</div></button>
-          <button class="gallery-item" type="button" onclick="openImage('images/window-cleaning-5.png','Window Cleaning')"><img src="images/window-cleaning-5.png" alt="Window cleaning before and after" loading="lazy"><div class="gallery-caption">Before and after</div></button>
-          <button class="gallery-item" type="button" onclick="openImage('images/window-cleaning-6.png','Window Cleaning')"><img src="images/window-cleaning-6.png" alt="White5 window cleaning" loading="lazy"><div class="gallery-caption">White5 window cleaning</div></button>
-          <button class="gallery-item" type="button" onclick="openImage('images/window-cleaning-7.png','Window Cleaning')"><img src="images/window-cleaning-7.png" alt="Window service photo" loading="lazy"><div class="gallery-caption">Window service photo</div></button>
-          <button class="gallery-item" type="button" onclick="openImage('images/window-cleaning-8.png','Window Cleaning')"><img src="images/window-cleaning-8.png" alt="Clean window finish" loading="lazy"><div class="gallery-caption">Clean window finish</div></button>
-          <button class="gallery-item" type="button" onclick="openImage('images/window-cleaning-9.png','Window Cleaning')"><img src="images/window-cleaning-9.png" alt="Window cleaning project" loading="lazy"><div class="gallery-caption">Window cleaning project</div></button>
-          <button class="gallery-item" type="button" onclick="openImage('images/window-cleaning-10.png','Window Cleaning')"><img src="images/window-cleaning-10.png" alt="Exterior glass result" loading="lazy"><div class="gallery-caption">Exterior glass result</div></button>
-          <button class="gallery-item" type="button" onclick="openImage('images/window-cleaning-11.jpg','Window Cleaning')"><img src="images/window-cleaning-11.jpg" alt="Finished window cleaning" loading="lazy"><div class="gallery-caption">Finished window cleaning</div></button>
+          <button class="gallery-item" type="button" onclick="openImage('images/window-cleaning.png','Window Cleaning Gallery')"><img src="images/window-cleaning.png" alt="Window cleaning result in Calgary by White5" loading="lazy" decoding="async"><div class="gallery-caption">Window cleaning result</div></button>
+          <button class="gallery-item" type="button" onclick="openImage('images/window-cleaning-0.png','Window Cleaning Gallery')"><img src="images/window-cleaning-0.png" alt="Window cleaning work in Calgary by White5" loading="lazy" decoding="async"><div class="gallery-caption">Window cleaning work</div></button>
+          <button class="gallery-item" type="button" onclick="openImage('images/window-cleaning-1.jpg','Window Cleaning Gallery')"><img src="images/window-cleaning-1.jpg" alt="Exterior window cleaning result in Calgary by White5" loading="lazy" decoding="async"><div class="gallery-caption">Exterior window cleaning</div></button>
+          <button class="gallery-item" type="button" onclick="openImage('images/window-cleaning-2.jpg','Window Cleaning Gallery')"><img src="images/window-cleaning-2.jpg" alt="Clean exterior glass result in Calgary by White5" loading="lazy" decoding="async"><div class="gallery-caption">Clean exterior glass</div></button>
+          <button class="gallery-item" type="button" onclick="openImage('images/window-cleaning-3.jpg','Window Cleaning Gallery')"><img src="images/window-cleaning-3.jpg" alt="Window cleaning detail in Calgary by White5" loading="lazy" decoding="async"><div class="gallery-caption">Window cleaning detail</div></button>
+          <button class="gallery-item" type="button" onclick="openImage('images/window-cleaning-4.jpg','Window Cleaning Gallery')"><img src="images/window-cleaning-4.jpg" alt="Residential window cleaning in Calgary by White5" loading="lazy" decoding="async"><div class="gallery-caption">Residential window cleaning</div></button>
+          <button class="gallery-item" type="button" onclick="openImage('images/window-cleaning-5.png','Window Cleaning Gallery')"><img src="images/window-cleaning-5.png" alt="Window cleaning before and after in Calgary by White5" loading="lazy" decoding="async"><div class="gallery-caption">Before and after</div></button>
+          <button class="gallery-item" type="button" onclick="openImage('images/window-cleaning-6.png','Window Cleaning Gallery')"><img src="images/window-cleaning-6.png" alt="White5 window cleaning result in Calgary" loading="lazy" decoding="async"><div class="gallery-caption">White5 window cleaning</div></button>
+          <button class="gallery-item" type="button" onclick="openImage('images/window-cleaning-7.png','Window Cleaning Gallery')"><img src="images/window-cleaning-7.png" alt="Window service photo in Calgary by White5" loading="lazy" decoding="async"><div class="gallery-caption">Window service photo</div></button>
+          <button class="gallery-item" type="button" onclick="openImage('images/window-cleaning-8.png','Window Cleaning Gallery')"><img src="images/window-cleaning-8.png" alt="Clean window finish in Calgary by White5" loading="lazy" decoding="async"><div class="gallery-caption">Clean window finish</div></button>
+          <button class="gallery-item" type="button" onclick="openImage('images/window-cleaning-9.png','Window Cleaning Gallery')"><img src="images/window-cleaning-9.png" alt="Window cleaning project in Calgary by White5" loading="lazy" decoding="async"><div class="gallery-caption">Window cleaning project</div></button>
+          <button class="gallery-item" type="button" onclick="openImage('images/window-cleaning-10.png','Window Cleaning Gallery')"><img src="images/window-cleaning-10.png" alt="Exterior glass result in Calgary by White5" loading="lazy" decoding="async"><div class="gallery-caption">Exterior glass result</div></button>
+          <button class="gallery-item" type="button" onclick="openImage('images/window-cleaning-11.jpg','Window Cleaning Gallery')"><img src="images/window-cleaning-11.jpg" alt="Finished window cleaning result in Calgary by White5" loading="lazy" decoding="async"><div class="gallery-caption">Finished window cleaning</div></button>
         </div>
       </div>
     </section>
@@ -413,19 +380,19 @@
     <section id="gutter-cleaning">
       <div class="container">
         <div class="section-head">
-          <h2>Gutter Cleaning</h2>
+          <h2>Gutter Cleaning Gallery</h2>
           <p>Gutter cleaning, roofline access, debris removal, and inspection views.</p>
         </div>
         <div class="gallery-grid">
-          <button class="gallery-item" type="button" onclick="openImage('images/gutter-cleaning-1.jpg','Gutter Cleaning')"><img src="images/gutter-cleaning-1.jpg" alt="Gutter cleaning work" loading="lazy"><div class="gallery-caption">Gutter cleaning work</div></button>
-          <button class="gallery-item" type="button" onclick="openImage('images/gutters-cleaning-3.jpg','Gutter Cleaning')"><img src="images/gutters-cleaning-3.jpg" alt="Gutter debris removal" loading="lazy"><div class="gallery-caption">Debris removal</div></button>
-          <button class="gallery-item" type="button" onclick="openImage('images/gutters-cleaning-4.jpg','Gutter Cleaning')"><img src="images/gutters-cleaning-4.jpg" alt="Gutter inspection" loading="lazy"><div class="gallery-caption">Gutter inspection</div></button>
-          <button class="gallery-item" type="button" onclick="openImage('images/gutters-cleaning-5.jpg','Gutter Cleaning')"><img src="images/gutters-cleaning-5.jpg" alt="Clean gutter line" loading="lazy"><div class="gallery-caption">Clean gutter line</div></button>
-          <button class="gallery-item" type="button" onclick="openImage('images/gutters-cleaning-6.jpg','Gutter Cleaning')"><img src="images/gutters-cleaning-6.jpg" alt="Roofline gutter cleaning" loading="lazy"><div class="gallery-caption">Roofline gutter cleaning</div></button>
-          <button class="gallery-item" type="button" onclick="openImage('images/gutters-cleaning-7.jpg','Gutter Cleaning')"><img src="images/gutters-cleaning-7.jpg" alt="Gutter service result" loading="lazy"><div class="gallery-caption">Gutter service result</div></button>
-          <button class="gallery-item" type="button" onclick="openImage('images/gutters-cleaning-8.jpg','Gutter Cleaning')"><img src="images/gutters-cleaning-8.jpg" alt="White5 gutter cleaning" loading="lazy"><div class="gallery-caption">White5 gutter cleaning</div></button>
-          <button class="gallery-item" type="button" onclick="openImage('images/gutters-cleaning-9.jpg','Gutter Cleaning')"><img src="images/gutters-cleaning-9.jpg" alt="Gutter cleaning project" loading="lazy"><div class="gallery-caption">Gutter cleaning project</div></button>
-          <button class="gallery-item" type="button" onclick="openImage('images/gutters-cleaning-10.jpg','Gutter Cleaning')"><img src="images/gutters-cleaning-10.jpg" alt="Finished gutter cleaning" loading="lazy"><div class="gallery-caption">Finished gutter cleaning</div></button>
+          <button class="gallery-item" type="button" onclick="openImage('images/gutter-cleaning-1.jpg','Gutter Cleaning Gallery')"><img src="images/gutter-cleaning-1.jpg" alt="Gutter cleaning debris removal in Calgary by White5" loading="lazy" decoding="async"><div class="gallery-caption">Gutter cleaning work</div></button>
+          <button class="gallery-item" type="button" onclick="openImage('images/gutters-cleaning-3.jpg','Gutter Cleaning Gallery')"><img src="images/gutters-cleaning-3.jpg" alt="Gutter debris removal in Calgary by White5" loading="lazy" decoding="async"><div class="gallery-caption">Debris removal</div></button>
+          <button class="gallery-item" type="button" onclick="openImage('images/gutters-cleaning-4.jpg','Gutter Cleaning Gallery')"><img src="images/gutters-cleaning-4.jpg" alt="Gutter inspection in Calgary by White5" loading="lazy" decoding="async"><div class="gallery-caption">Gutter inspection</div></button>
+          <button class="gallery-item" type="button" onclick="openImage('images/gutters-cleaning-5.jpg','Gutter Cleaning Gallery')"><img src="images/gutters-cleaning-5.jpg" alt="Clean gutter line in Calgary by White5" loading="lazy" decoding="async"><div class="gallery-caption">Clean gutter line</div></button>
+          <button class="gallery-item" type="button" onclick="openImage('images/gutters-cleaning-6.jpg','Gutter Cleaning Gallery')"><img src="images/gutters-cleaning-6.jpg" alt="Roofline gutter cleaning in Calgary by White5" loading="lazy" decoding="async"><div class="gallery-caption">Roofline gutter cleaning</div></button>
+          <button class="gallery-item" type="button" onclick="openImage('images/gutters-cleaning-7.jpg','Gutter Cleaning Gallery')"><img src="images/gutters-cleaning-7.jpg" alt="Gutter cleaning service result in Calgary by White5" loading="lazy" decoding="async"><div class="gallery-caption">Gutter service result</div></button>
+          <button class="gallery-item" type="button" onclick="openImage('images/gutters-cleaning-8.jpg','Gutter Cleaning Gallery')"><img src="images/gutters-cleaning-8.jpg" alt="White5 gutter cleaning result in Calgary" loading="lazy" decoding="async"><div class="gallery-caption">White5 gutter cleaning</div></button>
+          <button class="gallery-item" type="button" onclick="openImage('images/gutters-cleaning-9.jpg','Gutter Cleaning Gallery')"><img src="images/gutters-cleaning-9.jpg" alt="Gutter cleaning project in Calgary by White5" loading="lazy" decoding="async"><div class="gallery-caption">Gutter cleaning project</div></button>
+          <button class="gallery-item" type="button" onclick="openImage('images/gutters-cleaning-10.jpg','Gutter Cleaning Gallery')"><img src="images/gutters-cleaning-10.jpg" alt="Finished gutter cleaning in Calgary by White5" loading="lazy" decoding="async"><div class="gallery-caption">Finished gutter cleaning</div></button>
         </div>
       </div>
     </section>
@@ -433,27 +400,27 @@
     <section id="power-washing">
       <div class="container">
         <div class="section-head">
-          <h2>Power Washing</h2>
+          <h2>Power Washing Gallery</h2>
           <p>Exterior surface cleaning for areas where dirt builds up over time.</p>
         </div>
         <div class="gallery-grid">
-          <button class="gallery-item" type="button" onclick="openImage('images/power-washing-1.jpg','Power Washing')"><img src="images/power-washing-1.jpg" alt="Power washing result" loading="lazy"><div class="gallery-caption">Power washing result</div></button>
+          <button class="gallery-item" type="button" onclick="openImage('images/power-washing-1.jpg','Power Washing Gallery')"><img src="images/power-washing-1.jpg" alt="Power washing result for Calgary home by White5" loading="lazy" decoding="async"><div class="gallery-caption">Power washing result</div></button>
         </div>
       </div>
     </section>
   </main>
 
   <footer>
-    <div class="container">© 2026 White5 Exterior Cleaning | Calgary, Alberta | <a href="mailto:info@white5.ca">info@white5.ca</a> | <a href="tel:14034793905">403-479-3905</a></div>
+    <div class="container">&copy; 2026 White5 Exterior Cleaning | Calgary, Alberta | <a href="mailto:info@white5.ca">info@white5.ca</a> | <a href="tel:14034793905">403-479-3905</a></div>
   </footer>
 
   <div class="image-modal" id="imageModal" aria-hidden="true">
     <div class="modal-card">
       <div class="modal-top">
         <h3 id="modalTitle">Image Preview</h3>
-        <button class="modal-close" type="button" onclick="closeImage()" aria-label="Close image">×</button>
+        <button class="modal-close" type="button" onclick="closeImage()" aria-label="Close image">&times;</button>
       </div>
-      <img id="modalImage" src="" alt="Gallery preview">
+      <img id="modalImage" src="" alt="Gallery image preview">
     </div>
   </div>
 
