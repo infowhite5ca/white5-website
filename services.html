@@ -4,529 +4,128 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Services & Estimate | White5 Exterior Cleaning</title>
-  <meta name="description" content="White5 exterior cleaning services and quick estimate for window cleaning, gutter cleaning, and power washing in Calgary." />
+  <meta name="description" content="Get an estimate for White5 window cleaning, gutter cleaning, and power washing services in Calgary." />
   <style>
-    @font-face {
-      font-family: 'White5';
-      src: url('White5-Regular Font.ttf') format('truetype');
-      font-weight: normal;
-      font-style: normal;
-      font-display: swap;
-    }
-
-    :root {
-      --bg: #071a2f;
-      --card: rgba(255,255,255,0.09);
-      --card-border: rgba(255,255,255,0.16);
-      --text: #eef7ff;
-      --muted: #d6eaff;
-      --white: #ffffff;
-      --ink: #0b1f33;
-      --shadow: 0 18px 46px rgba(0,0,0,0.24);
-      --radius: 20px;
-      --max: 1180px;
-    }
-
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: Arial, sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at top right, rgba(94,203,255,0.18), transparent 26%),
-        radial-gradient(circle at left center, rgba(138,240,255,0.12), transparent 24%),
-        linear-gradient(180deg, #0c4990 0%, #2a5035 42%, #86854d 100%);
-    }
-
-    a { color: #fff; text-decoration: none; }
-    p { margin: 0; color: var(--muted); line-height: 1.6; }
-    ul { margin: 14px 0 0; padding-left: 20px; color: var(--muted); line-height: 1.65; }
-    .container { width: min(100% - 32px, var(--max)); margin: 0 auto; }
-
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      backdrop-filter: blur(10px);
-      background: rgba(5,16,29,0.78);
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .topbar-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 28px;
-      padding: 16px 0;
-    }
-
-    .logo-img {
-      width: 150px;
-      height: auto;
-      display: block;
-      filter: drop-shadow(0 10px 22px rgba(94,203,255,0.18));
-    }
-
-    .nav {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 20px;
-      font-family: 'White5', Arial, sans-serif;
-      font-size: 28px;
-      font-weight: 700;
-      letter-spacing: 0;
-    }
-
-    .nav a { text-shadow: 0 1px 2px rgba(0,0,0,0.75), 0 0 8px rgba(0,234,255,0.45); }
-    .nav a:hover { transform: translateY(-1px); }
-
-    .nav-cta,
-    .water-btn,
-    .estimate-btn,
-    .mobile-bottom-bar a:first-child {
-      color: #00304f;
-      background-image: url("water.png");
-      background-size: 180%;
-      background-position: top;
-      background-repeat: no-repeat;
-      animation: waterMove 8s ease-in-out infinite;
-      text-shadow: 0 0 2px rgba(255,255,255,1), 0 0 6px rgba(255,255,255,0.8);
-      box-shadow: 0 12px 28px rgba(94,203,255,0.22);
-    }
-
-    .nav-cta {
-      min-height: 52px;
-      padding: 0 24px;
-      border-radius: 999px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    @keyframes waterMove {
-      0% { background-position: top left; }
-      50% { background-position: center right; }
-      100% { background-position: top left; }
-    }
-
-    h1,
-    h2,
-    h3 {
-      font-family: 'White5', Arial, sans-serif;
-      letter-spacing: 0;
-      color: #fff;
-      -webkit-text-stroke: 0.25px rgba(0,0,0,0.55);
-      text-shadow: 0 2px 4px rgba(0,0,0,0.62), 0 0 12px rgba(94,203,255,0.28);
-      text-wrap: balance;
-    }
-
-    h1 { margin: 0 0 18px; font-size: clamp(54px, 8vw, 96px); line-height: 0.96; }
-    h2 { margin: 0; font-size: clamp(34px, 4vw, 48px); line-height: 1; }
-    h3 { margin: 0 0 10px; font-size: 34px; line-height: 1; }
-
-    .hero { padding: 74px 0 34px; }
-    .hero-grid { display: grid; grid-template-columns: 1fr 360px; gap: 26px; align-items: stretch; }
-    .hero-main { display: flex; flex-direction: column; justify-content: center; }
-    .eyebrow { margin: 0 0 10px; color: #fff; font-weight: 700; text-shadow: 0 1px 2px rgba(0,0,0,0.55); }
-    .hero-main p { max-width: 720px; font-size: 18px; }
-    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
-
-    .water-btn,
-    .ghost-btn,
-    .estimate-btn {
-      min-height: 54px;
-      padding: 0 24px;
-      border-radius: 999px;
-      border: 0;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'White5', Arial, sans-serif;
-      font-size: 25px;
-      font-weight: 700;
-    }
-
-    .ghost-btn {
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.18);
-      color: #fff;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.7);
-    }
-
-    .contact-card,
-    .service-card,
-    .estimate-card,
-    .result-card,
-    .review-card {
-      background: var(--card);
-      border: 1px solid var(--card-border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(8px);
-    }
-
-    .contact-card { padding: 24px; background: url("wc-white5.jpg") center / cover no-repeat; }
-    .contact-list { list-style: none; padding: 0; margin: 16px 0 0; display: grid; gap: 10px; }
-    .contact-list strong { display: block; color: #fff; }
-
-    section { padding: 34px 0; }
-    .section-head { max-width: 760px; margin-bottom: 20px; }
-    .section-head p { margin-top: 10px; font-size: 17px; }
-
-    .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
-    .service-card { padding: 24px; min-height: 330px; display: flex; flex-direction: column; }
-    .service-card p { margin-top: 8px; }
-    .service-actions { display: flex; flex-direction: column; gap: 10px; margin-top: auto; padding-top: 18px; }
-    .service-actions a { width: 100%; }
-
-    .estimate-layout { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 18px; align-items: start; }
-    .estimate-card, .result-card { padding: 24px; }
-    .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 18px; }
-    .field { display: grid; gap: 7px; }
-    label { color: #fff; font-weight: 700; }
-    input, select, textarea {
-      width: 100%;
-      min-height: 50px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,0.2);
-      background: rgba(0,0,0,0.18);
-      color: #fff;
-      padding: 0 14px;
-      font-size: 16px;
-      outline: none;
-    }
-    textarea { min-height: 92px; padding: 12px 14px; resize: vertical; }
-    option { color: #0b1f33; }
-    .checkbox-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
-    .checkbox-pill { display: inline-flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 999px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.14); color: #fff; }
-    .checkbox-pill input { width: 18px; min-height: 18px; }
-    .estimate-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
-    .price { margin: 10px 0; font-family: 'White5', Arial, sans-serif; font-size: 54px; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.62); }
-    .result-list { display: grid; gap: 8px; margin-top: 12px; color: var(--muted); }
-    .fine-print { font-size: 13px; color: rgba(238,247,255,0.78); margin-top: 14px; }
-
-    .reviews-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-    .review-card { padding: 18px; }
-    .stars { color: #ffd34d; letter-spacing: 1px; margin: 8px 0; }
-
-    .mobile-bottom-bar { display: none; }
-
-    footer { padding: 26px 0 34px; color: rgba(238,247,255,0.76); font-size: 14px; border-top: 1px solid rgba(255,255,255,0.1); }
-
-    @media (max-width: 1060px) {
-      .nav { display: none; }
-      .hero-grid, .estimate-layout { grid-template-columns: 1fr; }
-      .services-grid, .reviews-grid { grid-template-columns: 1fr; }
-    }
-
-    @media (max-width: 640px) {
-      body { overflow-x: hidden; padding-bottom: 92px; }
-      .container { width: min(100% - 22px, var(--max)); }
-      .topbar-inner { justify-content: center; padding: 10px 0; }
-      .logo-img { width: 118px; }
-      .hero { padding: 30px 0 20px; }
-      .hero-main { text-align: center; margin: 0 auto; }
-      h1 { font-size: clamp(38px, 12vw, 54px); line-height: 0.98; }
-      h2 { font-size: 31px; }
-      h3 { font-size: 28px; }
-      p, .hero-main p, .section-head p { font-size: 15.5px; line-height: 1.55; }
-      .hero-actions, .estimate-actions { flex-direction: column; width: 100%; gap: 10px; }
-      .water-btn, .ghost-btn, .estimate-btn { width: 100%; min-height: 52px; font-size: 22px; padding: 12px 16px; }
-      section { padding: 26px 0; }
-      .contact-card, .service-card, .estimate-card, .result-card, .review-card { border-radius: 20px; padding: 18px; }
-      .contact-card { min-height: 360px; background-position: center top; }
-      .services-grid, .reviews-grid { gap: 16px; }
-      .service-card { min-height: auto; }
-      .form-grid { grid-template-columns: 1fr; gap: 12px; }
-      .checkbox-row { flex-direction: column; }
-      .checkbox-pill { width: 100%; }
-      .price { font-size: 44px; }
-      footer { padding: 24px 0 30px; text-align: center; line-height: 1.7; }
-      .mobile-bottom-bar {
-        position: fixed;
-        left: 10px;
-        right: 10px;
-        bottom: 10px;
-        z-index: 999;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-        padding: 10px;
-        border-radius: 18px;
-        background: rgba(5,16,29,0.92);
-        border: 1px solid rgba(255,255,255,0.18);
-        box-shadow: 0 12px 34px rgba(0,0,0,0.35);
-        backdrop-filter: blur(12px);
-      }
-      .mobile-bottom-bar a {
-        min-height: 50px;
-        border-radius: 999px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-family: 'White5', Arial, sans-serif;
-        font-size: 22px;
-        font-weight: 700;
-      }
-      .mobile-bottom-bar a.secondary { color: #fff; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); }
-    }
-
-    @media (max-width: 390px) {
-      h1 { font-size: 36px; }
-      .water-btn, .ghost-btn, .estimate-btn, .mobile-bottom-bar a { font-size: 19px; }
-    }
+    @font-face { font-family: 'White5'; src: url('White5-Regular Font.ttf') format('truetype'); font-weight: normal; font-style: normal; font-display: swap; }
+    :root { --bg:#071a2f; --text:#eef7ff; --muted:#d6eaff; --white:#fff; --blue:#5ecbff; --green:#74d99f; --gold:#ffd700; --dark:#061525; --card:rgba(255,255,255,.08); --card-border:rgba(255,255,255,.14); --shadow:0 18px 46px rgba(0,0,0,.24); --radius:22px; --max:1180px; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; min-height:100vh; font-family:Arial,sans-serif; color:var(--text); background:radial-gradient(circle at top right,rgba(94,203,255,.18),transparent 26%),radial-gradient(circle at left center,rgba(138,240,255,.12),transparent 24%),linear-gradient(180deg,#0c4990 0%,#2a5035 42%,#86854d 100%); }
+    a { color:#fff; text-decoration:none; }
+    p { margin:0; color:var(--muted); line-height:1.6; }
+    .container { width:min(100% - 32px,var(--max)); margin:0 auto; }
+    .topbar { position:sticky; top:0; z-index:50; backdrop-filter:blur(10px); background:rgba(5,16,29,.78); border-bottom:1px solid rgba(255,255,255,.08); }
+    .topbar-inner { display:flex; align-items:center; justify-content:space-between; gap:28px; padding:16px 0; }
+    .logo-img { width:150px; height:auto; display:block; filter:drop-shadow(0 10px 22px rgba(94,203,255,.18)); }
+    .nav { display:flex; gap:20px; flex-wrap:wrap; align-items:center; font-family:'White5',Arial,sans-serif; font-size:28px; font-weight:700; letter-spacing:0; }
+    .nav a { text-shadow:0 1px 2px rgba(0,0,0,.75),0 0 8px rgba(0,234,255,.45); }
+    .nav-cta,.estimate-btn,.water-btn,.mobile-bottom-bar a:first-child { color:#00304f; background-image:url("water.png"); background-size:180%; background-position:top; background-repeat:no-repeat; animation:waterMove 8s ease-in-out infinite; text-shadow:0 0 2px rgba(255,255,255,1),0 0 6px rgba(255,255,255,.8); box-shadow:0 12px 28px rgba(94,203,255,.22); }
+    .nav-cta { min-height:52px; padding:0 24px; border-radius:999px; display:inline-flex; align-items:center; justify-content:center; }
+    @keyframes waterMove { 0%{background-position:top left;} 50%{background-position:center right;} 100%{background-position:top left;} }
+    h1,h2,h3,h4,.service-name strong { font-family:'White5',Arial,sans-serif; letter-spacing:0; color:#fff; -webkit-text-stroke:.25px rgba(0,0,0,.55); text-shadow:0 2px 4px rgba(0,0,0,.62),0 0 12px rgba(94,203,255,.28); text-wrap:balance; }
+    h1 { margin:0 0 18px; font-size:clamp(54px,8vw,96px); line-height:.96; }
+    h2 { margin:0; font-size:clamp(34px,4vw,48px); line-height:1; }
+    h3 { margin:0 0 10px; font-size:34px; line-height:1; }
+    h4 { margin:0 0 6px; font-size:28px; line-height:1; }
+    .hero { padding:74px 0 34px; }
+    .hero-inner { max-width:820px; }
+    .eyebrow { margin:0 0 10px; color:#fff; font-weight:700; text-shadow:0 1px 2px rgba(0,0,0,.55); }
+    .hero p { max-width:720px; font-size:18px; }
+    section { padding:34px 0; }
+    .section-head { max-width:780px; margin-bottom:22px; }
+    .section-head p { margin-top:10px; font-size:17px; }
+    .service-row { display:grid; grid-template-columns:320px 1fr; gap:20px; margin-bottom:22px; align-items:stretch; }
+    .service-photo,.service-content,.summary-card,.result-box,.request-modal-card { background:var(--card); border:1px solid var(--card-border); border-radius:var(--radius); box-shadow:var(--shadow); backdrop-filter:blur(8px); overflow:hidden; }
+    .service-photo img { width:100%; height:100%; min-height:360px; object-fit:cover; display:block; }
+    .service-content { padding:24px; }
+    .service-title-row { display:grid; grid-template-columns:auto 1fr auto; gap:14px; align-items:center; margin-bottom:18px; }
+    .service-code { width:58px; height:58px; border-radius:18px; display:flex; align-items:center; justify-content:center; background:rgba(94,203,255,.16); border:1px solid rgba(94,203,255,.35); color:#fff; font-weight:900; font-size:24px; }
+    .service-code.green { background:rgba(116,217,159,.16); border-color:rgba(116,217,159,.35); }
+    .service-code.dark { background:rgba(255,255,255,.1); border-color:rgba(255,255,255,.18); }
+    .service-name strong { font-size:34px; }
+    .title-line { height:1px; background:rgba(255,255,255,.14); }
+    .service-toggle { min-height:44px; border:1px solid rgba(255,255,255,.18); border-radius:999px; padding:0 16px; background:rgba(255,255,255,.1); color:#fff; cursor:pointer; font-weight:700; }
+    .service-toggle.active { background:rgba(94,203,255,.18); border-color:rgba(94,203,255,.6); }
+    .option-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+    .option-card { padding:16px; border-radius:18px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.13); }
+    .option-card.field-error { border-color:#ffd700; box-shadow:0 0 0 2px rgba(255,215,0,.18); }
+    .icon { width:38px; height:38px; border-radius:12px; display:flex; align-items:center; justify-content:center; margin-bottom:10px; background:rgba(94,203,255,.16); color:#fff; }
+    .icon.green { background:rgba(116,217,159,.16); }
+    .counter-list { display:grid; gap:10px; margin-top:12px; }
+    .counter-row { display:flex; align-items:center; justify-content:space-between; gap:12px; color:var(--muted); }
+    .counter-label span { display:block; font-size:12px; opacity:.78; }
+    .counter { display:inline-flex; align-items:center; gap:10px; }
+    .counter button,.story-btn,.surface-btn,.roof-btn { border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.1); color:#fff; cursor:pointer; }
+    .counter button { width:34px; height:34px; border-radius:999px; font-size:22px; line-height:1; }
+    .counter strong { min-width:28px; text-align:center; color:#fff; }
+    .single-counter { display:flex; align-items:center; gap:10px; margin-top:14px; }
+    .unit { color:var(--muted); }
+    .story-buttons,.surface-buttons { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+    .story-btn,.roof-btn { min-height:42px; border-radius:12px; padding:0 12px; }
+    .surface-btn { min-height:52px; border-radius:12px; padding:0 14px; }
+    .story-btn.active,.surface-btn.active,.roof-btn.active { border-color:rgba(94,203,255,.85); background:rgba(94,203,255,.18); }
+    .note { margin-top:16px; color:rgba(238,247,255,.82); font-size:14px; }
+    .summary-card { padding:24px; display:grid; gap:18px; }
+    .summary-top { display:flex; gap:14px; align-items:center; }
+    .summary-icon { width:52px; height:52px; border-radius:16px; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,.12); }
+    .summary-buttons { display:flex; gap:12px; flex-wrap:wrap; }
+    .estimate-btn,.water-btn,.request-btn { min-height:54px; border:0; border-radius:999px; padding:0 24px; display:inline-flex; align-items:center; justify-content:center; font-family:'White5',Arial,sans-serif; font-size:26px; font-weight:700; cursor:pointer; }
+    .request-btn,.ghost-btn { background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.18); color:#fff; text-shadow:0 1px 2px rgba(0,0,0,.7); }
+    .result-box { display:none; margin-top:18px; padding:24px; }
+    .result-box.active { display:block; }
+    .price { font-family:'White5',Arial,sans-serif; font-size:48px; color:var(--gold); text-shadow:0 2px 4px rgba(0,0,0,.62); margin:8px 0; }
+    .mobile-bottom-bar { display:none; }
+    .request-modal { position:fixed; inset:0; display:none; align-items:center; justify-content:center; padding:18px; background:rgba(0,0,0,.78); z-index:1000; }
+    .request-modal.active { display:flex; }
+    .request-modal-card { width:min(100%,620px); max-height:92vh; overflow:auto; padding:22px; }
+    .request-modal-top { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; }
+    .modal-close { width:42px; height:42px; border:0; border-radius:999px; background:rgba(255,255,255,.12); color:#fff; font-size:24px; cursor:pointer; }
+    .request-form { display:grid; gap:12px; }
+    .request-field { display:grid; gap:6px; }
+    .request-field label { color:#fff; font-weight:700; }
+    input,textarea { width:100%; min-height:48px; border-radius:14px; border:1px solid rgba(255,255,255,.2); background:rgba(0,0,0,.18); color:#fff; padding:0 14px; font-size:16px; outline:none; }
+    textarea { min-height:96px; padding:12px 14px; resize:vertical; }
+    footer { padding:26px 0 34px; color:rgba(238,247,255,.76); font-size:14px; border-top:1px solid rgba(255,255,255,.1); }
+    @media (max-width:1060px) { .nav{display:none;} .service-row{grid-template-columns:1fr;} .option-grid{grid-template-columns:1fr;} .service-photo img{min-height:260px;} }
+    @media (max-width:640px) { body{overflow-x:hidden;padding-bottom:92px;} .container{width:min(100% - 22px,var(--max));} .topbar-inner{justify-content:center;padding:10px 0;} .logo-img{width:118px;} .hero{padding:30px 0 20px;} .hero-inner{text-align:center;margin:0 auto;} h1{font-size:clamp(38px,12vw,54px);line-height:.98;} h2{font-size:31px;} h3{font-size:28px;} h4{font-size:24px;} p,.hero p,.section-head p{font-size:15.5px;line-height:1.55;} section{padding:26px 0;} .service-row{gap:14px;margin-bottom:16px;} .service-content,.summary-card,.result-box,.request-modal-card{border-radius:20px;padding:18px;} .service-photo{border-radius:20px;} .service-title-row{grid-template-columns:auto 1fr;}.service-toggle{grid-column:1 / -1;width:100%;} .service-name strong{font-size:28px;} .summary-buttons{flex-direction:column;} .estimate-btn,.water-btn,.request-btn{width:100%;min-height:52px;font-size:22px;padding:12px 16px;} .counter-row{align-items:flex-start;} .price{font-size:40px;} footer{padding:24px 0 30px;text-align:center;line-height:1.7;} .mobile-bottom-bar{position:fixed;left:10px;right:10px;bottom:10px;z-index:999;display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px;border-radius:18px;background:rgba(5,16,29,.92);border:1px solid rgba(255,255,255,.18);box-shadow:0 12px 34px rgba(0,0,0,.35);backdrop-filter:blur(12px);} .mobile-bottom-bar a{min-height:50px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;font-family:'White5',Arial,sans-serif;font-size:22px;font-weight:700;} .mobile-bottom-bar a.secondary{color:#fff;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);} }
+    @media (max-width:390px) { h1{font-size:36px;} .estimate-btn,.request-btn,.mobile-bottom-bar a{font-size:19px;} }
   </style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="container topbar-inner">
-      <a href="index.html" aria-label="White5 home"><img src="logo.png" alt="White5 logo" class="logo-img" /></a>
-      <nav class="nav" aria-label="Main navigation">
-        <a href="index.html">Home</a>
-        <a href="#services">Services</a>
-        <a href="gallery.html">Gallery</a>
-        <a href="#quote">Estimate</a>
-        <a class="nav-cta" href="tel:14034793905">Call Now</a>
-      </nav>
-    </div>
-  </header>
-
-  <div class="mobile-bottom-bar">
-    <a href="tel:14034793905">Call</a>
-    <a class="secondary" href="#quote">Quote</a>
-  </div>
-
+  <header class="topbar"><div class="container topbar-inner"><a href="index.html"><img src="logo.png" alt="White5 logo" class="logo-img"></a><nav class="nav"><a href="index.html">Home</a><a href="services.html">Services</a><a href="gallery.html">Gallery</a><a href="#estimate">Estimate</a><a class="nav-cta" href="tel:14034793905">Call Now</a></nav></div></header>
+  <div class="mobile-bottom-bar"><a href="tel:14034793905">Call</a><a class="secondary" href="#estimate">Quote</a></div>
   <main>
-    <section class="hero" id="quote">
-      <div class="container hero-grid">
-        <div class="hero-main">
-          <p class="eyebrow">White5 Exterior Cleaning | Calgary</p>
-          <h1>Services & Estimate</h1>
-          <p>Choose the services you need and get a quick starting estimate. Final pricing can change depending on access, height, dirt level, photos, and job details.</p>
-          <div class="hero-actions">
-            <a class="water-btn" href="#estimate">Calculate Estimate</a>
-            <a class="ghost-btn" href="tel:14034793905">Call 403-479-3905</a>
-          </div>
-        </div>
-
-        <aside class="contact-card">
-          <h3>Contact White5</h3>
-          <p>Reach out directly for window cleaning, gutter cleaning, or power washing in Calgary.</p>
-          <ul class="contact-list">
-            <li><strong>Phone</strong><a href="tel:14034793905">403-479-3905</a></li>
-            <li><strong>Email</strong><a href="mailto:info@white5.ca">info@white5.ca</a></li>
-            <li><strong>Location</strong>Calgary, Alberta</li>
-            <li><strong>Hours</strong>Monday to Saturday</li>
-          </ul>
-        </aside>
-      </div>
-    </section>
-
-    <section id="services">
-      <div class="container">
-        <div class="section-head">
-          <h2>Exterior Cleaning Services</h2>
-          <p>Practical exterior cleaning for Calgary homes with careful work and clear results.</p>
-        </div>
-        <div class="services-grid">
-          <article class="service-card">
-            <h3>Window Cleaning</h3>
-            <p>Exterior window cleaning using purified water for a cleaner, spot-free finish.</p>
-            <ul>
-              <li>Exterior glass cleaning</li>
-              <li>Frames and visible edges</li>
-              <li>Purified water system</li>
-            </ul>
-            <div class="service-actions">
-              <a class="ghost-btn" href="gallery.html#window-cleaning">View Gallery</a>
-              <a class="water-btn" href="#estimate">Get Window Quote</a>
-            </div>
-          </article>
-
-          <article class="service-card">
-            <h3>Gutter Cleaning</h3>
-            <p>Removing leaves, dirt, and debris from gutters to help water flow properly.</p>
-            <ul>
-              <li>Debris removal</li>
-              <li>Downspout check</li>
-              <li>Basic gutter inspection</li>
-            </ul>
-            <div class="service-actions">
-              <a class="ghost-btn" href="gallery.html#gutter-cleaning">View Gallery</a>
-              <a class="water-btn" href="#estimate">Get Gutter Quote</a>
-            </div>
-          </article>
-
-          <article class="service-card">
-            <h3>Power Washing</h3>
-            <p>Careful exterior surface cleaning for driveways, siding, patios, decks, and outdoor areas.</p>
-            <ul>
-              <li>Driveways and sidewalks</li>
-              <li>Patios and exterior surfaces</li>
-              <li>Careful pressure and distance</li>
-            </ul>
-            <div class="service-actions">
-              <a class="ghost-btn" href="gallery.html#power-washing">View Gallery</a>
-              <a class="water-btn" href="#estimate">Get Washing Quote</a>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="estimate">
-      <div class="container">
-        <div class="section-head">
-          <h2>Quick Estimate</h2>
-          <p>Enter the details you know. You can leave anything that does not apply as 0.</p>
-        </div>
-        <div class="estimate-layout">
-          <div class="estimate-card">
-            <h3>Job Details</h3>
-            <div class="checkbox-row">
-              <label class="checkbox-pill"><input id="includeWindow" type="checkbox" checked> Window Cleaning</label>
-              <label class="checkbox-pill"><input id="includeGutter" type="checkbox"> Gutter Cleaning</label>
-              <label class="checkbox-pill"><input id="includePower" type="checkbox"> Power Washing</label>
-            </div>
-
-            <div class="form-grid">
-              <div class="field"><label for="houseSize">House size, sq ft</label><input id="houseSize" type="number" min="0" placeholder="Example: 1800"></div>
-              <div class="field"><label for="stories">Stories</label><select id="stories"><option value="1">1 story</option><option value="1.25">2 stories</option><option value="1.45">3 stories</option></select></div>
-              <div class="field"><label for="smallWindows">Small windows</label><input id="smallWindows" type="number" min="0" value="0"></div>
-              <div class="field"><label for="standardWindows">Standard windows</label><input id="standardWindows" type="number" min="0" value="0"></div>
-              <div class="field"><label for="largeWindows">Large windows</label><input id="largeWindows" type="number" min="0" value="0"></div>
-              <div class="field"><label for="gutterLength">Gutter length, ft</label><input id="gutterLength" type="number" min="0" value="0"></div>
-              <div class="field"><label for="powerArea">Power washing area, sq ft</label><input id="powerArea" type="number" min="0" value="0"></div>
-              <div class="field"><label for="dirtLevel">Dirt level</label><select id="dirtLevel"><option value="1">Normal</option><option value="1.15">Heavy</option><option value="1.3">Very heavy</option></select></div>
-            </div>
-
-            <div class="field" style="margin-top:14px;"><label for="notes">Notes</label><textarea id="notes" placeholder="Access, timing, service details, or anything else helpful"></textarea></div>
-            <div class="estimate-actions">
-              <button class="estimate-btn" type="button" onclick="calculateEstimate()">Calculate Estimate</button>
-              <button class="ghost-btn" type="button" onclick="sendRequestEmail()">Send Request</button>
-            </div>
-          </div>
-
-          <aside class="result-card">
-            <h3>Your Estimated Price</h3>
-            <div class="price" id="finalPrice">$0</div>
-            <p id="estimateNote">Select services and enter details to calculate a starting estimate.</p>
-            <div class="result-list" id="resultList"></div>
-            <p class="fine-print">This is a starting estimate only. Final price may change after photos or an in-person review.</p>
-          </aside>
-        </div>
-      </div>
-    </section>
-
-    <section id="reviews">
-      <div class="container">
-        <div class="section-head">
-          <h2>Customer Reviews</h2>
-          <p>Recent feedback from White5 customers.</p>
-        </div>
-        <div class="reviews-grid">
-          <article class="review-card"><h3>Demetrius Lloyd</h3><div class="stars">★★★★★</div><p>Great service! Had my gutters cleaned fast, professionally, and thoroughly. Everything was cleaned properly and left tidy.</p></article>
-          <article class="review-card"><h3>Margaret Stewart</h3><div class="stars">★★★★★</div><p>I had Volodymyr pressure wash my house with 40 years of build up. He was amazing to get it back to looking new.</p></article>
-          <article class="review-card"><h3>Qasim S</h3><div class="stars">★★★★★</div><p>He cleaned the gutters on the backside of our home. He was polite, competent, thorough and showed the result of his work.</p></article>
-        </div>
-      </div>
-    </section>
+    <section class="hero" id="quote"><div class="container hero-inner"><p class="eyebrow">White5 Exterior Cleaning | Calgary</p><h1>Get Your Estimate</h1><p>Choose the services you need and enter the details. The more accurate the info, the more useful your estimate will be.</p></div></section>
+    <section id="estimate"><div class="container">
+      <div class="service-row"><div class="service-photo"><img src="images/window-cleaning-1.jpg" alt="Window cleaning"></div><div class="service-content"><div class="service-title-row"><div class="service-code">W.C</div><div class="service-name"><strong>Window Cleaning</strong></div><button class="service-toggle active" id="toggleWindow" type="button" onclick="toggleService('window')">Included</button></div><div class="option-grid"><div class="option-card"><div class="icon">▦</div><h4>Window Quantity</h4><p>How many windows of each size?</p><div class="counter-list"><div class="counter-row"><div class="counter-label">Small <span>(up to 3ft)</span></div><div class="counter"><button type="button" onclick="changeValue('smallWindows',-1)">−</button><strong id="smallWindows">0</strong><button type="button" onclick="changeValue('smallWindows',1)">+</button></div></div><div class="counter-row"><div class="counter-label">Standard <span>(3ft–6ft)</span></div><div class="counter"><button type="button" onclick="changeValue('standardWindows',-1)">−</button><strong id="standardWindows">0</strong><button type="button" onclick="changeValue('standardWindows',1)">+</button></div></div><div class="counter-row"><div class="counter-label">Large <span>(6ft–10ft)</span></div><div class="counter"><button type="button" onclick="changeValue('largeWindows',-1)">−</button><strong id="largeWindows">0</strong><button type="button" onclick="changeValue('largeWindows',1)">+</button></div></div><div class="counter-row"><div class="counter-label">Extra Large <span>(10ft+)</span></div><div class="counter"><button type="button" onclick="changeValue('xlWindows',-1)">−</button><strong id="xlWindows">0</strong><button type="button" onclick="changeValue('xlWindows',1)">+</button></div></div></div></div><div class="option-card"><div class="icon">▣</div><h4>Property Size</h4><p>Approximate property size for window cleaning.</p><div class="single-counter"><div class="counter"><button type="button" onclick="changeValue('windowSqft',-100)">−</button><strong id="windowSqft">0</strong><button type="button" onclick="changeValue('windowSqft',100)">+</button></div><span class="unit">sq ft</span></div></div><div class="option-card"><div class="icon">▥</div><h4>Stories</h4><p>How many stories is your property?</p><div class="story-buttons" data-group="windowStories"><button class="story-btn" type="button" onclick="selectStory('windowStories',1,this)">1 Story</button><button class="story-btn active" type="button" onclick="selectStory('windowStories',2,this)">2 Stories</button><button class="story-btn" type="button" onclick="selectStory('windowStories',3,this)">3+ Stories</button></div></div></div><div class="note">ⓘ These details help us provide an accurate estimate.</div></div></div>
+      <div class="service-row"><div class="service-photo"><img src="images/gutter-cleaning-1.jpg" alt="Gutter cleaning"></div><div class="service-content"><div class="service-title-row"><div class="service-code green">G.C</div><div class="service-name"><strong>Gutter Cleaning</strong></div><button class="service-toggle" id="toggleGutter" type="button" onclick="toggleService('gutter')">Add service</button></div><div class="option-grid"><div class="option-card"><div class="icon green">▰</div><h4>Gutter Length</h4><p>Enter the total linear feet of gutters to clean.</p><div class="single-counter"><div class="counter"><button type="button" onclick="changeValue('gutterLength',-10)">−</button><strong id="gutterLength">0</strong><button type="button" onclick="changeValue('gutterLength',10)">+</button></div><span class="unit">ft</span></div></div><div class="option-card"><div class="icon green">⌂</div><h4>Roof Type</h4><p>Select the closest roof type.</p><div class="story-buttons"><button class="story-btn roof-btn active" type="button" onclick="selectRoofType(0.25,this)">Gable</button><button class="story-btn roof-btn" type="button" onclick="selectRoofType(0.25,this)">Hip</button><button class="story-btn roof-btn" type="button" onclick="selectRoofType(0.25,this)">Front Gable</button><button class="story-btn roof-btn" type="button" onclick="selectRoofType(0,this)">Dormer</button><button class="story-btn roof-btn" type="button" onclick="selectRoofType(0,this)">Flat</button></div></div><div class="option-card"><div class="icon green">▥</div><h4>Stories</h4><p>How many stories is your property?</p><div class="story-buttons" data-group="gutterStories"><button class="story-btn" type="button" onclick="selectStory('gutterStories',1,this)">1 Story</button><button class="story-btn active" type="button" onclick="selectStory('gutterStories',2,this)">2 Stories</button><button class="story-btn" type="button" onclick="selectStory('gutterStories',3,this)">3+ Stories</button></div></div></div><div class="note">ⓘ These details help us provide an accurate estimate.</div></div></div>
+      <div class="service-row"><div class="service-photo"><img src="images/power-washing-1.jpg" alt="Power washing"></div><div class="service-content"><div class="service-title-row"><div class="service-code dark">P.W</div><div class="service-name"><strong>Power Washing</strong></div><button class="service-toggle" id="togglePower" type="button" onclick="toggleService('power')">Add service</button></div><div class="option-grid"><div class="option-card"><div class="icon">▤</div><h4>Choose Surface</h4><p>Select the main surface you want cleaned.</p><div class="surface-buttons"><button class="surface-btn active" type="button" onclick="selectSurface('Driveway',this)">Driveway</button><button class="surface-btn" type="button" onclick="selectSurface('Siding',this)">Siding</button><button class="surface-btn" type="button" onclick="selectSurface('Fence',this)">Fence</button><button class="surface-btn" type="button" onclick="selectSurface('Deck',this)">Deck</button><button class="surface-btn" type="button" onclick="selectSurface('Patio',this)">Patio</button></div></div><div class="option-card"><div class="icon">▧</div><h4>Surface Size</h4><p>Enter approximate square footage for each surface.</p><div class="counter-list"><div class="counter-row"><div class="counter-label">Driveway</div><div class="counter"><button type="button" onclick="changeValue('drivewaySqft',-50)">−</button><strong id="drivewaySqft">0</strong><button type="button" onclick="changeValue('drivewaySqft',50)">+</button></div></div><div class="counter-row"><div class="counter-label">Siding</div><div class="counter"><button type="button" onclick="changeValue('sidingSqft',-50)">−</button><strong id="sidingSqft">0</strong><button type="button" onclick="changeValue('sidingSqft',50)">+</button></div></div><div class="counter-row"><div class="counter-label">Fence</div><div class="counter"><button type="button" onclick="changeValue('fenceSqft',-50)">−</button><strong id="fenceSqft">0</strong><button type="button" onclick="changeValue('fenceSqft',50)">+</button></div></div><div class="counter-row"><div class="counter-label">Deck</div><div class="counter"><button type="button" onclick="changeValue('deckSqft',-50)">−</button><strong id="deckSqft">0</strong><button type="button" onclick="changeValue('deckSqft',50)">+</button></div></div><div class="counter-row"><div class="counter-label">Patio</div><div class="counter"><button type="button" onclick="changeValue('patioSqft',-50)">−</button><strong id="patioSqft">0</strong><button type="button" onclick="changeValue('patioSqft',50)">+</button></div></div></div></div><div class="option-card"><div class="icon">✉</div><h4>Send Request</h4><p>Open the request form and send your details to White5.</p><button class="estimate-btn request-btn" type="button" onclick="openRequestModal()" style="min-width:100%;margin-top:20px;">Send Request →</button></div></div><div class="note">ⓘ These details help us provide an accurate estimate.</div></div></div>
+      <div class="summary-card"><div class="summary-top"><div class="summary-icon">▦</div><div><h3>Ready to see your price?</h3><p>Calculate your estimate first, then send a request with your contact details.</p></div></div><div class="summary-buttons"><button class="estimate-btn" type="button" onclick="calculateEstimate()">Calculate My Price →</button><button class="estimate-btn request-btn" type="button" onclick="openRequestModal()">Send Request →</button></div></div><div class="result-box" id="resultBox"><h3>Your Estimated Price</h3><div class="price" id="finalPrice">$0</div><p id="estimateNote">This is a starting estimate. Final price may change depending on access, dirt level, height, photos, and job details.</p></div>
+    </div></section>
   </main>
-
-  <footer>
-    <div class="container">© 2026 White5 Exterior Cleaning | Calgary, Alberta | <a href="mailto:info@white5.ca">info@white5.ca</a> | <a href="tel:14034793905">403-479-3905</a></div>
-  </footer>
-
+  <footer><div class="container">© 2026 White5 Exterior Cleaning | Calgary, Alberta | <a href="mailto:info@white5.ca">info@white5.ca</a> | <a href="tel:14034793905">403-479-3905</a></div></footer>
+  <div class="request-modal" id="requestModal"><div class="request-modal-card"><div class="request-modal-top"><h3>Send Request</h3><button class="modal-close" type="button" onclick="closeRequestModal()">×</button></div><div class="request-form"><div class="request-field"><label for="customerName">Your Name</label><input id="customerName" type="text" placeholder="Your name"></div><div class="request-field"><label for="customerAddress">Property Address</label><input id="customerAddress" type="text" placeholder="Street address, Calgary"></div><div class="request-field"><label for="customerEmail">Email</label><input id="customerEmail" type="email" placeholder="your@email.com"></div><div class="request-field"><label for="customerPhone">Phone Number</label><input id="customerPhone" type="tel" placeholder="403-000-0000"></div><div class="request-field"><label for="customerNotes">Extra Notes</label><textarea id="customerNotes" placeholder="Add access information, preferred day, photos note, or other details."></textarea></div><button class="estimate-btn" type="button" onclick="sendRequestEmail()">Send Email Request</button></div></div></div>
   <script>
-    function numberValue(id) {
-      return Math.max(0, Number(document.getElementById(id).value) || 0);
-    }
-
-    function money(value) {
-      return '$' + Math.round(value);
-    }
-
-    function calculateEstimate() {
-      const includeWindow = document.getElementById('includeWindow').checked;
-      const includeGutter = document.getElementById('includeGutter').checked;
-      const includePower = document.getElementById('includePower').checked;
-      const stories = Number(document.getElementById('stories').value);
-      const dirt = Number(document.getElementById('dirtLevel').value);
-      const houseSize = numberValue('houseSize');
-      const smallWindows = numberValue('smallWindows');
-      const standardWindows = numberValue('standardWindows');
-      const largeWindows = numberValue('largeWindows');
-      const gutterLength = numberValue('gutterLength');
-      const powerArea = numberValue('powerArea');
-      let total = 0;
-      const lines = [];
-
-      if (includeWindow) {
-        const windowCountPrice = smallWindows * 5 + standardWindows * 8 + largeWindows * 12;
-        const houseFallback = houseSize ? houseSize * 0.08 : 0;
-        const windowPrice = Math.max(windowCountPrice, houseFallback, 120) * stories * dirt;
-        total += windowPrice;
-        lines.push('Window cleaning: ' + money(windowPrice));
-      }
-
-      if (includeGutter) {
-        const gutterPrice = Math.max(gutterLength * 1.8, houseSize * 0.07, 120) * stories * dirt;
-        total += gutterPrice;
-        lines.push('Gutter cleaning: ' + money(gutterPrice));
-      }
-
-      if (includePower) {
-        const powerPrice = Math.max(powerArea * 0.22, 140) * dirt;
-        total += powerPrice;
-        lines.push('Power washing: ' + money(powerPrice));
-      }
-
-      if (!includeWindow && !includeGutter && !includePower) {
-        document.getElementById('finalPrice').textContent = '$0';
-        document.getElementById('estimateNote').textContent = 'Select at least one service to calculate an estimate.';
-        document.getElementById('resultList').innerHTML = '';
-        return null;
-      }
-
-      document.getElementById('finalPrice').textContent = money(total);
-      document.getElementById('estimateNote').textContent = 'Estimated starting price based on the details entered.';
-      document.getElementById('resultList').innerHTML = lines.map(line => '<div>' + line + '</div>').join('');
-      return total;
-    }
-
-    function sendRequestEmail() {
-      const estimate = calculateEstimate();
-      if (estimate === null) return;
-
-      const notes = document.getElementById('notes').value.trim();
-      const body = [
-        'WHITE5 SERVICE REQUEST',
-        '',
-        'Estimated starting price: ' + money(estimate),
-        '',
-        'Services:',
-        'Window cleaning: ' + (document.getElementById('includeWindow').checked ? 'Yes' : 'No'),
-        'Gutter cleaning: ' + (document.getElementById('includeGutter').checked ? 'Yes' : 'No'),
-        'Power washing: ' + (document.getElementById('includePower').checked ? 'Yes' : 'No'),
-        '',
-        'House size: ' + numberValue('houseSize') + ' sq ft',
-        'Small windows: ' + numberValue('smallWindows'),
-        'Standard windows: ' + numberValue('standardWindows'),
-        'Large windows: ' + numberValue('largeWindows'),
-        'Gutter length: ' + numberValue('gutterLength') + ' ft',
-        'Power washing area: ' + numberValue('powerArea') + ' sq ft',
-        '',
-        'Notes:',
-        notes || 'No notes entered.'
-      ].join('\n');
-
-      window.location.href = 'mailto:info@white5.ca?subject=' + encodeURIComponent('White5 Service Request') + '&body=' + encodeURIComponent(body);
-    }
+    const state = { includeWindow:true, includeGutter:false, includePower:false, windowStories:2, gutterStories:2, selectedSurface:'Driveway', roofFactor:.25, roofType:'Gable', lastEstimate:0 };
+    const serviceFields = { window:['smallWindows','standardWindows','largeWindows','xlWindows','windowSqft'], gutter:['gutterLength'], power:['drivewaySqft','sidingSqft','fenceSqft','deckSqft','patioSqft'] };
+    const surfaceIds = { Driveway:'drivewaySqft', Siding:'sidingSqft', Fence:'fenceSqft', Deck:'deckSqft', Patio:'patioSqft' };
+    function getNumber(id){ const el=document.getElementById(id); return Number(el ? (el.value !== undefined ? el.value : el.textContent) : 0) || 0; }
+    function setNumber(id,value){ const el=document.getElementById(id); if(el) el.textContent=Math.max(0,value); }
+    function setServiceIncluded(service,included){ const key=service.charAt(0).toUpperCase()+service.slice(1); state['include'+key]=included; const toggle=document.getElementById('toggle'+key); if(toggle){ toggle.classList.toggle('active',included); toggle.textContent=included?'Included':'Add service'; } }
+    function toggleService(service){ const key=service.charAt(0).toUpperCase()+service.slice(1); setServiceIncluded(service,!state['include'+key]); }
+    function autoIncludeServiceFromField(id){ for(const service in serviceFields){ if(serviceFields[service].includes(id)) setServiceIncluded(service,true); } }
+    function changeValue(id,amount){ const value=Math.max(0,getNumber(id)+amount); setNumber(id,value); if(value>0) autoIncludeServiceFromField(id); const surface=Object.keys(surfaceIds).find(key=>surfaceIds[key]===id); if(surface){ state.selectedSurface=surface; document.querySelectorAll('.surface-btn').forEach(btn=>btn.classList.toggle('active',btn.textContent.trim()===surface)); } }
+    function selectStory(group,value,button){ state[group]=value; if(group==='windowStories') setServiceIncluded('window',true); if(group==='gutterStories') setServiceIncluded('gutter',true); button.parentElement.querySelectorAll('.story-btn').forEach(btn=>btn.classList.remove('active')); button.classList.add('active'); }
+    function selectRoofType(factor,button){ setServiceIncluded('gutter',true); state.roofFactor=Number(factor)||0; state.roofType=button.textContent.trim(); document.querySelectorAll('.roof-btn').forEach(btn=>btn.classList.remove('active')); button.classList.add('active'); }
+    function selectSurface(surface,button){ setServiceIncluded('power',true); state.selectedSurface=surface; document.querySelectorAll('.surface-btn').forEach(btn=>btn.classList.remove('active')); button.classList.add('active'); }
+    function validateSelectedServices(){ if(!state.includeWindow && !state.includeGutter && !state.includePower){ alert('Please select at least one service: Window Cleaning, Gutter Cleaning, or Power Washing.'); return false; } if(state.includeWindow && (getNumber('smallWindows')+getNumber('standardWindows')+getNumber('largeWindows')+getNumber('xlWindows') <= 0)){ alert('Please add at least one window for Window Cleaning.'); return false; } if(state.includeWindow && getNumber('windowSqft') <= 0){ alert('Please enter Window Cleaning Property Size.'); return false; } if(state.includeGutter && getNumber('gutterLength') <= 0){ alert('Please enter Gutter Length.'); return false; } if(state.includePower && getNumber(surfaceIds[state.selectedSurface]) <= 0){ alert('Please enter surface size for ' + state.selectedSurface + '.'); return false; } return true; }
+    function calculateEstimate(showResult=true){ if(!validateSelectedServices()) return null; const smallWindows=getNumber('smallWindows'), standardWindows=getNumber('standardWindows'), largeWindows=getNumber('largeWindows'), xlWindows=getNumber('xlWindows'), windowSqft=getNumber('windowSqft'); const gutterLength=getNumber('gutterLength'); const drivewaySqft=getNumber('drivewaySqft'), sidingSqft=getNumber('sidingSqft'), fenceSqft=getNumber('fenceSqft'), deckSqft=getNumber('deckSqft'), patioSqft=getNumber('patioSqft'); let windowPrice=0,gutterPrice=0,powerPrice=0; if(state.includeWindow){ windowPrice = smallWindows*5 + standardWindows*8 + largeWindows*12 + xlWindows*18; windowPrice += windowSqft*.015; if(state.windowStories===2) windowPrice += 35; if(state.windowStories===3) windowPrice += 75; windowPrice = Math.max(windowPrice,120); } if(state.includeGutter){ gutterPrice = gutterLength * (1.2 + state.roofFactor); if(state.gutterStories===2) gutterPrice += 30; if(state.gutterStories===3) gutterPrice += 70; gutterPrice = Math.max(gutterPrice,170); } if(state.includePower){ powerPrice = drivewaySqft*.18 + sidingSqft*.22 + fenceSqft*.18 + deckSqft*.22 + patioSqft*.18; powerPrice = Math.max(powerPrice,140); } const selected=[]; if(state.includeWindow) selected.push('Window Cleaning'); if(state.includeGutter) selected.push('Gutter Cleaning'); if(state.includePower) selected.push('Power Washing'); const total=windowPrice+gutterPrice+powerPrice; state.lastEstimate=Math.round(total); document.getElementById('finalPrice').textContent='$'+state.lastEstimate; document.getElementById('estimateNote').textContent='Included services: '+selected.join(', ')+'. This is a starting estimate. Final price may change depending on access, dirt level, height, photos, and job details.'; if(showResult) document.getElementById('resultBox').classList.add('active'); return total; }
+    function openRequestModal(){ const estimate=calculateEstimate(false); if(estimate===null) return; document.getElementById('requestModal').classList.add('active'); document.body.style.overflow='hidden'; }
+    function closeRequestModal(){ document.getElementById('requestModal').classList.remove('active'); document.body.style.overflow=''; }
+    function buildRequestBody(){ const selected=[]; if(state.includeWindow) selected.push('Window Cleaning'); if(state.includeGutter) selected.push('Gutter Cleaning'); if(state.includePower) selected.push('Power Washing'); return `White5 Service Request\n\nCUSTOMER INFORMATION\nName: ${document.getElementById('customerName').value.trim()}\nAddress: ${document.getElementById('customerAddress').value.trim()}\nEmail: ${document.getElementById('customerEmail').value.trim()}\nPhone: ${document.getElementById('customerPhone').value.trim()}\n\nSELECTED SERVICES\n${selected.join(', ')}\n\nESTIMATED PRICE\nEstimated starting price: $${state.lastEstimate}\n\nWINDOW CLEANING\nIncluded: ${state.includeWindow?'Yes':'No'}\nSmall windows: ${getNumber('smallWindows')}\nStandard windows: ${getNumber('standardWindows')}\nLarge windows: ${getNumber('largeWindows')}\nExtra large windows: ${getNumber('xlWindows')}\nProperty size for windows: ${getNumber('windowSqft')} sq ft\nWindow stories: ${state.windowStories}\n\nGUTTER CLEANING\nIncluded: ${state.includeGutter?'Yes':'No'}\nGutter length: ${getNumber('gutterLength')} ft\nRoof type: ${state.roofType}\nGutter stories: ${state.gutterStories}\n\nPOWER WASHING\nIncluded: ${state.includePower?'Yes':'No'}\nSelected surface: ${state.selectedSurface}\nDriveway: ${getNumber('drivewaySqft')} sq ft\nSiding: ${getNumber('sidingSqft')} sq ft\nFence: ${getNumber('fenceSqft')} sq ft\nDeck: ${getNumber('deckSqft')} sq ft\nPatio: ${getNumber('patioSqft')} sq ft\n\nCUSTOMER NOTES\n${document.getElementById('customerNotes').value.trim()}\n\nNOTE\nThis is a starting estimate. Final price may change depending on access, dirt level, height, photos, and job details.`; }
+    function sendRequestEmail(){ const estimate=calculateEstimate(false); if(estimate===null) return; const email=document.getElementById('customerEmail').value.trim(); const phone=document.getElementById('customerPhone').value.trim(); if(!email && !phone){ alert('Please enter your email or phone number.'); return; } window.location.href='mailto:info@white5.ca?subject='+encodeURIComponent('White5 Service Request')+'&body='+encodeURIComponent(buildRequestBody()); }
+    document.addEventListener('keydown',event=>{ if(event.key==='Escape') closeRequestModal(); });
+    document.getElementById('requestModal').addEventListener('click',function(event){ if(event.target===this) closeRequestModal(); });
   </script>
 </body>
 </html>
