@@ -1,613 +1,10 @@
-<!DOCTYPE html> <html lang="en" data-qb-installed="true"><style>.app-crx-show-flight-price-compare { width:
 <!DOCTYPE html>
-<html lang="en" data-qb-installed="true"><style>.app-crx-show-flight-price-compare {
-  width: 320px;
-  overflow: hidden;
-  position: fixed;
-  border-radius: 8px;
-  right: 20px;
-  top: 20px;
-  background: #fff;
-  z-index: 999;
-  box-shadow: 0px 8px 16px 0px rgba(69, 88, 115, 0.12);
-  color: #8592a6;
-  font-size: 14px;
-  font-weight: normal;
-  letter-spacing: 0px;
-  font-family: system-ui;
-  text-align: left;
-}
-.app-crx-show-flight-price-compare .flex,
-.app-crx-show-flight-price-compare .flex-column,
-.app-crx-show-flight-price-compare .v-center,
-.app-crx-show-flight-price-compare .h-center,
-.app-crx-show-flight-price-compare .flex-column-center,
-.app-crx-show-flight-price-compare .flex-center {
-  display: -webkit-flex;
-  display: flex;
-}
-.app-crx-show-flight-price-compare .flex1 {
-  flex: 1 1 auto;
-}
-.app-crx-show-flight-price-compare .h-flex-center,
-.app-crx-show-flight-price-compare .h-center,
-.app-crx-show-flight-price-compare .flex-column-center,
-.app-crx-show-flight-price-compare .flex-center {
-  -webkit-justify-content: center;
-  justify-content: center;
-}
-.app-crx-show-flight-price-compare .v-flex-center,
-.app-crx-show-flight-price-compare .v-center,
-.app-crx-show-flight-price-compare .flex-center {
-  -webkit-align-items: center;
-  align-items: center;
-}
-.app-crx-show-flight-price-compare .flex-between {
-  justify-content: space-between;
-}
-.app-crx-show-flight-price-compare .flex-column {
-  flex-direction: column;
-}
-.app-crx-show-flight-price-compare .flex-column-center {
-  flex-direction: column;
-}
-.app-crx-show-flight-price-compare .ml-4 {
-  margin-left: 4px;
-}
-.app-crx-show-flight-price-compare .mr-4 {
-  margin-right: 4px;
-}
-.app-crx-show-flight-price-compare .mr-16 {
-  margin-right: 16px;
-}
-.app-crx-show-flight-price-compare .ft-12 {
-  font-size: 12px;
-  line-height: 18px;
-}
-.app-crx-show-flight-price-compare .align-center {
-  align-items: center;
-}
-.app-crx-show-flight-price-compare .justify-around {
-  justify-content: space-around;
-}
-.app-crx-show-flight-price-compare .flex-wrap {
-  flex-wrap: wrap;
-}
-.app-crx-show-flight-price-compare .color-black {
-  color: #0f294d;
-}
-.app-crx-show-flight-price-compare .color-cyan {
-  color: #06aebd;
-}
-.app-crx-show-flight-price-compare .flex {
-  display: flex;
-}
-.app-crx-show-flight-price-compare .color-tertiaryBlack {
-  color: #8592a6;
-}
-.app-crx-show-flight-price-compare .color-brandBlue {
-  color: #3264ff;
-}
-.app-crx-show-flight-price-compare .f-bold {
-  font-weight: bold;
-}
-.app-crx-show-flight-price-compare .mt-4 {
-  margin-top: 4px;
-}
-.app-crx-show-flight-price-compare .mb-4 {
-  margin-bottom: 4px;
-}
-.app-crx-show-flight-price-compare .f-12 {
-  font-size: 12px;
-}
-.app-crx-show-flight-price-compare .divider {
-  width: 100%;
-  height: 1px;
-  background-color: #dadfe6;
-  transform: scaleY(0.5);
-}
-.app-crx-show-flight-price-compare .mh-8 {
-  margin-top: 8px;
-  margin-bottom: 8px;
-}
-.app-crx-show-flight-price-compare .mh-16 {
-  margin-top: 16px;
-  margin-bottom: 16px;
-}
-.app-crx-show-flight-price-compare .mt-8 {
-  margin-top: 8px;
-}
-.app-crx-show-flight-price-compare .mt-16 {
-  margin-top: 16px;
-}
-.app-crx-show-flight-price-compare .mb-8 {
-  margin-bottom: 8px;
-}
-.app-crx-show-flight-price-compare .header-wrapper {
-  display: flex;
-  align-items: center;
-  margin: 16px 16px 0;
-}
-.app-crx-show-flight-price-compare .header-wrapper.bold {
-  justify-content: flex-start;
-}
-.app-crx-show-flight-price-compare .header-wrapper.bold .header-text {
-  font-size: 16px;
-}
-.app-crx-show-flight-price-compare .header-wrapper .header-icon {
-  width: 44px;
-  height: 44px;
-}
-.app-crx-show-flight-price-compare .header-wrapper .header-icon .img {
-  transform: scale(0.5, 0.5);
-  max-width: 100%;
-  border-radius: 50%;
-}
-.app-crx-show-flight-price-compare .header-wrapper .header-text {
-  color: #3264ff;
-  font-size: 14px;
-  text-align: center;
-  font-weight: bold;
-  height: 22px;
-  letter-spacing: 0px;
-  line-height: 22px;
-}
-.app-crx-show-flight-price-compare .header-wrapper .header-close {
-  cursor: pointer;
-  position: absolute;
-  right: 6px;
-  top: 6px;
-}
-.app-crx-show-flight-price-compare .header-wrapper .header-close span {
-  text-align: center;
-  color: #ced2d9;
-  font-size: 22px;
-}
-.app-crx-show-flight-price-compare .header-wrapper .header-close path {
-  fill: #8592a6;
-}
-.app-crx-show-flight-price-compare .flex {
-  display: flex;
-}
-.app-crx-show-flight-price-compare .color-tertiaryBlack {
-  color: #8592a6;
-}
-.app-crx-show-flight-price-compare .color-brandBlue {
-  color: #3264ff;
-}
-.app-crx-show-flight-price-compare .f-bold {
-  font-weight: bold;
-}
-.app-crx-show-flight-price-compare .mt-4 {
-  margin-top: 4px;
-}
-.app-crx-show-flight-price-compare .mb-4 {
-  margin-bottom: 4px;
-}
-.app-crx-show-flight-price-compare .f-12 {
-  font-size: 12px;
-}
-.app-crx-show-flight-price-compare .divider {
-  width: 100%;
-  height: 1px;
-  background-color: #dadfe6;
-  transform: scaleY(0.5);
-}
-.app-crx-show-flight-price-compare .mh-8 {
-  margin-top: 8px;
-  margin-bottom: 8px;
-}
-.app-crx-show-flight-price-compare .mh-16 {
-  margin-top: 16px;
-  margin-bottom: 16px;
-}
-.app-crx-show-flight-price-compare .mt-8 {
-  margin-top: 8px;
-}
-.app-crx-show-flight-price-compare .mt-16 {
-  margin-top: 16px;
-}
-.app-crx-show-flight-price-compare .mb-8 {
-  margin-bottom: 8px;
-}
-.app-crx-show-flight-price-compare .flightdetail-wrapper {
-  border-radius: 0px 0px 4px 4px;
-}
-.app-crx-show-flight-price-compare .tags {
-  display: flex;
-  font-size: 12px;
-}
-.app-crx-show-flight-price-compare .tags .flight-tag {
-  background-color: rgba(50, 100, 255, 0.08);
-  color: #3264ff;
-  padding: 4px;
-  flex: 1;
-  text-align: center;
-  font-weight: bold;
-  letter-spacing: 0px;
-  line-height: 18px;
-  border-radius: 4px 4px 0px 0px;
-}
-.app-crx-show-flight-price-compare .tags .compare-tag {
-  padding: 2px 4px;
-  background: rgba(50, 100, 255, 0.08);
-  color: #3264ff;
-  border-radius: 1px;
-}
-.app-crx-show-flight-price-compare .flightdetail {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.app-crx-show-flight-price-compare .flightdetail .from-wrapper .date,
-.app-crx-show-flight-price-compare .flightdetail .to-wrapper .date {
-  margin-bottom: 4px;
-}
-.app-crx-show-flight-price-compare .flightdetail .from-wrapper .time,
-.app-crx-show-flight-price-compare .flightdetail .to-wrapper .time {
-  color: #0f294d;
-  font-weight: 700;
-  font-size: 16px;
-  margin-bottom: 4px;
-}
-.app-crx-show-flight-price-compare .flightdetail .to-wrapper {
-  text-align: right;
-}
-.app-crx-show-flight-price-compare .flightdetail-wrapper {
-  background-color: #f5f7fa;
-  padding: 8px;
-}
-.app-crx-show-flight-price-compare .flightdetail-wrapper .airplane-icon-wrapper .airline-dashed {
-  width: 80px;
-  height: 2px;
-  background-color: #dadfe6;
-  position: relative;
-}
-.app-crx-show-flight-price-compare .flightdetail-wrapper .airplane-icon-wrapper .airline-dashed::before,
-.app-crx-show-flight-price-compare .flightdetail-wrapper .airplane-icon-wrapper .airline-dashed::after {
-  content: '';
-  display: block;
-  width: 4px;
-  height: 4px;
-  position: absolute;
-  top: -1px;
-  background-color: #dadfe6;
-}
-.app-crx-show-flight-price-compare .flightdetail-wrapper .airplane-icon-wrapper .airline-dashed::before {
-  left: 0;
-}
-.app-crx-show-flight-price-compare .flightdetail-wrapper .airplane-icon-wrapper .airline-dashed::after {
-  right: 0;
-}
-.app-crx-show-flight-price-compare .flightdetail-wrapper .airplane-icon-wrapper img {
-  height: 32px;
-  width: 32px;
-}
-.app-crx-show-flight-price-compare .flightdetail-wrapper .passangerInfo {
-  margin-top: 8px;
-}
-.app-crx-show-flight-price-compare .flightdetail-wrapper .passangerInfo path {
-  fill: #06aebd !important;
-}
-.app-crx-show-flight-price-compare .flex {
-  display: flex;
-}
-.app-crx-show-flight-price-compare .color-tertiaryBlack {
-  color: #8592a6;
-}
-.app-crx-show-flight-price-compare .color-brandBlue {
-  color: #3264ff;
-}
-.app-crx-show-flight-price-compare .f-bold {
-  font-weight: bold;
-}
-.app-crx-show-flight-price-compare .mt-4 {
-  margin-top: 4px;
-}
-.app-crx-show-flight-price-compare .mb-4 {
-  margin-bottom: 4px;
-}
-.app-crx-show-flight-price-compare .f-12 {
-  font-size: 12px;
-}
-.app-crx-show-flight-price-compare .divider {
-  width: 100%;
-  height: 1px;
-  background-color: #dadfe6;
-  transform: scaleY(0.5);
-}
-.app-crx-show-flight-price-compare .mh-8 {
-  margin-top: 8px;
-  margin-bottom: 8px;
-}
-.app-crx-show-flight-price-compare .mh-16 {
-  margin-top: 16px;
-  margin-bottom: 16px;
-}
-.app-crx-show-flight-price-compare .mt-8 {
-  margin-top: 8px;
-}
-.app-crx-show-flight-price-compare .mt-16 {
-  margin-top: 16px;
-}
-.app-crx-show-flight-price-compare .mb-8 {
-  margin-bottom: 8px;
-}
-.app-crx-show-flight-price-compare .flightinfo-wrapper {
-  max-height: 50vh;
-  overflow: auto;
-}
-.app-crx-show-flight-price-compare .flightinfo-wrapper .compare-tag {
-  font-size: 14px;
-  color: #455873;
-  margin-top: 8px;
-}
-.app-crx-show-flight-price-compare .flightinfo-wrapper .compare-tag span {
-  color: #F94C86;
-  font-weight: bold;
-}
-.app-crx-show-flight-price-compare .flightinfo-wrapper .compare-tag.higher span {
-  color: #06aebd;
-}
-.app-crx-show-flight-price-compare .flex {
-  display: flex;
-}
-.app-crx-show-flight-price-compare .color-tertiaryBlack {
-  color: #8592a6;
-}
-.app-crx-show-flight-price-compare .color-brandBlue {
-  color: #3264ff;
-}
-.app-crx-show-flight-price-compare .f-bold {
-  font-weight: bold;
-}
-.app-crx-show-flight-price-compare .mt-4 {
-  margin-top: 4px;
-}
-.app-crx-show-flight-price-compare .mb-4 {
-  margin-bottom: 4px;
-}
-.app-crx-show-flight-price-compare .f-12 {
-  font-size: 12px;
-}
-.app-crx-show-flight-price-compare .divider {
-  width: 100%;
-  height: 1px;
-  background-color: #dadfe6;
-  transform: scaleY(0.5);
-}
-.app-crx-show-flight-price-compare .mh-8 {
-  margin-top: 8px;
-  margin-bottom: 8px;
-}
-.app-crx-show-flight-price-compare .mh-16 {
-  margin-top: 16px;
-  margin-bottom: 16px;
-}
-.app-crx-show-flight-price-compare .mt-8 {
-  margin-top: 8px;
-}
-.app-crx-show-flight-price-compare .mt-16 {
-  margin-top: 16px;
-}
-.app-crx-show-flight-price-compare .mb-8 {
-  margin-bottom: 8px;
-}
-.app-crx-show-flight-price-compare .compare-wrapper {
-  margin: 0 16px 8px;
-}
-.app-crx-show-flight-price-compare .compare-wrapper .book-btn {
-  background: #3264ff;
-  border-radius: 2px;
-  height: 38px;
-  width: 100%;
-  cursor: pointer;
-  border: none;
-  outline: none;
-  color: #ffffff;
-  font-size: 16px;
-  font-weight: 400;
-  letter-spacing: 0px;
-  text-align: center;
-}
-.app-crx-show-flight-price-compare .compare-wrapper .book-btn:hover {
-  background-color: #2D5AE5;
-}
-.app-crx-show-flight-price-compare .flex {
-  display: flex;
-}
-.app-crx-show-flight-price-compare .color-tertiaryBlack {
-  color: #8592a6;
-}
-.app-crx-show-flight-price-compare .color-brandBlue {
-  color: #3264ff;
-}
-.app-crx-show-flight-price-compare .f-bold {
-  font-weight: bold;
-}
-.app-crx-show-flight-price-compare .mt-4 {
-  margin-top: 4px;
-}
-.app-crx-show-flight-price-compare .mb-4 {
-  margin-bottom: 4px;
-}
-.app-crx-show-flight-price-compare .f-12 {
-  font-size: 12px;
-}
-.app-crx-show-flight-price-compare .divider {
-  width: 100%;
-  height: 1px;
-  background-color: #dadfe6;
-  transform: scaleY(0.5);
-}
-.app-crx-show-flight-price-compare .mh-8 {
-  margin-top: 8px;
-  margin-bottom: 8px;
-}
-.app-crx-show-flight-price-compare .mh-16 {
-  margin-top: 16px;
-  margin-bottom: 16px;
-}
-.app-crx-show-flight-price-compare .mt-8 {
-  margin-top: 8px;
-}
-.app-crx-show-flight-price-compare .mt-16 {
-  margin-top: 16px;
-}
-.app-crx-show-flight-price-compare .mb-8 {
-  margin-bottom: 8px;
-}
-.m-chromePluginV2__content-leftimg {
-  width: 66px;
-  height: 16px;
-  background-size: cover;
-}
-.m-chromePluginV2__content-leftimg-wrapper {
-  width: 66px;
-  height: 16px;
-}
-.m-chromePluginV2__price-item {
-  justify-content: flex-end;
-  flex: 1;
-  text-align: center;
-}
-.m-chromePluginV2__price-text {
-  word-break: break-all;
-  width: 100%;
-}
-.m-chromePluginV2__price-otherbar,
-.m-chromePluginV2__price-tripbar,
-.m-chromePluginV2__price-tripbar-loading {
-  width: 32px;
-  border-radius: 4px 4px 0 0;
-}
-.m-chromePluginV2__price-otherbar {
-  height: 60px;
-  background: rgba(50, 100, 255, 0.32);
-}
-.m-chromePluginV2__price-tripbar {
-  height: 40px;
-  background: #3264ff;
-}
-.m-chromePluginV2__price-tripbar-loading {
-  height: 60px;
-  background: #3264ff;
-}
-.app-crx-show-flight-price-compare .loading-wrapper .loading-text {
-  padding: 0 16px 16px;
-}
-.app-crx-show-flight-price-compare .loading-wrapper .header-icon {
-  width: 16px;
-  height: 16px;
-}
-.app-crx-show-flight-price-compare .loading-wrapper .header-icon path {
-  fill: #3264FF !important;
-}
-.app-crx-show-flight-price-compare .loading-wrapper .loading-loadgif {
-  display: flex;
-  flex-direction: column;
-  margin-left: 4px;
-  justify-content: center;
-  align-items: center;
-}
-.app-crx-show-flight-price-compare .noflight-wrapper .noflight-text {
-  margin-top: 4px;
-  overflow: hidden;
-  color: #455873;
-  font-size: 13px;
-  font-weight: normal;
-  letter-spacing: 0px;
-  line-height: 18px;
-  width: 288px;
-  margin: 0 16px 16px 16px;
-}
-.app-crx-show-flight-price-compare .flex {
-  display: flex;
-}
-.app-crx-show-flight-price-compare .color-tertiaryBlack {
-  color: #8592a6;
-}
-.app-crx-show-flight-price-compare .color-brandBlue {
-  color: #3264ff;
-}
-.app-crx-show-flight-price-compare .f-bold {
-  font-weight: bold;
-}
-.app-crx-show-flight-price-compare .mt-4 {
-  margin-top: 4px;
-}
-.app-crx-show-flight-price-compare .mb-4 {
-  margin-bottom: 4px;
-}
-.app-crx-show-flight-price-compare .f-12 {
-  font-size: 12px;
-}
-.app-crx-show-flight-price-compare .divider {
-  width: 100%;
-  height: 1px;
-  background-color: #dadfe6;
-  transform: scaleY(0.5);
-}
-.app-crx-show-flight-price-compare .mh-8 {
-  margin-top: 8px;
-  margin-bottom: 8px;
-}
-.app-crx-show-flight-price-compare .mh-16 {
-  margin-top: 16px;
-  margin-bottom: 16px;
-}
-.app-crx-show-flight-price-compare .mt-8 {
-  margin-top: 8px;
-}
-.app-crx-show-flight-price-compare .mt-16 {
-  margin-top: 16px;
-}
-.app-crx-show-flight-price-compare .mb-8 {
-  margin-bottom: 8px;
-}
-.app-crx-show-flight-price-compare .welcome-inject-wrapper {
-  color: #fff;
-  background: #3264ff;
-}
-.app-crx-show-flight-price-compare .welcome-inject-wrapper .header-wrapper {
-  color: #fff;
-  background: #3264ff;
-}
-.app-crx-show-flight-price-compare .welcome-inject-wrapper .header-wrapper .header-icon .img {
-  display: none;
-}
-.app-crx-show-flight-price-compare .welcome-inject-wrapper .header-wrapper .header-text {
-  color: #fff;
-}
-.app-crx-show-flight-price-compare .welcome-inject-wrapper .header-wrapper .header-close span {
-  color: #fff;
-}
-.app-crx-show-flight-price-compare .welcome-inject-wrapper .content-1 {
-  margin: 16px 16px 8px 16px;
-}
-.app-crx-show-flight-price-compare .welcome-inject-wrapper .content-2 {
-  margin: 0 16px 8px 16px;
-}
-.app-crx-show-flight-price-compare .welcome-inject-wrapper .content-2 span {
-  text-decoration: underline;
-}
-.app-crx-show-flight-price-compare .welcome-inject-wrapper .trip-com-wrapper {
-  display: flex;
-  justify-content: flex-end;
-  padding: 0 24px 16px 24px;
-}
-.app-crx-show-flight-price-compare .welcome-inject-wrapper .trip-com-wrapper .trip-com-logo {
-  height: 18px;
-  width: 73px;
-}
-</style><div id="save-fly-plugin-inject-element"></div><head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>Services &amp; Estimate | White5 Exterior Cleaning</title>
-
-  <meta name="description" content="Get an estimate for White5 window cleaning, gutter cleaning, and power washing services in Calgary.">
-
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Services & Estimate | White5 Exterior Cleaning</title>
+  <meta name="description" content="White5 exterior cleaning services and quick estimate for window cleaning, gutter cleaning, and power washing in Calgary." />
   <style>
     @font-face {
       font-family: 'White5';
@@ -619,60 +16,42 @@
 
     :root {
       --bg: #071a2f;
+      --card: rgba(255,255,255,0.09);
+      --card-border: rgba(255,255,255,0.16);
       --text: #eef7ff;
       --muted: #d6eaff;
       --white: #ffffff;
-      --blue: #5ecbff;
-      --green: #74d99f;
-      --gold: #ffd700;
-      --dark: #061525;
-      --card: rgba(255,255,255,0.08);
-      --card-border: rgba(255,255,255,0.14);
-      --shadow: 0 18px 46px rgba(0, 0, 0, 0.24);
-      --radius: 22px;
+      --ink: #0b1f33;
+      --shadow: 0 18px 46px rgba(0,0,0,0.24);
+      --radius: 20px;
       --max: 1180px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
+      min-height: 100vh;
       font-family: Arial, sans-serif;
       color: var(--text);
       background:
-        radial-gradient(circle at top right, rgba(94, 203, 255, 0.18), transparent 26%),
-        radial-gradient(circle at left center, rgba(138, 240, 255, 0.12), transparent 24%),
+        radial-gradient(circle at top right, rgba(94,203,255,0.18), transparent 26%),
+        radial-gradient(circle at left center, rgba(138,240,255,0.12), transparent 24%),
         linear-gradient(180deg, #0c4990 0%, #2a5035 42%, #86854d 100%);
-      min-height: 100vh;
     }
 
-    a {
-      color: #ffffff;
-      text-decoration: none;
-    }
-
-    p {
-      color: var(--muted);
-      line-height: 1.6;
-    }
-
-    .container {
-      width: min(100% - 32px, var(--max));
-      margin: 0 auto;
-    }
+    a { color: #fff; text-decoration: none; }
+    p { margin: 0; color: var(--muted); line-height: 1.6; }
+    ul { margin: 14px 0 0; padding-left: 20px; color: var(--muted); line-height: 1.65; }
+    .container { width: min(100% - 32px, var(--max)); margin: 0 auto; }
 
     .topbar {
       position: sticky;
       top: 0;
       z-index: 50;
       backdrop-filter: blur(10px);
-      background: rgba(5, 16, 29, 0.78);
+      background: rgba(5,16,29,0.78);
       border-bottom: 1px solid rgba(255,255,255,0.08);
     }
 
@@ -681,66 +60,48 @@
       align-items: center;
       justify-content: space-between;
       gap: 28px;
-      padding: 18px 0;
+      padding: 16px 0;
     }
 
     .logo-img {
       width: 150px;
       height: auto;
-      object-fit: contain;
       display: block;
-      filter: drop-shadow(0 10px 22px rgba(94, 203, 255, 0.18));
-      flex-shrink: 0;
+      filter: drop-shadow(0 10px 22px rgba(94,203,255,0.18));
     }
 
     .nav {
       display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
       align-items: center;
-      font-family: 'White5', sans-serif;
-      letter-spacing: -1.3pt;
+      flex-wrap: wrap;
+      gap: 20px;
+      font-family: 'White5', Arial, sans-serif;
       font-size: 28px;
       font-weight: 700;
+      letter-spacing: 0;
     }
 
-    .nav a {
-      color: #ffffff;
-      -webkit-text-stroke: 0.4px rgba(0, 0, 0, 0.65);
-      text-shadow:
-        0 1px 2px rgba(0, 0, 0, 0.75),
-        0 0 8px rgba(0, 234, 255, 0.55);
-      transition: 0.2s ease;
-    }
-
-    .nav a:hover {
-      transform: translateY(-1px);
-      text-shadow:
-        0 1px 2px rgba(0, 0, 0, 0.8),
-        0 0 12px rgba(0, 234, 255, 0.85);
-    }
+    .nav a { text-shadow: 0 1px 2px rgba(0,0,0,0.75), 0 0 8px rgba(0,234,255,0.45); }
+    .nav a:hover { transform: translateY(-1px); }
 
     .nav-cta,
     .water-btn,
-    .estimate-btn {
+    .estimate-btn,
+    .mobile-bottom-bar a:first-child {
+      color: #00304f;
       background-image: url("water.png");
       background-size: 180%;
       background-position: top;
       background-repeat: no-repeat;
       animation: waterMove 8s ease-in-out infinite;
-      border: 1px solid rgba(255,255,255,0.25);
-      box-shadow:
-        0 0 10px rgba(255,255,255,0.35),
-        0 0 24px rgba(56,182,255,0.48),
-        0 14px 34px rgba(56,182,255,0.32),
-        inset 0 1px 0 rgba(255,255,255,0.45);
+      text-shadow: 0 0 2px rgba(255,255,255,1), 0 0 6px rgba(255,255,255,0.8);
+      box-shadow: 0 12px 28px rgba(94,203,255,0.22);
     }
 
     .nav-cta {
       min-height: 52px;
       padding: 0 24px;
       border-radius: 999px;
-      color: #ffffff !important;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -748,1755 +109,424 @@
 
     @keyframes waterMove {
       0% { background-position: top left; }
-      50% { background-position: top right; }
+      50% { background-position: center right; }
       100% { background-position: top left; }
     }
 
-    .hero {
-      padding: 76px 0 36px;
-      text-align: center;
-    }
-
-    .eyebrow {
-      margin: 0 0 10px;
-      color: #ffffff;
-      font-size: 16px;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.5);
-    }
-
-    h1 {
-      font-family: 'White5', sans-serif;
-      font-size: clamp(58px, 8vw, 106px);
-      line-height: 0.9;
-      margin: 0 0 20px;
-      background: linear-gradient(180deg, #fff2a8, #ffd700, #caa400);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      color: transparent;
-      -webkit-text-stroke: 0.45px rgba(0, 0, 0, 0.55);
-      text-shadow:
-        0 2px 4px rgba(0, 0, 0, 0.55),
-        0 0 10px rgba(255, 214, 0, 0.24);
-    }
-
-    h2 {
-      margin: 0;
-      color: #ffffff;
-      font-size: clamp(30px, 4vw, 46px);
-      text-shadow: 0 2px 5px rgba(0,0,0,0.35);
-    }
-
+    h1,
+    h2,
     h3 {
-      margin: 0;
-      font-family: 'White5', sans-serif;
-      font-size: 40px;
-      line-height: 0.95;
-      color: #ffffff;
-      -webkit-text-stroke: 0.35px rgba(0,0,0,0.45);
-      text-shadow:
-        0 2px 4px rgba(0,0,0,0.55),
-        0 0 8px rgba(255,255,255,0.18);
-    }
-
-    .hero p {
-      max-width: 760px;
-      margin: 0 auto;
-      font-size: 18px;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.35);
-    }
-
-    .estimate-section {
-      padding: 28px 0 80px;
-    }
-
-    .service-row {
-      display: grid;
-      grid-template-columns: 320px 1fr;
-      gap: 28px;
-      align-items: stretch;
-      margin-bottom: 34px;
-    }
-
-    .service-photo {
-      min-height: 430px;
-      border-radius: 22px;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.14);
-      box-shadow: var(--shadow);
-      background: rgba(255,255,255,0.08);
-    }
-
-    .service-photo img {
-      width: 100%;
-      height: 100%;
-      display: block;
-      object-fit: cover;
-    }
-
-    .service-content {
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-    }
-
-    .service-title {
-      display: grid;
-      grid-template-columns: auto 1fr auto;
-      gap: 22px;
-      align-items: end;
-    }
-
-    .service-code {
-      font-family: Arial, sans-serif;
-      font-size: 48px;
-      line-height: 1;
-      font-weight: 900;
-      letter-spacing: -2px;
-      color: #5ecbff;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.45);
-    }
-
-    .service-code.green {
-      color: #74d99f;
-    }
-
-    .service-code.dark {
-      color: #d6eaff;
-    }
-
-    .service-name {
-      padding-bottom: 4px;
-    }
-
-    .service-name strong {
-      display: block;
-      color: #ffffff;
-      font-size: 22px;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.45);
-    }
-
-    .title-line {
-      height: 2px;
-      background: rgba(94,203,255,0.8);
-      margin-bottom: 12px;
-      border-radius: 999px;
-    }
-
-    .title-line.green {
-      background: rgba(116,217,159,0.8);
-    }
-
-    .option-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-    }
-
-    .option-card {
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.14);
-      border-radius: 18px;
-      padding: 20px;
-      min-height: 230px;
-      box-shadow: 0 12px 28px rgba(0,0,0,0.16);
-      backdrop-filter: blur(6px);
-    }
-
-    .option-card h4 {
-      margin: 0 0 8px;
-      color: #ffffff;
-      font-size: 17px;
-    }
-
-    .option-card p {
-      margin: 0 0 18px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    .icon {
-      width: 42px;
-      height: 42px;
-      border-radius: 14px;
-      display: grid;
-      place-items: center;
-      margin-bottom: 14px;
-      background: rgba(94,203,255,0.12);
-      border: 1px solid rgba(94,203,255,0.22);
-      color: #9be7ff;
-      font-size: 24px;
-    }
-
-    .icon.green {
-      background: rgba(116,217,159,0.12);
-      border-color: rgba(116,217,159,0.22);
-      color: #9ff0bd;
-    }
-
-    .counter-list {
-      display: grid;
-      gap: 10px;
-    }
-
-    .counter-row {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .counter-label {
-      color: #ffffff;
-      font-size: 13px;
-      font-weight: 700;
-      line-height: 1.35;
-    }
-
-    .counter-label span {
-      color: var(--muted);
-      font-weight: 400;
-      font-size: 12px;
-    }
-
-    .counter {
-      display: inline-grid;
-      grid-template-columns: 36px 44px 36px;
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.14);
-      background: rgba(255,255,255,0.06);
-    }
-
-    .counter button {
-      border: 0;
-      background: rgba(255,255,255,0.08);
-      color: #ffffff;
-      font-size: 20px;
-      cursor: pointer;
-    }
-
-    .counter strong {
-      display: grid;
-      place-items: center;
-      color: #ffffff;
-      font-size: 18px;
-      min-height: 38px;
-    }
-
-    .story-buttons,
-    .surface-buttons {
-      display: grid;
-      gap: 10px;
-    }
-
-    .story-btn,
-    .surface-btn {
-      min-height: 48px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.16);
-      background: rgba(255,255,255,0.07);
-      color: #ffffff;
-      font-weight: 800;
-      cursor: pointer;
-      transition: 0.2s ease;
-    }
-
-    .story-btn.active,
-    .surface-btn.active {
-      border-color: rgba(94,203,255,0.85);
-      background: rgba(94,203,255,0.14);
-      box-shadow: 0 0 18px rgba(94,203,255,0.18);
-    }
-
-    .surface-buttons {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    .surface-btn {
-      min-height: 76px;
-      display: grid;
-      place-items: center;
-      font-size: 13px;
-    }
-
-    .single-counter {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-top: 46px;
-    }
-
-    .unit {
-      color: #9be7ff;
-      font-weight: 800;
-    }
-
-    .note {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      color: var(--muted);
-      font-size: 14px;
-      margin-top: -4px;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.35);
-    }
-
-    .summary-panel {
-      margin-top: 30px;
-      padding: 24px;
-      border-radius: var(--radius);
-      background:
-        radial-gradient(circle at top left, rgba(255,255,255,0.22), transparent 28%),
-        rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.14);
-      box-shadow: var(--shadow);
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 22px;
-      align-items: center;
-    }
-
-    .summary-left {
-      display: flex;
-      gap: 18px;
-      align-items: center;
-    }
-
-    .summary-icon {
-      width: 66px;
-      height: 66px;
-      border-radius: 20px;
-      display: grid;
-      place-items: center;
-      background: rgba(94,203,255,0.16);
-      border: 1px solid rgba(94,203,255,0.24);
-      font-size: 34px;
-    }
-
-    .summary-left h3 {
-      font-size: 34px;
-      margin-bottom: 6px;
-    }
-
-    .summary-left p {
-      margin: 0;
-      font-size: 15px;
-    }
-
-    .summary-buttons {
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-
-    .estimate-btn {
-      min-height: 64px;
-      min-width: 260px;
-      border-radius: 16px;
-      border: 0;
-      cursor: pointer;
-      font-family: 'White5', sans-serif;
-      font-size: 31px;
-      letter-spacing: -2pt;
-      color: #00304f;
-      text-shadow:
-        0 0 2px rgba(255,255,255,1),
-        0 0 6px rgba(255,255,255,0.85),
-        0 0 12px rgba(94,203,255,0.65);
-      transition: 0.2s ease;
-    }
-
-    .estimate-btn:hover {
-      transform: translateY(-2px);
-      box-shadow:
-        0 0 14px rgba(255,255,255,0.85),
-        0 0 28px rgba(56,182,255,0.75),
-        0 0 46px rgba(56,182,255,0.55);
-    }
-
-    .request-btn {
-      background-image: none;
-      background: rgba(255,255,255,0.08);
-      color: #ffffff;
-      border: 1px solid rgba(255,255,255,0.22);
-      text-shadow:
-        0 1px 2px rgba(0,0,0,0.65),
-        0 0 8px rgba(0,234,255,0.45);
-      box-shadow:
-        0 0 14px rgba(94,203,255,0.22),
-        0 10px 24px rgba(0,0,0,0.18);
-    }
-
-
-
-    .service-toggle {
-      min-height: 42px;
-      padding: 0 16px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.22);
-      background: rgba(255,255,255,0.08);
-      color: #ffffff;
-      font-weight: 900;
-      cursor: pointer;
-      white-space: nowrap;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.45);
-      transition: 0.2s ease;
-    }
-
-    .service-toggle.active {
-      border-color: rgba(94,203,255,0.9);
-      background: rgba(94,203,255,0.18);
-      box-shadow: 0 0 18px rgba(94,203,255,0.28);
-    }
-
-    .service-toggle:not(.active)::before {
-      content: "+ ";
-    }
-
-    .service-toggle.active::before {
-      content: "✓ ";
-    }
-
-    .result-box {
-      margin-top: 22px;
-      display: none;
-      padding: 24px;
-      border-radius: var(--radius);
-      background:
-        radial-gradient(circle at top right, rgba(94,203,255,0.18), transparent 34%),
-        rgba(6, 21, 37, 0.78);
-      border: 1px solid rgba(255,255,255,0.16);
-      box-shadow: var(--shadow);
-    }
-
-    .result-box.active {
-      display: block;
-    }
-
-    .result-box h3 {
-      margin-bottom: 10px;
-    }
-
-    .price {
-      font-size: 44px;
-      font-weight: 900;
-      color: #ffd700;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.45);
-      margin: 6px 0 12px;
-    }
-
-    .result-box p {
-      margin: 0;
-    }
-
-    .option-card.field-error {
-      border-color: rgba(255, 74, 74, 0.95);
-      background: rgba(255, 74, 74, 0.16);
-      box-shadow:
-        0 0 0 2px rgba(255, 74, 74, 0.28),
-        0 12px 28px rgba(0,0,0,0.16);
-    }
-
-    .option-card.field-error h4::after {
-      content: " required";
-      color: #ffb3b3;
-      font-size: 12px;
-      font-family: Arial, sans-serif;
+      font-family: 'White5', Arial, sans-serif;
       letter-spacing: 0;
-      margin-left: 6px;
+      color: #fff;
+      -webkit-text-stroke: 0.25px rgba(0,0,0,0.55);
+      text-shadow: 0 2px 4px rgba(0,0,0,0.62), 0 0 12px rgba(94,203,255,0.28);
+      text-wrap: balance;
     }
 
-    .request-modal {
-      position: fixed;
-      inset: 0;
-      z-index: 999;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 18px;
-      background: rgba(3, 12, 22, 0.82);
-      backdrop-filter: blur(10px);
-    }
+    h1 { margin: 0 0 18px; font-size: clamp(54px, 8vw, 96px); line-height: 0.96; }
+    h2 { margin: 0; font-size: clamp(34px, 4vw, 48px); line-height: 1; }
+    h3 { margin: 0 0 10px; font-size: 34px; line-height: 1; }
 
-    .request-modal.active {
-      display: flex;
-    }
+    .hero { padding: 74px 0 34px; }
+    .hero-grid { display: grid; grid-template-columns: 1fr 360px; gap: 26px; align-items: stretch; }
+    .hero-main { display: flex; flex-direction: column; justify-content: center; }
+    .eyebrow { margin: 0 0 10px; color: #fff; font-weight: 700; text-shadow: 0 1px 2px rgba(0,0,0,0.55); }
+    .hero-main p { max-width: 720px; font-size: 18px; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
 
-    .request-modal-box {
-      width: min(100%, 620px);
-      max-height: 92vh;
-      overflow: auto;
-      border-radius: 26px;
-      padding: 24px;
-      background:
-        radial-gradient(circle at top right, rgba(94,203,255,0.18), transparent 34%),
-        rgba(12, 33, 55, 0.96);
-      border: 1px solid rgba(255,255,255,0.18);
-      box-shadow:
-        0 24px 70px rgba(0,0,0,0.45),
-        0 0 28px rgba(94,203,255,0.18);
-    }
-
-    .request-modal-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 18px;
-    }
-
-    .request-modal-top h3 {
-      margin: 0;
-      font-size: 34px;
-    }
-
-    .modal-close {
-      width: 44px;
-      height: 44px;
-      border: 1px solid rgba(255,255,255,0.2);
+    .water-btn,
+    .ghost-btn,
+    .estimate-btn {
+      min-height: 54px;
+      padding: 0 24px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.08);
-      color: #ffffff;
-      font-size: 30px;
-      line-height: 1;
-      cursor: pointer;
-    }
-
-    .request-form {
-      display: grid;
-      gap: 14px;
-    }
-
-    .request-field {
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-    }
-
-    .request-field label {
-      color: #ffffff;
-      font-weight: 700;
-      font-size: 14px;
-    }
-
-    .request-field input,
-    .request-field textarea {
-      width: 100%;
-      padding: 14px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,0.18);
-      background: rgba(255,255,255,0.95);
-      color: #0b1f33;
-      font-size: 16px;
-      outline: none;
-      font-family: Arial, sans-serif;
-    }
-
-    .request-field textarea {
-      min-height: 100px;
-      resize: vertical;
-    }
-
-    .request-field input:focus,
-    .request-field textarea:focus {
-      border-color: rgba(56,182,255,0.9);
-      box-shadow: 0 0 0 3px rgba(56,182,255,0.18);
-    }
-
-    .request-submit {
-      min-height: 56px;
-      border-radius: 16px;
       border: 0;
       cursor: pointer;
-      font-family: 'White5', sans-serif;
-      font-size: 29px;
-      letter-spacing: -2pt;
-      background-image: url("water.png");
-      background-size: 180%;
-      background-position: top;
-      background-repeat: no-repeat;
-      animation: waterMove 8s ease-in-out infinite;
-      color: #00304f;
-      text-shadow:
-        0 0 2px rgba(255,255,255,1),
-        0 0 6px rgba(255,255,255,0.85),
-        0 0 12px rgba(94,203,255,0.65);
-      box-shadow:
-        0 0 12px rgba(94,203,255,0.28),
-        0 10px 22px rgba(56,182,255,0.22);
-    }
-
-    .request-note {
-      margin: 0;
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-
-
-    .reviews-section {
-      margin-top: 34px;
-      padding: 28px;
-      border-radius: var(--radius);
-      background:
-        radial-gradient(circle at top left, rgba(255,255,255,0.18), transparent 30%),
-        rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.14);
-      box-shadow: var(--shadow);
-    }
-
-    .reviews-title {
-      margin-bottom: 18px;
-      font-family: 'White5', sans-serif;
-      letter-spacing: -1.5pt;
-    }
-
-    .reviews-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-    }
-
-    .review-card {
-      padding: 20px;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.14);
-      box-shadow: 0 12px 28px rgba(0,0,0,0.16);
-    }
-
-    .review-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-
-    .review-top strong {
-      color: #ffffff;
-      font-size: 16px;
-    }
-
-    .review-top .google {
-      color: #9be7ff;
-      font-size: 13px;
-      font-weight: 800;
-      text-decoration: underline;
-      text-underline-offset: 3px;
-    }
-
-    .stars {
-      color: var(--gold);
-      letter-spacing: 2px;
-      font-size: 20px;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.45);
-      margin-bottom: 10px;
-    }
-
-    .review-card p {
-      margin: 0;
-      font-size: 14px;
-      line-height: 1.55;
-    }
-
-    .review-buttons {
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-      margin-top: 18px;
-    }
-
-    .review-btn {
-      min-height: 48px;
-      padding: 0 20px;
-      border-radius: 999px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.22);
-      color: #ffffff;
-      font-weight: 800;
-      box-shadow: 0 10px 24px rgba(0,0,0,0.18);
+      font-family: 'White5', Arial, sans-serif;
+      font-size: 25px;
+      font-weight: 700;
     }
 
-    .review-btn.leave {
-      background-image: url("water.png");
-      background-size: 180%;
-      background-position: top;
-      background-repeat: no-repeat;
-      animation: waterMove 8s ease-in-out infinite;
-      color: #00304f;
-      text-shadow: 0 0 2px rgba(255,255,255,1), 0 0 8px rgba(255,255,255,0.85);
+    .ghost-btn {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: #fff;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.7);
     }
 
-    .footer {
-      padding: 28px 0 44px;
-      color: var(--muted);
-      font-size: 14px;
+    .contact-card,
+    .service-card,
+    .estimate-card,
+    .result-card,
+    .review-card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
     }
 
-    .footer-line {
-      height: 1px;
-      background: rgba(255,255,255,0.08);
-      margin-bottom: 18px;
+    .contact-card { padding: 24px; background: url("wc-white5.jpg") center / cover no-repeat; }
+    .contact-list { list-style: none; padding: 0; margin: 16px 0 0; display: grid; gap: 10px; }
+    .contact-list strong { display: block; color: #fff; }
+
+    section { padding: 34px 0; }
+    .section-head { max-width: 760px; margin-bottom: 20px; }
+    .section-head p { margin-top: 10px; font-size: 17px; }
+
+    .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .service-card { padding: 24px; min-height: 330px; display: flex; flex-direction: column; }
+    .service-card p { margin-top: 8px; }
+    .service-actions { display: flex; flex-direction: column; gap: 10px; margin-top: auto; padding-top: 18px; }
+    .service-actions a { width: 100%; }
+
+    .estimate-layout { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 18px; align-items: start; }
+    .estimate-card, .result-card { padding: 24px; }
+    .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 18px; }
+    .field { display: grid; gap: 7px; }
+    label { color: #fff; font-weight: 700; }
+    input, select, textarea {
+      width: 100%;
+      min-height: 50px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(0,0,0,0.18);
+      color: #fff;
+      padding: 0 14px;
+      font-size: 16px;
+      outline: none;
     }
+    textarea { min-height: 92px; padding: 12px 14px; resize: vertical; }
+    option { color: #0b1f33; }
+    .checkbox-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+    .checkbox-pill { display: inline-flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 999px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.14); color: #fff; }
+    .checkbox-pill input { width: 18px; min-height: 18px; }
+    .estimate-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+    .price { margin: 10px 0; font-family: 'White5', Arial, sans-serif; font-size: 54px; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.62); }
+    .result-list { display: grid; gap: 8px; margin-top: 12px; color: var(--muted); }
+    .fine-print { font-size: 13px; color: rgba(238,247,255,0.78); margin-top: 14px; }
+
+    .reviews-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .review-card { padding: 18px; }
+    .stars { color: #ffd34d; letter-spacing: 1px; margin: 8px 0; }
+
+    .mobile-bottom-bar { display: none; }
+
+    footer { padding: 26px 0 34px; color: rgba(238,247,255,0.76); font-size: 14px; border-top: 1px solid rgba(255,255,255,0.1); }
 
     @media (max-width: 1060px) {
-      .nav {
-        display: none;
-      }
-
-      .service-row {
-        grid-template-columns: 1fr;
-      }
-
-      .service-photo {
-        min-height: 320px;
-      }
-
-      .option-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .summary-panel {
-        grid-template-columns: 1fr;
-      }
-
-      .summary-buttons {
-        justify-content: stretch;
-      }
-
-      .estimate-btn {
-        width: 100%;
-        min-width: 0;
-      }
+      .nav { display: none; }
+      .hero-grid, .estimate-layout { grid-template-columns: 1fr; }
+      .services-grid, .reviews-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 640px) {
-      .topbar-inner {
-        padding: 14px 0;
+      body { overflow-x: hidden; padding-bottom: 92px; }
+      .container { width: min(100% - 22px, var(--max)); }
+      .topbar-inner { justify-content: center; padding: 10px 0; }
+      .logo-img { width: 118px; }
+      .hero { padding: 30px 0 20px; }
+      .hero-main { text-align: center; margin: 0 auto; }
+      h1 { font-size: clamp(38px, 12vw, 54px); line-height: 0.98; }
+      h2 { font-size: 31px; }
+      h3 { font-size: 28px; }
+      p, .hero-main p, .section-head p { font-size: 15.5px; line-height: 1.55; }
+      .hero-actions, .estimate-actions { flex-direction: column; width: 100%; gap: 10px; }
+      .water-btn, .ghost-btn, .estimate-btn { width: 100%; min-height: 52px; font-size: 22px; padding: 12px 16px; }
+      section { padding: 26px 0; }
+      .contact-card, .service-card, .estimate-card, .result-card, .review-card { border-radius: 20px; padding: 18px; }
+      .contact-card { min-height: 360px; background-position: center top; }
+      .services-grid, .reviews-grid { gap: 16px; }
+      .service-card { min-height: auto; }
+      .form-grid { grid-template-columns: 1fr; gap: 12px; }
+      .checkbox-row { flex-direction: column; }
+      .checkbox-pill { width: 100%; }
+      .price { font-size: 44px; }
+      footer { padding: 24px 0 30px; text-align: center; line-height: 1.7; }
+      .mobile-bottom-bar {
+        position: fixed;
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+        z-index: 999;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        padding: 10px;
+        border-radius: 18px;
+        background: rgba(5,16,29,0.92);
+        border: 1px solid rgba(255,255,255,0.18);
+        box-shadow: 0 12px 34px rgba(0,0,0,0.35);
+        backdrop-filter: blur(12px);
       }
-
-      .logo-img {
-        width: 130px;
+      .mobile-bottom-bar a {
+        min-height: 50px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'White5', Arial, sans-serif;
+        font-size: 22px;
+        font-weight: 700;
       }
-
-      .hero {
-        padding-top: 54px;
-      }
-
-      h1 {
-        font-size: 58px;
-      }
-
-      h2 {
-        font-size: 34px;
-      }
-
-      h3 {
-        font-size: 32px;
-      }
-
-      .service-code {
-        font-size: 42px;
-      }
-
-      .service-title {
-        grid-template-columns: 1fr;
-        gap: 8px;
-      }
-
-      .counter-row {
-        grid-template-columns: 1fr;
-      }
-
-      .counter {
-        width: fit-content;
-      }
-
-      .single-counter {
-        margin-top: 20px;
-      }
-
-      .summary-left {
-        align-items: flex-start;
-      }
-
-      .summary-icon {
-        width: 54px;
-        height: 54px;
-        font-size: 28px;
-      }
-
-      .estimate-btn {
-        font-size: 26px;
-      }
-
-      .price {
-        font-size: 36px;
-      }
-
-      .request-modal-box {
-        padding: 20px;
-        border-radius: 22px;
-      }
-
-      .request-modal-top h3 {
-        font-size: 28px;
-      }
+      .mobile-bottom-bar a.secondary { color: #fff; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); }
     }
 
-
-    @media (max-width: 640px) {
-      .reviews-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .review-top {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .review-btn {
-        width: 100%;
-      }
+    @media (max-width: 390px) {
+      h1 { font-size: 36px; }
+      .water-btn, .ghost-btn, .estimate-btn, .mobile-bottom-bar a { font-size: 19px; }
     }
-
   </style>
 </head>
-
 <body>
   <header class="topbar">
     <div class="container topbar-inner">
-      <a href="index.html">
-        <img src="logo.png" alt="White5 logo" class="logo-img">
-      </a>
-
-      <nav class="nav">
+      <a href="index.html" aria-label="White5 home"><img src="logo.png" alt="White5 logo" class="logo-img" /></a>
+      <nav class="nav" aria-label="Main navigation">
         <a href="index.html">Home</a>
-        <a href="services.html">Services</a>
+        <a href="#services">Services</a>
         <a href="gallery.html">Gallery</a>
-        <a href="#estimate">Estimate</a>
+        <a href="#quote">Estimate</a>
         <a class="nav-cta" href="tel:14034793905">Call Now</a>
       </nav>
     </div>
   </header>
 
+  <div class="mobile-bottom-bar">
+    <a href="tel:14034793905">Call</a>
+    <a class="secondary" href="#quote">Quote</a>
+  </div>
+
   <main>
     <section class="hero" id="quote">
-      <div class="container">
-        <p class="eyebrow">White5 Exterior Cleaning | Calgary</p>
-        <h1>Get Your Estimate</h1>
-        <p>
-          Choose the services you need and enter the details.
-          The more accurate the info, the more useful your estimate will be.
-        </p>
+      <div class="container hero-grid">
+        <div class="hero-main">
+          <p class="eyebrow">White5 Exterior Cleaning | Calgary</p>
+          <h1>Services & Estimate</h1>
+          <p>Choose the services you need and get a quick starting estimate. Final pricing can change depending on access, height, dirt level, photos, and job details.</p>
+          <div class="hero-actions">
+            <a class="water-btn" href="#estimate">Calculate Estimate</a>
+            <a class="ghost-btn" href="tel:14034793905">Call 403-479-3905</a>
+          </div>
+        </div>
+
+        <aside class="contact-card">
+          <h3>Contact White5</h3>
+          <p>Reach out directly for window cleaning, gutter cleaning, or power washing in Calgary.</p>
+          <ul class="contact-list">
+            <li><strong>Phone</strong><a href="tel:14034793905">403-479-3905</a></li>
+            <li><strong>Email</strong><a href="mailto:info@white5.ca">info@white5.ca</a></li>
+            <li><strong>Location</strong>Calgary, Alberta</li>
+            <li><strong>Hours</strong>Monday to Saturday</li>
+          </ul>
+        </aside>
       </div>
     </section>
 
-    <section class="estimate-section" id="estimate">
+    <section id="services">
       <div class="container">
-
-        <div class="service-row">
-          <div class="service-photo">
-            <img src="images/window-cleaning-1.jpg" alt="Window cleaning">
-          </div>
-
-          <div class="service-content">
-            <div class="service-title">
-              <div>
-                <div class="service-code">W.C</div>
-                <div class="service-name">
-                  <strong>Window Cleaning</strong>
-                </div>
-              </div>
-              <div class="title-line"></div>
-              <button class="service-toggle active" id="toggleWindow" type="button" onclick="toggleService('window')">Included</button>
-            </div>
-
-            <div class="option-grid">
-              <div class="option-card">
-                <div class="icon">▦</div>
-                <h4>Window Quantity</h4>
-                <p>How many windows of each size?</p>
-
-                <div class="counter-list">
-                  <div class="counter-row">
-                    <div class="counter-label">Small <span>(up to 3ft)</span></div>
-                    <div class="counter">
-                      <button type="button" onclick="changeValue('smallWindows', -1)">−</button>
-                      <strong id="smallWindows">0</strong>
-                      <button type="button" onclick="changeValue('smallWindows', 1)">+</button>
-                    </div>
-                  </div>
-
-                  <div class="counter-row">
-                    <div class="counter-label">Standard <span>(3ft–6ft)</span></div>
-                    <div class="counter">
-                      <button type="button" onclick="changeValue('standardWindows', -1)">−</button>
-                      <strong id="standardWindows">0</strong>
-                      <button type="button" onclick="changeValue('standardWindows', 1)">+</button>
-                    </div>
-                  </div>
-
-                  <div class="counter-row">
-                    <div class="counter-label">Large <span>(6ft–10ft)</span></div>
-                    <div class="counter">
-                      <button type="button" onclick="changeValue('largeWindows', -1)">−</button>
-                      <strong id="largeWindows">0</strong>
-                      <button type="button" onclick="changeValue('largeWindows', 1)">+</button>
-                    </div>
-                  </div>
-
-                  <div class="counter-row">
-                    <div class="counter-label">Extra Large <span>(10ft+)</span></div>
-                    <div class="counter">
-                      <button type="button" onclick="changeValue('xlWindows', -1)">−</button>
-                      <strong id="xlWindows">0</strong>
-                      <button type="button" onclick="changeValue('xlWindows', 1)">+</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="option-card">
-                <div class="icon">⌂</div>
-                <h4>Property Size</h4>
-                <p>Enter the total square footage of your home.</p>
-
-                <div class="single-counter">
-                  <div class="counter">
-                    <button type="button" onclick="changeValue('windowSqft', -100)">−</button>
-                    <strong id="windowSqft">0</strong>
-                    <button type="button" onclick="changeValue('windowSqft', 100)">+</button>
-                  </div>
-                  <span class="unit">sq ft</span>
-                </div>
-              </div>
-
-              <div class="option-card">
-                <div class="icon">▥</div>
-                <h4>Stories</h4>
-                <p>How many stories is your property?</p>
-
-                <div class="story-buttons" data-group="windowStories">
-                  <button class="story-btn" type="button" onclick="selectStory('windowStories', 1, this)">1 Story</button>
-                  <button class="story-btn active" type="button" onclick="selectStory('windowStories', 2, this)">2 Stories</button>
-                  <button class="story-btn" type="button" onclick="selectStory('windowStories', 3, this)">3+ Stories</button>
-                </div>
-              </div>
-            </div>
-
-            <div class="note">ⓘ These details help us provide an accurate estimate.</div>
-          </div>
+        <div class="section-head">
+          <h2>Exterior Cleaning Services</h2>
+          <p>Practical exterior cleaning for Calgary homes with careful work and clear results.</p>
         </div>
-
-        <div class="service-row">
-          <div class="service-photo">
-            <img src="images/gutter-cleaning-1.jpg" alt="Gutter cleaning">
-          </div>
-
-          <div class="service-content">
-            <div class="service-title">
-              <div>
-                <div class="service-code green">G.C</div>
-                <div class="service-name">
-                  <strong>Gutter Cleaning</strong>
-                </div>
-              </div>
-              <div class="title-line green"></div>
-              <button class="service-toggle" id="toggleGutter" type="button" onclick="toggleService('gutter')">Add service</button>
+        <div class="services-grid">
+          <article class="service-card">
+            <h3>Window Cleaning</h3>
+            <p>Exterior window cleaning using purified water for a cleaner, spot-free finish.</p>
+            <ul>
+              <li>Exterior glass cleaning</li>
+              <li>Frames and visible edges</li>
+              <li>Purified water system</li>
+            </ul>
+            <div class="service-actions">
+              <a class="ghost-btn" href="gallery.html#window-cleaning">View Gallery</a>
+              <a class="water-btn" href="#estimate">Get Window Quote</a>
             </div>
+          </article>
 
-            <div class="option-grid">
-              <div class="option-card">
-                <div class="icon green">▰</div>
-                <h4>Gutter Length</h4>
-                <p>Enter the total linear feet of gutters to clean.</p>
+          <article class="service-card">
+            <h3>Gutter Cleaning</h3>
+            <p>Removing leaves, dirt, and debris from gutters to help water flow properly.</p>
+            <ul>
+              <li>Debris removal</li>
+              <li>Downspout check</li>
+              <li>Basic gutter inspection</li>
+            </ul>
+            <div class="service-actions">
+              <a class="ghost-btn" href="gallery.html#gutter-cleaning">View Gallery</a>
+              <a class="water-btn" href="#estimate">Get Gutter Quote</a>
+            </div>
+          </article>
 
-                <div class="single-counter">
-                  <div class="counter">
-                    <button type="button" onclick="changeValue('gutterLength', -10)">−</button>
-                    <strong id="gutterLength">0</strong>
-                    <button type="button" onclick="changeValue('gutterLength', 10)">+</button>
-                  </div>
-                  <span class="unit">ft</span>
-                </div>
-              </div>
-
-              <div class="option-card">
-      <div class="icon green">🏠</div>
-      <h4>Roof Type</h4>
-      <p>Select your roof design.</p>
-      <div class="story-buttons" style="display: flex; flex-wrap: wrap; gap: 8px;">
-        <button class="story-btn roof-btn active" type="button" onclick="selectRoofType(0.25, this)">Gable</button>
-        <button class="story-btn roof-btn" type="button" onclick="selectRoofType(0.25, this)">Hip</button>
-        <button class="story-btn roof-btn" type="button" onclick="selectRoofType(0.25, this)">Front Gable</button>
-        <button class="story-btn roof-btn" type="button" onclick="selectRoofType(0, this)">Dormer</button>
-        <button class="story-btn roof-btn" type="button" onclick="selectRoofType(0, this)">Flat</button>
+          <article class="service-card">
+            <h3>Power Washing</h3>
+            <p>Careful exterior surface cleaning for driveways, siding, patios, decks, and outdoor areas.</p>
+            <ul>
+              <li>Driveways and sidewalks</li>
+              <li>Patios and exterior surfaces</li>
+              <li>Careful pressure and distance</li>
+            </ul>
+            <div class="service-actions">
+              <a class="ghost-btn" href="gallery.html#power-washing">View Gallery</a>
+              <a class="water-btn" href="#estimate">Get Washing Quote</a>
+            </div>
+          </article>
+        </div>
       </div>
-    </div>
+    </section>
 
-              <div class="option-card">
-                <div class="icon green">▥</div>
-                <h4>Stories</h4>
-                <p>How many stories is your property?</p>
-
-                <div class="story-buttons" data-group="gutterStories">
-                  <button class="story-btn" type="button" onclick="selectStory('gutterStories', 1, this)">1 Story</button>
-                  <button class="story-btn active" type="button" onclick="selectStory('gutterStories', 2, this)">2 Stories</button>
-                  <button class="story-btn" type="button" onclick="selectStory('gutterStories', 3, this)">3+ Stories</button>
-                </div>
-              </div>
-            </div>
-
-            <div class="note">ⓘ These details help us provide an accurate estimate.</div>
-          </div>
+    <section id="estimate">
+      <div class="container">
+        <div class="section-head">
+          <h2>Quick Estimate</h2>
+          <p>Enter the details you know. You can leave anything that does not apply as 0.</p>
         </div>
-
-        <div class="service-row">
-          <div class="service-photo">
-            <img src="images/power-washing-1.jpg" alt="Power washing">
-          </div>
-
-          <div class="service-content">
-            <div class="service-title">
-              <div>
-                <div class="service-code dark">P.W</div>
-                <div class="service-name">
-                  <strong>Power Washing</strong>
-                </div>
-              </div>
-              <div class="title-line"></div>
-              <button class="service-toggle" id="togglePower" type="button" onclick="toggleService('power')">Add service</button>
+        <div class="estimate-layout">
+          <div class="estimate-card">
+            <h3>Job Details</h3>
+            <div class="checkbox-row">
+              <label class="checkbox-pill"><input id="includeWindow" type="checkbox" checked> Window Cleaning</label>
+              <label class="checkbox-pill"><input id="includeGutter" type="checkbox"> Gutter Cleaning</label>
+              <label class="checkbox-pill"><input id="includePower" type="checkbox"> Power Washing</label>
             </div>
 
-            <div class="option-grid">
-              <div class="option-card">
-                <div class="icon">⌁</div>
-                <h4>Choose Surface</h4>
-                <p>Select the type of surface you need cleaned.</p>
-
-                <div class="surface-buttons">
-                  <button class="surface-btn active" type="button" onclick="selectSurface('Driveway', this)">Driveway</button>
-                  <button class="surface-btn" type="button" onclick="selectSurface('Siding', this)">Siding</button>
-                  <button class="surface-btn" type="button" onclick="selectSurface('Fence', this)">Fence</button>
-                  <button class="surface-btn" type="button" onclick="selectSurface('Deck', this)">Deck</button>
-                  <button class="surface-btn" type="button" onclick="selectSurface('Patio', this)">Patio</button>
-                </div>
-              </div>
-
-              <div class="option-card">
-                <div class="icon">▯</div>
-                <h4>Surface Size</h4>
-                <p>Enter approximate square footage for each surface.</p>
-
-                <div class="counter-list">
-                  <div class="counter-row">
-                    <div class="counter-label">Driveway</div>
-                    <div class="counter">
-                      <button type="button" onclick="changeValue('drivewaySqft', -50)">−</button>
-                      <strong id="drivewaySqft">0</strong>
-                      <button type="button" onclick="changeValue('drivewaySqft', 50)">+</button>
-                    </div>
-                  </div>
-
-                  <div class="counter-row">
-                    <div class="counter-label">Siding</div>
-                    <div class="counter">
-                      <button type="button" onclick="changeValue('sidingSqft', -50)">−</button>
-                      <strong id="sidingSqft">0</strong>
-                      <button type="button" onclick="changeValue('sidingSqft', 50)">+</button>
-                    </div>
-                  </div>
-
-                  <div class="counter-row">
-                    <div class="counter-label">Fence</div>
-                    <div class="counter">
-                      <button type="button" onclick="changeValue('fenceSqft', -50)">−</button>
-                      <strong id="fenceSqft">0</strong>
-                      <button type="button" onclick="changeValue('fenceSqft', 50)">+</button>
-                    </div>
-                  </div>
-
-                  <div class="counter-row">
-                    <div class="counter-label">Deck</div>
-                    <div class="counter">
-                      <button type="button" onclick="changeValue('deckSqft', -50)">−</button>
-                      <strong id="deckSqft">0</strong>
-                      <button type="button" onclick="changeValue('deckSqft', 50)">+</button>
-                    </div>
-                  </div>
-
-                  <div class="counter-row">
-                    <div class="counter-label">Patio</div>
-                    <div class="counter">
-                      <button type="button" onclick="changeValue('patioSqft', -50)">−</button>
-                      <strong id="patioSqft">0</strong>
-                      <button type="button" onclick="changeValue('patioSqft', 50)">+</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="option-card">
-                <div class="icon">▤</div>
-                <h4>Send Request</h4>
-                <p>Open the request form and send your details to White5.</p>
-
-                <button class="estimate-btn request-btn" type="button" onclick="openRequestModal()" style="min-width: 100%; margin-top: 34px;">
-                  Send Request →
-                </button>
-              </div>
+            <div class="form-grid">
+              <div class="field"><label for="houseSize">House size, sq ft</label><input id="houseSize" type="number" min="0" placeholder="Example: 1800"></div>
+              <div class="field"><label for="stories">Stories</label><select id="stories"><option value="1">1 story</option><option value="1.25">2 stories</option><option value="1.45">3 stories</option></select></div>
+              <div class="field"><label for="smallWindows">Small windows</label><input id="smallWindows" type="number" min="0" value="0"></div>
+              <div class="field"><label for="standardWindows">Standard windows</label><input id="standardWindows" type="number" min="0" value="0"></div>
+              <div class="field"><label for="largeWindows">Large windows</label><input id="largeWindows" type="number" min="0" value="0"></div>
+              <div class="field"><label for="gutterLength">Gutter length, ft</label><input id="gutterLength" type="number" min="0" value="0"></div>
+              <div class="field"><label for="powerArea">Power washing area, sq ft</label><input id="powerArea" type="number" min="0" value="0"></div>
+              <div class="field"><label for="dirtLevel">Dirt level</label><select id="dirtLevel"><option value="1">Normal</option><option value="1.15">Heavy</option><option value="1.3">Very heavy</option></select></div>
             </div>
 
-            <div class="note">ⓘ These details help us provide an accurate estimate.</div>
+            <div class="field" style="margin-top:14px;"><label for="notes">Notes</label><textarea id="notes" placeholder="Access, timing, service details, or anything else helpful"></textarea></div>
+            <div class="estimate-actions">
+              <button class="estimate-btn" type="button" onclick="calculateEstimate()">Calculate Estimate</button>
+              <button class="ghost-btn" type="button" onclick="sendRequestEmail()">Send Request</button>
+            </div>
           </div>
+
+          <aside class="result-card">
+            <h3>Your Estimated Price</h3>
+            <div class="price" id="finalPrice">$0</div>
+            <p id="estimateNote">Select services and enter details to calculate a starting estimate.</p>
+            <div class="result-list" id="resultList"></div>
+            <p class="fine-print">This is a starting estimate only. Final price may change after photos or an in-person review.</p>
+          </aside>
         </div>
+      </div>
+    </section>
 
-        <div class="summary-panel">
-          <div class="summary-left">
-            <div class="summary-icon">▦</div>
-            <div>
-              <h3>Ready to see your price?</h3>
-              <p>
-                Calculate your estimate first, then send a request with your contact details.
-              </p>
-            </div>
-          </div>
-
-          <div class="summary-buttons">
-            <button class="estimate-btn" type="button" onclick="calculateEstimate()">
-              Calculate My Price →
-            </button>
-
-            <button class="estimate-btn request-btn" type="button" onclick="openRequestModal()">
-              Send Request →
-            </button>
-          </div>
+    <section id="reviews">
+      <div class="container">
+        <div class="section-head">
+          <h2>Customer Reviews</h2>
+          <p>Recent feedback from White5 customers.</p>
         </div>
-
-        <div class="result-box" id="resultBox">
-          <h3>Your Estimated Price</h3>
-          <div class="price" id="finalPrice">$0</div>
-          <p id="estimateNote">
-            This is a starting estimate. Final price may change depending on access,
-            dirt level, height, photos, and job details.
-          </p>
-  
-
-
+        <div class="reviews-grid">
+          <article class="review-card"><h3>Demetrius Lloyd</h3><div class="stars">★★★★★</div><p>Great service! Had my gutters cleaned fast, professionally, and thoroughly. Everything was cleaned properly and left tidy.</p></article>
+          <article class="review-card"><h3>Margaret Stewart</h3><div class="stars">★★★★★</div><p>I had Volodymyr pressure wash my house with 40 years of build up. He was amazing to get it back to looking new.</p></article>
+          <article class="review-card"><h3>Qasim S</h3><div class="stars">★★★★★</div><p>He cleaned the gutters on the backside of our home. He was polite, competent, thorough and showed the result of his work.</p></article>
+        </div>
+      </div>
+    </section>
   </main>
 
-  <div class="request-modal" id="requestModal">
-    <div class="request-modal-box">
-      <div class="request-modal-top">
-        <h3>Send Request</h3>
-
-        <button class="modal-close" type="button" onclick="closeRequestModal()">
-          ×
-        </button>
-      </div>
-
-      <form class="request-form" onsubmit="event.preventDefault(); sendRequestEmail();">
-        <div class="request-field">
-          <label for="customerName">Your Name</label>
-          <input id="customerName" type="text" placeholder="Your name" required="">
-        </div>
-
-        <div class="request-field">
-          <label for="customerAddress">Property Address</label>
-          <input id="customerAddress" type="text" placeholder="Street address, Calgary">
-        </div>
-
-        <div class="request-field">
-          <label for="customerEmail">Email</label>
-          <input id="customerEmail" type="email" placeholder="your@email.com">
-        </div>
-
-        <div class="request-field">
-          <label for="customerPhone">Phone Number</label>
-          <input id="customerPhone" type="tel" placeholder="403-000-0000">
-        </div>
-
-        <div class="request-field">
-          <label for="customerNotes">Extra Notes</label>
-          <textarea id="customerNotes" placeholder="Add access information, preferred day, photos note, or other details."></textarea>
-        </div>
-
-        <button class="request-submit" type="submit">
-          Send Email Request →
-        </button>
-
-        <p class="request-note">
-          This will open your email app with the request details already filled in.
-        </p>
-      </form>
-    </div>
-  </div>
-
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-line"></div>
-      © 2026 White5 Exterior Cleaning | Calgary, Alberta |
-      <a href="mailto:info@white5.ca">info@white5.ca</a> |
-      <a href="tel:14034793905">403-479-3905</a>
-    </div>
+  <footer>
+    <div class="container">© 2026 White5 Exterior Cleaning | Calgary, Alberta | <a href="mailto:info@white5.ca">info@white5.ca</a> | <a href="tel:14034793905">403-479-3905</a></div>
   </footer>
 
   <script>
-    const state = {
-      includeWindow: true,
-      includeGutter: false,
-      includePower: false,
-      windowStories: 2,
-      gutterStories: 2,
-      selectedSurface: "Driveway",
-      roofFactor: 0.25,
-      roofType: "Gable",
-      lastEstimate: 0
-    };
-
-    const serviceFields = {
-      window: ["smallWindows", "standardWindows", "largeWindows", "xlWindows", "windowSqft"],
-      gutter: ["gutterLength", "gutterSqft"],
-      power: ["drivewaySqft", "sidingSqft", "fenceSqft", "deckSqft", "patioSqft"]
-    };
-
-    const surfaceIds = {
-      Driveway: "drivewaySqft",
-      Siding: "sidingSqft",
-      Fence: "fenceSqft",
-      Deck: "deckSqft",
-      Patio: "patioSqft"
-    };
-
-    function getNumber(id) {
-      const element = document.getElementById(id);
-
-      if (!element) {
-        return 0;
-      }
-
-      const rawValue = element.value !== undefined ? element.value : element.textContent;
-      return Number(rawValue) || 0;
+    function numberValue(id) {
+      return Math.max(0, Number(document.getElementById(id).value) || 0);
     }
 
-    function hideResultBox() {
-      const resultBox = document.getElementById("resultBox");
-
-      if (resultBox) {
-        resultBox.classList.remove("active");
-      }
+    function money(value) {
+      return '$' + Math.round(value);
     }
 
-    function findOptionCard(titleText) {
-      return Array.from(document.querySelectorAll(".option-card")).find(card => {
-        const title = card.querySelector("h4");
-        return title && title.textContent.trim().includes(titleText);
-      });
-    }
+    function calculateEstimate() {
+      const includeWindow = document.getElementById('includeWindow').checked;
+      const includeGutter = document.getElementById('includeGutter').checked;
+      const includePower = document.getElementById('includePower').checked;
+      const stories = Number(document.getElementById('stories').value);
+      const dirt = Number(document.getElementById('dirtLevel').value);
+      const houseSize = numberValue('houseSize');
+      const smallWindows = numberValue('smallWindows');
+      const standardWindows = numberValue('standardWindows');
+      const largeWindows = numberValue('largeWindows');
+      const gutterLength = numberValue('gutterLength');
+      const powerArea = numberValue('powerArea');
+      let total = 0;
+      const lines = [];
 
-    function getOptionCardByElementId(id) {
-      const element = document.getElementById(id);
-      return element ? element.closest(".option-card") : null;
-    }
-
-    function getOptionCardByButtonSelector(selector) {
-      const button = document.querySelector(selector);
-      return button ? button.closest(".option-card") : null;
-    }
-
-    function setCardError(card, hasError) {
-      if (card) {
-        card.classList.toggle("field-error", hasError);
-      }
-    }
-
-    function clearAllErrors() {
-      document.querySelectorAll(".field-error").forEach(card => {
-        card.classList.remove("field-error");
-      });
-    }
-
-    function hasActiveButton(selector) {
-      return Boolean(document.querySelector(selector));
-    }
-
-    function getServiceKeyFromField(id) {
-      return Object.keys(serviceFields).find(service => serviceFields[service].includes(id));
-    }
-
-    function setServiceIncluded(service, included) {
-      const key = service.charAt(0).toUpperCase() + service.slice(1);
-      state["include" + key] = included;
-
-      const toggle = document.getElementById("toggle" + key);
-      if (toggle) {
-        toggle.classList.toggle("active", included);
-        toggle.textContent = included ? "Included" : "Add service";
+      if (includeWindow) {
+        const windowCountPrice = smallWindows * 5 + standardWindows * 8 + largeWindows * 12;
+        const houseFallback = houseSize ? houseSize * 0.08 : 0;
+        const windowPrice = Math.max(windowCountPrice, houseFallback, 120) * stories * dirt;
+        total += windowPrice;
+        lines.push('Window cleaning: ' + money(windowPrice));
       }
 
-      hideResultBox();
-    }
-
-    function toggleService(service) {
-      const key = service.charAt(0).toUpperCase() + service.slice(1);
-      setServiceIncluded(service, !state["include" + key]);
-      clearAllErrors();
-    }
-
-    function autoIncludeServiceFromField(id) {
-      const service = getServiceKeyFromField(id);
-      if (service) {
-        setServiceIncluded(service, true);
-      }
-    }
-
-    function validateSelectedServices() {
-      clearAllErrors();
-
-      let isValid = true;
-      const missingFields = [];
-
-      function requireNumber(label, id) {
-        const card = getOptionCardByElementId(id);
-        const failed = getNumber(id) <= 0;
-        setCardError(card, failed);
-
-        if (failed) {
-          missingFields.push(label);
-          isValid = false;
-        }
+      if (includeGutter) {
+        const gutterPrice = Math.max(gutterLength * 1.8, houseSize * 0.07, 120) * stories * dirt;
+        total += gutterPrice;
+        lines.push('Gutter cleaning: ' + money(gutterPrice));
       }
 
-      function requireAnyNumber(label, ids) {
-        const card = getOptionCardByElementId(ids[0]);
-        const failed = ids.every(id => getNumber(id) <= 0);
-        setCardError(card, failed);
-
-        if (failed) {
-          missingFields.push(label);
-          isValid = false;
-        }
+      if (includePower) {
+        const powerPrice = Math.max(powerArea * 0.22, 140) * dirt;
+        total += powerPrice;
+        lines.push('Power washing: ' + money(powerPrice));
       }
 
-      function requireButton(label, activeSelector, cardSelector) {
-        const card = getOptionCardByButtonSelector(cardSelector || activeSelector);
-        const failed = !hasActiveButton(activeSelector);
-        setCardError(card, failed);
-
-        if (failed) {
-          missingFields.push(label);
-          isValid = false;
-        }
-      }
-
-      if (!state.includeWindow && !state.includeGutter && !state.includePower) {
-        hideResultBox();
-        alert("Please select at least one service: Window Cleaning, Gutter Cleaning, or Power Washing.");
-        return false;
-      }
-
-      if (state.includeWindow) {
-        requireAnyNumber("Window Quantity: add at least one window", [
-          "smallWindows",
-          "standardWindows",
-          "largeWindows",
-          "xlWindows"
-        ]);
-        requireNumber("Window Cleaning Property Size", "windowSqft");
-        requireButton("Window Cleaning Stories", '[data-group="windowStories"] .story-btn.active', '[data-group="windowStories"] .story-btn');
-      }
-
-      if (state.includeGutter) {
-        requireNumber("Gutter Length", "gutterLength");
-        requireButton("Roof Type", ".roof-btn.active", ".roof-btn");
-        requireButton("Gutter Stories", '[data-group="gutterStories"] .story-btn.active', '[data-group="gutterStories"] .story-btn');
-      }
-
-      if (state.includePower) {
-        requireButton("Choose Surface", ".surface-btn.active", ".surface-btn");
-
-        const selectedSurfaceId = surfaceIds[state.selectedSurface];
-        if (selectedSurfaceId) {
-          requireNumber(state.selectedSurface + " Surface Size", selectedSurfaceId);
-        } else {
-          const surfaceCard = findOptionCard("Choose Surface");
-          setCardError(surfaceCard, true);
-          missingFields.push("Choose Surface");
-          isValid = false;
-        }
-      }
-
-      if (!isValid) {
-        hideResultBox();
-        alert("Please complete the required fields for the selected service sections only: " + missingFields.join(", ") + ".");
-      }
-
-      return isValid;
-    }
-
-    function syncSelectedSurfaceFromField(id) {
-      const matchingSurface = Object.keys(surfaceIds).find(surface => surfaceIds[surface] === id);
-
-      if (!matchingSurface) {
-        return;
-      }
-
-      state.selectedSurface = matchingSurface;
-
-      document.querySelectorAll(".surface-btn").forEach(btn => {
-        btn.classList.toggle("active", btn.textContent.trim() === matchingSurface);
-      });
-    }
-
-    function changeValue(id, amount) {
-      const element = document.getElementById(id);
-
-      if (!element) {
-        return;
-      }
-
-      let value = Number(element.textContent) || 0;
-      value = Math.max(0, value + amount);
-      element.textContent = value;
-
-      if (value > 0) {
-        autoIncludeServiceFromField(id);
-        syncSelectedSurfaceFromField(id);
-      }
-
-      const card = element.closest(".option-card");
-      if (card && value > 0) {
-        card.classList.remove("field-error");
-      }
-
-      hideResultBox();
-    }
-
-    function selectStory(group, value, button) {
-      state[group] = value;
-
-      if (group === "windowStories") {
-        setServiceIncluded("window", true);
-      }
-
-      if (group === "gutterStories") {
-        setServiceIncluded("gutter", true);
-      }
-
-      const parent = button.parentElement;
-      const buttons = parent.querySelectorAll(".story-btn");
-
-      buttons.forEach(btn => btn.classList.remove("active"));
-      button.classList.add("active");
-
-      const card = button.closest(".option-card");
-      if (card) {
-        card.classList.remove("field-error");
-      }
-
-      hideResultBox();
-    }
-
-    function selectRoofType(factor, button) {
-      setServiceIncluded("gutter", true);
-      state.roofFactor = Number(factor) || 0;
-      state.roofType = button.textContent.trim();
-
-      const buttons = document.querySelectorAll(".roof-btn");
-      buttons.forEach(btn => btn.classList.remove("active"));
-      button.classList.add("active");
-
-      const card = button.closest(".option-card");
-      if (card) {
-        card.classList.remove("field-error");
-      }
-
-      hideResultBox();
-    }
-
-    function selectSurface(surface, button) {
-      setServiceIncluded("power", true);
-      state.selectedSurface = surface;
-
-      const buttons = document.querySelectorAll(".surface-btn");
-      buttons.forEach(btn => btn.classList.remove("active"));
-      button.classList.add("active");
-
-      const card = button.closest(".option-card");
-      if (card) {
-        card.classList.remove("field-error");
-      }
-
-      const selectedSurfaceCard = getOptionCardByElementId(surfaceIds[surface]);
-      if (selectedSurfaceCard && getNumber(surfaceIds[surface]) > 0) {
-        selectedSurfaceCard.classList.remove("field-error");
-      }
-
-      hideResultBox();
-    }
-
-    function calculateEstimate(showResult = true) {
-      if (!validateSelectedServices()) {
+      if (!includeWindow && !includeGutter && !includePower) {
+        document.getElementById('finalPrice').textContent = '$0';
+        document.getElementById('estimateNote').textContent = 'Select at least one service to calculate an estimate.';
+        document.getElementById('resultList').innerHTML = '';
         return null;
       }
 
-      const smallWindows = getNumber("smallWindows");
-      const standardWindows = getNumber("standardWindows");
-      const largeWindows = getNumber("largeWindows");
-      const xlWindows = getNumber("xlWindows");
-      const windowSqft = getNumber("windowSqft");
-
-      const gutterLength = getNumber("gutterLength");
-      const gutterSqft = getNumber("gutterSqft");
-
-      const drivewaySqft = getNumber("drivewaySqft");
-      const sidingSqft = getNumber("sidingSqft");
-      const fenceSqft = getNumber("fenceSqft");
-      const deckSqft = getNumber("deckSqft");
-      const patioSqft = getNumber("patioSqft");
-
-      let windowPrice = 0;
-      let gutterPrice = 0;
-      let powerPrice = 0;
-
-      const totalWindows =
-        smallWindows +
-        standardWindows +
-        largeWindows +
-        xlWindows;
-
-      if (state.includeWindow) {
-        windowPrice =
-          smallWindows * 5 +
-          standardWindows * 8 +
-          largeWindows * 12 +
-          xlWindows * 18;
-
-        windowPrice += windowSqft * 0.015;
-
-        if (state.windowStories === 2) {
-          windowPrice += 35;
-        }
-
-        if (state.windowStories === 3) {
-          windowPrice += 75;
-        }
-
-        windowPrice = Math.max(windowPrice, 120);
-      }
-
-      if (state.includeGutter) {
-        gutterPrice = gutterLength * (1.2 + state.roofFactor);
-
-        if (gutterSqft > 0) {
-          gutterPrice += gutterSqft * 0.035;
-        }
-
-        if (state.gutterStories === 2) {
-          gutterPrice += 30;
-        }
-
-        if (state.gutterStories === 3) {
-          gutterPrice += 70;
-        }
-
-        gutterPrice = Math.max(gutterPrice, 170);
-      }
-
-      const totalPowerSqft =
-        drivewaySqft +
-        sidingSqft +
-        fenceSqft +
-        deckSqft +
-        patioSqft;
-
-      if (state.includePower) {
-        powerPrice =
-          drivewaySqft * 0.18 +
-          sidingSqft * 0.22 +
-          fenceSqft * 0.18 +
-          deckSqft * 0.22 +
-          patioSqft * 0.18;
-
-        powerPrice = Math.max(powerPrice, 140);
-      }
-
-      const selectedServices = [];
-      if (state.includeWindow) selectedServices.push("Window Cleaning");
-      if (state.includeGutter) selectedServices.push("Gutter Cleaning");
-      if (state.includePower) selectedServices.push("Power Washing");
-
-      let total = windowPrice + gutterPrice + powerPrice;
-
-      if (total <= 0) {
-        total = 0;
-      }
-
-      state.lastEstimate = Math.round(total);
-
-      const resultBox = document.getElementById("resultBox");
-      const finalPrice = document.getElementById("finalPrice");
-      const estimateNote = document.getElementById("estimateNote");
-
-      if (finalPrice) {
-        finalPrice.textContent = "$" + state.lastEstimate;
-      }
-
-      if (estimateNote) {
-        estimateNote.textContent = "Included services: " + selectedServices.join(", ") + ". This is a starting estimate. Final price may change depending on access, dirt level, height, photos, and job details.";
-      }
-
-      if (showResult && resultBox) {
-        resultBox.classList.add("active");
-
-        resultBox.scrollIntoView({
-          behavior: "smooth",
-          block: "center"
-        });
-      }
-
-      return state.lastEstimate;
-    }
-
-    function openRequestModal() {
-      if (!validateSelectedServices()) {
-        return;
-      }
-
-      const modal = document.getElementById("requestModal");
-      modal.classList.add("active");
-      document.body.style.overflow = "hidden";
-    }
-
-    function closeRequestModal() {
-      const modal = document.getElementById("requestModal");
-      modal.classList.remove("active");
-      document.body.style.overflow = "";
-    }
-
-    function buildRequestBody() {
-      const smallWindows = getNumber("smallWindows");
-      const standardWindows = getNumber("standardWindows");
-      const largeWindows = getNumber("largeWindows");
-      const xlWindows = getNumber("xlWindows");
-      const windowSqft = getNumber("windowSqft");
-
-      const gutterLength = getNumber("gutterLength");
-      const gutterSqft = getNumber("gutterSqft");
-
-      const drivewaySqft = getNumber("drivewaySqft");
-      const sidingSqft = getNumber("sidingSqft");
-      const fenceSqft = getNumber("fenceSqft");
-      const deckSqft = getNumber("deckSqft");
-      const patioSqft = getNumber("patioSqft");
-
-      const customerName = document.getElementById("customerName").value.trim();
-      const customerAddress = document.getElementById("customerAddress").value.trim();
-      const customerEmail = document.getElementById("customerEmail").value.trim();
-      const customerPhone = document.getElementById("customerPhone").value.trim();
-      const customerNotes = document.getElementById("customerNotes").value.trim();
-
-      const selectedServices = [];
-      if (state.includeWindow) selectedServices.push("Window Cleaning");
-      if (state.includeGutter) selectedServices.push("Gutter Cleaning");
-      if (state.includePower) selectedServices.push("Power Washing");
-
-      const body = `
-White5 Service Request
-
-CUSTOMER INFORMATION
-Name: ${customerName}
-Address: ${customerAddress}
-Email: ${customerEmail}
-Phone: ${customerPhone}
-
-SELECTED SERVICES
-${selectedServices.join(", ")}
-
-ESTIMATED PRICE
-Estimated starting price: $${state.lastEstimate}
-
-WINDOW CLEANING
-Included: ${state.includeWindow ? "Yes" : "No"}
-Small windows: ${smallWindows}
-Standard windows: ${standardWindows}
-Large windows: ${largeWindows}
-Extra large windows: ${xlWindows}
-Property size for windows: ${windowSqft} sq ft
-Window stories: ${state.windowStories}
-
-GUTTER CLEANING
-Included: ${state.includeGutter ? "Yes" : "No"}
-Gutter length: ${gutterLength} ft
-Property size for gutters: ${gutterSqft} sq ft
-Roof type: ${state.roofType}
-Gutter stories: ${state.gutterStories}
-
-POWER WASHING
-Included: ${state.includePower ? "Yes" : "No"}
-Selected surface: ${state.selectedSurface}
-Driveway: ${drivewaySqft} sq ft
-Siding: ${sidingSqft} sq ft
-Fence: ${fenceSqft} sq ft
-Deck: ${deckSqft} sq ft
-Patio: ${patioSqft} sq ft
-
-CUSTOMER NOTES
-${customerNotes}
-
-NOTE
-This is a starting estimate. Final price may change depending on access, dirt level, height, photos, and job details.
-`;
-
-      return body;
+      document.getElementById('finalPrice').textContent = money(total);
+      document.getElementById('estimateNote').textContent = 'Estimated starting price based on the details entered.';
+      document.getElementById('resultList').innerHTML = lines.map(line => '<div>' + line + '</div>').join('');
+      return total;
     }
 
     function sendRequestEmail() {
-      const estimate = calculateEstimate(false);
+      const estimate = calculateEstimate();
+      if (estimate === null) return;
 
-      if (estimate === null) {
-        return;
-      }
+      const notes = document.getElementById('notes').value.trim();
+      const body = [
+        'WHITE5 SERVICE REQUEST',
+        '',
+        'Estimated starting price: ' + money(estimate),
+        '',
+        'Services:',
+        'Window cleaning: ' + (document.getElementById('includeWindow').checked ? 'Yes' : 'No'),
+        'Gutter cleaning: ' + (document.getElementById('includeGutter').checked ? 'Yes' : 'No'),
+        'Power washing: ' + (document.getElementById('includePower').checked ? 'Yes' : 'No'),
+        '',
+        'House size: ' + numberValue('houseSize') + ' sq ft',
+        'Small windows: ' + numberValue('smallWindows'),
+        'Standard windows: ' + numberValue('standardWindows'),
+        'Large windows: ' + numberValue('largeWindows'),
+        'Gutter length: ' + numberValue('gutterLength') + ' ft',
+        'Power washing area: ' + numberValue('powerArea') + ' sq ft',
+        '',
+        'Notes:',
+        notes || 'No notes entered.'
+      ].join('\n');
 
-      const customerEmail = document.getElementById("customerEmail").value.trim();
-      const customerPhone = document.getElementById("customerPhone").value.trim();
-
-      if (!customerEmail && !customerPhone) {
-        alert("Please enter your email or phone number.");
-        return;
-      }
-
-      const subject = "White5 Service Request";
-      const body = buildRequestBody();
-
-      const mailtoLink =
-        "mailto:info@white5.ca" +
-        "?subject=" + encodeURIComponent(subject) +
-        "&body=" + encodeURIComponent(body);
-
-      window.location.href = mailtoLink;
+      window.location.href = 'mailto:info@white5.ca?subject=' + encodeURIComponent('White5 Service Request') + '&body=' + encodeURIComponent(body);
     }
-
-    document.addEventListener("keydown", function(event) {
-      if (event.key === "Escape") {
-        closeRequestModal();
-      }
-    });
-
-    document.getElementById("requestModal").addEventListener("click", function(event) {
-      if (event.target === this) {
-        closeRequestModal();
-      }
-    });
   </script>
-<script defer="" src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon="{&quot;version&quot;:&quot;2024.11.0&quot;,&quot;token&quot;:&quot;2f4cfb85299144f790195bad7ff78d64&quot;,&quot;r&quot;:1,&quot;server_timing&quot;:{&quot;name&quot;:{&quot;cfCacheStatus&quot;:true,&quot;cfEdge&quot;:true,&quot;cfExtPri&quot;:true,&quot;cfL4&quot;:true,&quot;cfOrigin&quot;:true,&quot;cfSpeedBrain&quot;:true},&quot;location_startswith&quot;:null}}" crossorigin="anonymous"></script>
-
-</body></html>
+</body>
+</html>
