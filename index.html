@@ -193,24 +193,31 @@
     }
     .social-link,
     .social-icon {
-      width: 46px;
-      height: 46px;
-      border-radius: 14px;
+      width: 50px;
+      height: 50px;
+      padding: 5px;
+      border-radius: 16px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.18);
-      box-shadow: 0 10px 22px rgba(0,0,0,0.22);
+      background: linear-gradient(180deg, rgba(255,255,255,0.22), rgba(255,255,255,0.09));
+      border: 1px solid rgba(255,255,255,0.3);
+      box-shadow: 0 10px 22px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.32);
       overflow: hidden;
+      transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
     }
-    .social-link:hover { transform: translateY(-1px); }
+    .social-link:hover {
+      transform: translateY(-2px);
+      border-color: rgba(94,203,255,0.68);
+      box-shadow: 0 14px 28px rgba(0,0,0,0.28), 0 0 18px rgba(94,203,255,0.24), inset 0 1px 0 rgba(255,255,255,0.38);
+    }
     .social-link img,
     .social-icon img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
+      border-radius: 11px;
     }
 
     section { padding: 34px 0; }
@@ -425,10 +432,10 @@
             <li><strong>Hours</strong>Monday to Saturday</li>
           </ul>
           <div class="social-links" aria-label="White5 social and contact links">
-            <span class="social-icon" title="Instagram"><img src="images/instagram-icon.jpg" alt="Instagram icon"></span>
-            <span class="social-icon" title="YouTube"><img src="images/youtube-icon.jpg" alt="YouTube icon"></span>
+            <a class="social-link" href="https://www.instagram.com/white5calgary?igsh=MW00Yzl5bTJtOHBlYw==" target="_blank" rel="noopener" aria-label="Visit White5 on Instagram"><img src="images/instagram-icon.jpg" alt="Instagram icon"></a>
+            <a class="social-link" href="https://youtube.com/@white5.calgary?si=Ix8ZeG43A5u_KNmg" target="_blank" rel="noopener" aria-label="Visit White5 on YouTube"><img src="images/youtube-icon.jpg" alt="YouTube icon"></a>
             <a class="social-link" href="https://www.google.com/search?q=White5+Exterior+Cleaning+Calgary" target="_blank" rel="noopener" aria-label="Find White5 on Google"><img src="images/google-icon.jpg" alt="Google icon"></a>
-            <span class="social-icon" title="Facebook"><img src="images/facebook-icon.jpg" alt="Facebook icon"></span>
+            <a class="social-link" href="https://www.facebook.com/share/1LE6FZqZ7b/" target="_blank" rel="noopener" aria-label="Visit White5 on Facebook"><img src="images/facebook-icon.jpg" alt="Facebook icon"></a>
             <a class="social-link" href="https://wa.me/14034793905" target="_blank" rel="noopener" aria-label="Message White5 on WhatsApp"><img src="images/whatsapp-icon.jpg" alt="WhatsApp icon"></a>
           </div>
         </aside>
