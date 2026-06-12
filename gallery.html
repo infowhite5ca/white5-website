@@ -233,6 +233,35 @@
       font-size: 14px;
     }
 
+    .video-grid {
+      display: grid;
+      grid-template-columns: minmax(240px, 380px);
+      gap: 16px;
+    }
+
+    .video-card {
+      overflow: hidden;
+      border-radius: var(--radius);
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      box-shadow: var(--shadow);
+    }
+
+    .video-frame {
+      position: relative;
+      aspect-ratio: 9 / 16;
+      background: #06111e;
+    }
+
+    .video-frame iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+    }
+
     .image-modal {
       position: fixed;
       inset: 0;
@@ -314,6 +343,7 @@
       .section-head { display: block; margin-bottom: 14px; }
       .section-head p { margin-top: 8px; }
       .gallery-grid { grid-template-columns: 1fr; gap: 14px; }
+      .video-grid { grid-template-columns: 1fr; }
       .gallery-item { border-radius: 18px; }
       .gallery-caption { font-size: 13.5px; }
       footer { padding: 24px 0 30px; text-align: center; line-height: 1.7; }
@@ -349,6 +379,23 @@
         <div class="hero-actions">
           <a class="water-btn" href="index.html#quote">Get a Free Quote</a>
           <a class="ghost-btn" href="tel:14034793905">Call 403-479-3905</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="videos">
+      <div class="container">
+        <div class="section-head">
+          <h2>Videos</h2>
+          <p>Short videos from recent White5 exterior cleaning work in Calgary.</p>
+        </div>
+        <div class="video-grid">
+          <article class="video-card">
+            <div class="video-frame">
+              <iframe src="https://www.youtube.com/embed/7p110UM5uvw" title="White5 exterior cleaning short video in Calgary" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            </div>
+            <div class="gallery-caption">White5 exterior cleaning short</div>
+          </article>
         </div>
       </div>
     </section>
