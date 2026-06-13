@@ -2,7 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-17206495005"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'AW-17206495005');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gallery | White5 Window Cleaning, Gutter and Eavestrough Cleaning, Power Washing Calgary</title>
   <meta name="description" content="View White5 exterior cleaning work in Calgary, including window cleaning, gutter cleaning, eavestrough cleaning, and power washing results for local homes." />
   <link rel="canonical" href="https://www.white5.ca/gallery.html">
@@ -354,6 +363,22 @@
       .water-btn, .ghost-btn { font-size: 19px; }
     }
   </style>
+  <script>
+  function gtag_report_conversion(url) {
+    var callback = function () {
+      if (typeof(url) !== 'undefined') {
+        window.location = url;
+      }
+    };
+
+    gtag('event', 'conversion', {
+      'send_to': 'AW-17206495005/4T4mCJ7N-64cEJ2O2YxA',
+      'event_callback': callback
+    });
+
+    return false;
+  }
+</script>
 </head>
 <body>
   <header class="topbar">
@@ -365,7 +390,7 @@
         <a href="index.html#window-cleaning">Window Cleaning</a>
         <a href="index.html#gutter-cleaning">Gutter and Eavestrough</a>
         <a href="index.html#power-washing">Power Washing</a>
-        <a class="nav-cta" href="tel:14034793905">Call Now</a>
+        <a onclick="return gtag_report_conversion('tel:14034793905');" class="nav-cta" href="tel:14034793905">Call Now</a>
       </nav>
     </div>
   </header>
@@ -377,8 +402,8 @@
         <h1>Gallery</h1>
         <p>See recent White5 exterior cleaning work, including window cleaning, gutter cleaning, eavestrough cleaning, and power washing results around Calgary.</p>
         <div class="hero-actions">
-          <a class="water-btn" href="index.html#quote">Get a Free Quote</a>
-          <a class="ghost-btn" href="tel:14034793905">Call 403-479-3905</a>
+          <a onclick="gtag('event', 'conversion', {'send_to': 'AW-17206495005/4T4mCJ7N-64cEJ2O2YxA'});" class="water-btn" href="index.html#quote">Get a Free Quote</a>
+          <a onclick="return gtag_report_conversion('tel:14034793905');" class="ghost-btn" href="tel:14034793905">Call 403-479-3905</a>
         </div>
       </div>
     </section>
@@ -481,7 +506,7 @@
   </main>
 
   <footer>
-    <div class="container">&copy; 2026 White5 Exterior Cleaning | Calgary, Alberta | <a href="mailto:info@white5.ca">info@white5.ca</a> | <a href="tel:14034793905">403-479-3905</a></div>
+    <div class="container">&copy; 2026 White5 Exterior Cleaning | Calgary, Alberta | <a href="mailto:info@white5.ca">info@white5.ca</a> | <a onclick="return gtag_report_conversion('tel:14034793905');" href="tel:14034793905">403-479-3905</a></div>
   </footer>
 
   <div class="image-modal" id="imageModal" aria-hidden="true">
