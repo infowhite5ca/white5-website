@@ -104,3 +104,5 @@ jobs:
             git commit -m "Add second Google Ads tracking tag"
             git push
           fi
+
+# trigger: 2026-06-27
