@@ -10,6 +10,7 @@
   gtag('js', new Date());
 
   gtag('config', 'AW-17206495005');
+  gtag('config', 'AW-18208326566');
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gallery | White5 Window Cleaning, Gutter and Eavestrough Cleaning, Power Washing Calgary</title>
@@ -364,6 +365,11 @@
     }
   </style>
   <script>
+  function white5_report_conversion_event() {
+    gtag('event', 'conversion', {'send_to': 'AW-17206495005/4T4mCJ7N-64cEJ2O2YxA'});
+    gtag('event', 'conversion', {'send_to': 'AW-18208326566/BLZ_CNyjlcUcEKaHtOpD'});
+  }
+
   function gtag_report_conversion(url) {
     var callback = function () {
       if (typeof(url) !== 'undefined') {
@@ -371,14 +377,16 @@
       }
     };
 
+    gtag('event', 'conversion', {'send_to': 'AW-17206495005/4T4mCJ7N-64cEJ2O2YxA'});
     gtag('event', 'conversion', {
-      'send_to': 'AW-17206495005/4T4mCJ7N-64cEJ2O2YxA',
+      'send_to': 'AW-18208326566/BLZ_CNyjlcUcEKaHtOpD',
       'event_callback': callback
     });
 
     return false;
   }
 </script>
+
 </head>
 <body>
   <header class="topbar">
@@ -402,7 +410,7 @@
         <h1>Gallery</h1>
         <p>See recent White5 exterior cleaning work, including window cleaning, gutter cleaning, eavestrough cleaning, and power washing results around Calgary.</p>
         <div class="hero-actions">
-          <a onclick="gtag('event', 'conversion', {'send_to': 'AW-17206495005/4T4mCJ7N-64cEJ2O2YxA'});" class="water-btn" href="index.html#quote">Get a Free Quote</a>
+          <a onclick="white5_report_conversion_event();" class="water-btn" href="index.html#quote">Get a Free Quote</a>
           <a onclick="return gtag_report_conversion('tel:14034793905');" class="ghost-btn" href="tel:14034793905">Call 403-479-3905</a>
         </div>
       </div>

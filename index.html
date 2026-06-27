@@ -10,6 +10,7 @@
   gtag('js', new Date());
 
   gtag('config', 'AW-17206495005');
+  gtag('config', 'AW-18208326566');
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" href="/favicon.ico">
@@ -399,6 +400,11 @@
     }
   </script>
   <script>
+  function white5_report_conversion_event() {
+    gtag('event', 'conversion', {'send_to': 'AW-17206495005/4T4mCJ7N-64cEJ2O2YxA'});
+    gtag('event', 'conversion', {'send_to': 'AW-18208326566/BLZ_CNyjlcUcEKaHtOpD'});
+  }
+
   function gtag_report_conversion(url) {
     var callback = function () {
       if (typeof(url) !== 'undefined') {
@@ -406,14 +412,16 @@
       }
     };
 
+    gtag('event', 'conversion', {'send_to': 'AW-17206495005/4T4mCJ7N-64cEJ2O2YxA'});
     gtag('event', 'conversion', {
-      'send_to': 'AW-17206495005/4T4mCJ7N-64cEJ2O2YxA',
+      'send_to': 'AW-18208326566/BLZ_CNyjlcUcEKaHtOpD',
       'event_callback': callback
     });
 
     return false;
   }
 </script>
+
 </head>
 <body>
   <header class="topbar">
@@ -422,7 +430,7 @@
       <nav class="nav" aria-label="Main navigation">
         <a href="#services">Services</a>
         <a href="gallery.html">Gallery</a>
-        <a onclick="gtag('event', 'conversion', {'send_to': 'AW-17206495005/4T4mCJ7N-64cEJ2O2YxA'});" href="#quote">Estimate</a>
+        <a onclick="white5_report_conversion_event();" href="#quote">Estimate</a>
         <a href="services.html">Details</a>
         <a onclick="return gtag_report_conversion('tel:14034793905');" class="nav-cta" href="tel:14034793905">Call Now</a>
       </nav>
@@ -431,7 +439,7 @@
 
   <div class="mobile-bottom-bar">
     <a onclick="return gtag_report_conversion('tel:14034793905');" href="tel:14034793905">Call</a>
-    <a onclick="gtag('event', 'conversion', {'send_to': 'AW-17206495005/4T4mCJ7N-64cEJ2O2YxA'});" class="secondary" href="#quote">Quote</a>
+    <a onclick="white5_report_conversion_event();" class="secondary" href="#quote">Quote</a>
   </div>
 
   <main>
@@ -442,7 +450,7 @@
           <h1>Window Cleaning, Gutter and Eavestrough Cleaning, Power Washing in Calgary</h1>
           <p>White5 provides reliable exterior cleaning services for Calgary homes, including purified water window cleaning, gutter cleaning, eavestrough cleaning, and power washing. Honest work, careful service, and clear results.</p>
           <div class="hero-actions">
-            <a onclick="gtag('event', 'conversion', {'send_to': 'AW-17206495005/4T4mCJ7N-64cEJ2O2YxA'});" class="water-btn" href="#quote">Get a Free Quote</a>
+            <a onclick="white5_report_conversion_event();" class="water-btn" href="#quote">Get a Free Quote</a>
             <a class="ghost-btn" href="gallery.html">View Gallery</a>
           </div>
         </div>
@@ -478,19 +486,19 @@
             <h3>Window Cleaning in Calgary</h3>
             <p>Window cleaning services for Calgary homes, including exterior window cleaning, interior window cleaning, screen cleaning, and track cleaning for a clearer finish inside and outside.</p>
             <ul><li>Exterior and interior window cleaning</li><li>Screen cleaning</li><li>Track cleaning</li></ul>
-            <div class="service-actions"><a class="ghost-btn" href="gallery.html#window-cleaning">Gallery</a><a onclick="gtag('event', 'conversion', {'send_to': 'AW-17206495005/4T4mCJ7N-64cEJ2O2YxA'});" class="water-btn" href="services.html#quote">Get Quote</a></div>
+            <div class="service-actions"><a class="ghost-btn" href="gallery.html#window-cleaning">Gallery</a><a onclick="white5_report_conversion_event();" class="water-btn" href="services.html#quote">Get Quote</a></div>
           </article>
           <article class="service-card" id="gutter-cleaning">
             <h3>Gutter and Eavestrough Cleaning in Calgary</h3>
             <p>Gutter cleaning and eavestrough cleaning for Calgary homes, removing leaves, dirt, and debris to help water flow properly and reduce overflow around the home.</p>
             <ul><li>Debris removal</li><li>Downspout check</li><li>Basic gutter and eavestrough inspection</li></ul>
-            <div class="service-actions"><a class="ghost-btn" href="gallery.html#gutter-cleaning">Gallery</a><a onclick="gtag('event', 'conversion', {'send_to': 'AW-17206495005/4T4mCJ7N-64cEJ2O2YxA'});" class="water-btn" href="services.html#quote">Get Quote</a></div>
+            <div class="service-actions"><a class="ghost-btn" href="gallery.html#gutter-cleaning">Gallery</a><a onclick="white5_report_conversion_event();" class="water-btn" href="services.html#quote">Get Quote</a></div>
           </article>
           <article class="service-card" id="power-washing">
             <h3>Power Washing in Calgary</h3>
             <p>Power washing and exterior surface care for Calgary homes, including deck and fence renovation prep, siding washing, and driveway washing.</p>
             <ul><li>Deck and fence renovation: washing, sanding, and staining prep</li><li>Siding washing</li><li>Driveway washing</li></ul>
-            <div class="service-actions"><a class="ghost-btn" href="gallery.html#power-washing">Gallery</a><a onclick="gtag('event', 'conversion', {'send_to': 'AW-17206495005/4T4mCJ7N-64cEJ2O2YxA'});" class="water-btn" href="services.html#quote">Get Quote</a></div>
+            <div class="service-actions"><a class="ghost-btn" href="gallery.html#power-washing">Gallery</a><a onclick="white5_report_conversion_event();" class="water-btn" href="services.html#quote">Get Quote</a></div>
           </article>
         </div>
       </div>
@@ -501,7 +509,7 @@
         <div class="section-head">
           <h2>Quick Estimate</h2>
           <p>Enter the approximate size of your house to get a simple starting estimate. For a detailed service estimate, use the services page.</p>
-          <div class="hero-actions"><a onclick="gtag('event', 'conversion', {'send_to': 'AW-17206495005/4T4mCJ7N-64cEJ2O2YxA'});" class="water-btn" href="services.html#quote">Detailed Estimate</a></div>
+          <div class="hero-actions"><a onclick="white5_report_conversion_event();" class="water-btn" href="services.html#quote">Detailed Estimate</a></div>
         </div>
         <aside class="quote-card">
           <h3>Starting Price</h3>
@@ -509,7 +517,7 @@
           <div class="quote-calculator">
             <label for="houseSize">House size, sq ft</label>
             <input id="houseSize" type="number" min="0" placeholder="Example: 1800">
-            <button type="button" onclick="gtag('event', 'conversion', {'send_to': 'AW-17206495005/4T4mCJ7N-64cEJ2O2YxA'}); calculateEstimate()">Calculate Estimate</button>
+            <button type="button" onclick="white5_report_conversion_event(); calculateEstimate()">Calculate Estimate</button>
             <div class="quote-result">Estimated starting price:<strong id="estimateOutput">$0</strong></div>
           </div>
         </aside>
