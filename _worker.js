@@ -1,4 +1,5 @@
 const META_API_VERSION = "v25.0";
+const META_PIXEL_ID = "1587609516129238";
 
 const OPENAI_PIXEL_SCRIPT = `
   <!-- OpenAI Ads Measurement Pixel -->
@@ -45,9 +46,65 @@ const OPENAI_PIXEL_SCRIPT = `
   </script>
 `;
 
+const META_PIXEL_SCRIPT = `
+  <!-- Meta Pixel Code -->
+  <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '${META_PIXEL_ID}');
+    fbq('track', 'PageView');
+
+    function white5_report_meta_lead() {
+      if (typeof fbq === 'function') {
+        fbq('track', 'Lead');
+      }
+    }
+
+    (function () {
+      function patchMetaLeadTracking() {
+        var original = window.sendRequestEmail;
+        if (typeof original !== 'function' || original.__white5MetaWrapped) return;
+
+        window.sendRequestEmail = function () {
+          var estimate = typeof window.calculateEstimate === 'function'
+            ? window.calculateEstimate(false)
+            : true;
+          if (estimate === null) return;
+
+          var emailElement = document.getElementById('customerEmail');
+          var phoneElement = document.getElementById('customerPhone');
+          var email = emailElement ? emailElement.value.trim() : '';
+          var phone = phoneElement ? phoneElement.value.trim() : '';
+
+          if (!email && !phone) {
+            alert('Please enter your email or phone number.');
+            return;
+          }
+
+          white5_report_meta_lead();
+          return original.apply(this, arguments);
+        };
+        window.sendRequestEmail.__white5MetaWrapped = true;
+      }
+
+      patchMetaLeadTracking();
+      document.addEventListener('DOMContentLoaded', patchMetaLeadTracking);
+      window.addEventListener('load', patchMetaLeadTracking);
+    })();
+  </script>
+  <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=${META_PIXEL_ID}&ev=PageView&noscript=1" /></noscript>
+`;
+
 class HeadInjector {
   element(element) {
     element.append(OPENAI_PIXEL_SCRIPT, { html: true });
+    element.append(META_PIXEL_SCRIPT, { html: true });
   }
 }
 
@@ -286,6 +343,7 @@ async function handleMetaTracking(request, env) {
       apiVersion: META_API_VERSION,
       created,
       pixel: pixels[0],
+      installedPixelId: META_PIXEL_ID,
       adsStarted: false,
       spendEnabled: false,
     });
@@ -321,6 +379,10 @@ export default {
     const contentType = response.headers.get("content-type") || "";
 
     if (!contentType.includes("text/html")) {
+      return response;
+    }
+
+    if (url.pathname.startsWith("/meta-admin")) {
       return response;
     }
 
