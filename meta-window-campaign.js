@@ -1,3 +1,5 @@
+const META_API_VERSION = "v25.0";
+
 const CAMPAIGN = Object.freeze({
   campaignName: "White5 | Window & Screen Cleaning | Calgary",
   adSetName: "White5 | Calgary | Website Leads | 20 CAD",
@@ -11,12 +13,100 @@ const CAMPAIGN = Object.freeze({
   description: "Free estimates in Calgary",
 });
 
+function json(data, status = 200) {
+  return new Response(JSON.stringify(data, null, 2), {
+    status,
+    headers: {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "no-store",
+    },
+  });
+}
+
+async function createAppSecretProof(accessToken, appSecret) {
+  const key = await crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(appSecret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"],
+  );
+  const signature = await crypto.subtle.sign(
+    "HMAC",
+    key,
+    new TextEncoder().encode(accessToken),
+  );
+  return [...new Uint8Array(signature)]
+    .map((byte) => byte.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+function validateRequest(request, env) {
+  if (request.method !== "POST") {
+    return json({ ok: false, error: "Method not allowed" }, 405);
+  }
+  if (!env.ADMIN_API_KEY) {
+    return json({ ok: false, error: "ADMIN_API_KEY is not configured" }, 500);
+  }
+  if (request.headers.get("x-admin-key") !== env.ADMIN_API_KEY) {
+    return json({ ok: false, error: "Unauthorized" }, 401);
+  }
+  const required = ["META_ACCESS_TOKEN", "META_AD_ACCOUNT_ID", "META_PAGE_ID"];
+  const missing = required.filter((name) => !env[name]);
+  if (missing.length) {
+    return json({ ok: false, error: "Missing Cloudflare secrets", missing }, 500);
+  }
+  return null;
+}
+
+function getAdAccountId(env) {
+  return env.META_AD_ACCOUNT_ID.startsWith("act_")
+    ? env.META_AD_ACCOUNT_ID
+    : `act_${env.META_AD_ACCOUNT_ID}`;
+}
+
+async function requestMeta(path, env, params = {}, options = {}) {
+  const url = new URL(`https://graph.facebook.com/${META_API_VERSION}/${path}`);
+  for (const [name, value] of Object.entries(params)) {
+    if (value !== undefined && value !== null) url.searchParams.set(name, String(value));
+  }
+  url.searchParams.set("access_token", env.META_ACCESS_TOKEN);
+  if (env.META_APP_SECRET) {
+    url.searchParams.set(
+      "appsecret_proof",
+      await createAppSecretProof(env.META_ACCESS_TOKEN, env.META_APP_SECRET),
+    );
+  }
+
+  const init = {
+    method: options.method || "GET",
+    headers: { accept: "application/json" },
+  };
+  if (options.body) {
+    const form = new URLSearchParams();
+    for (const [name, value] of Object.entries(options.body)) {
+      if (value !== undefined && value !== null) form.set(name, String(value));
+    }
+    init.headers["content-type"] = "application/x-www-form-urlencoded";
+    init.body = form.toString();
+  }
+
+  const response = await fetch(url, init);
+  let payload;
+  try {
+    payload = await response.json();
+  } catch {
+    payload = { error: { message: "Meta returned a non-JSON response" } };
+  }
+  return { response, payload };
+}
+
 function findByName(payload, name) {
   const data = Array.isArray(payload?.data) ? payload.data : [];
   return data.find((item) => item?.name === name) || null;
 }
 
-function failure(json, result, step, created, ids) {
+function failure(result, step, created, ids) {
   return json({
     ok: false,
     error: "Meta API request failed",
@@ -29,7 +119,7 @@ function failure(json, result, step, created, ids) {
   }, result.response.status);
 }
 
-async function findCalgary(requestMeta, env) {
+async function findCalgary(env) {
   const result = await requestMeta("search", env, {
     type: "adgeolocation",
     q: "Calgary",
@@ -41,7 +131,8 @@ async function findCalgary(requestMeta, env) {
 
   const locations = Array.isArray(result.payload.data) ? result.payload.data : [];
   const match = locations.find((item) =>
-    item?.name === "Calgary" && item?.country_code === "CA" &&
+    item?.name === "Calgary" &&
+    item?.country_code === "CA" &&
     (!item?.region || item.region === "Alberta"),
   ) || locations.find((item) => item?.name === "Calgary" && item?.country_code === "CA");
 
@@ -54,7 +145,7 @@ async function findCalgary(requestMeta, env) {
   return { response: result.response, payload: match };
 }
 
-async function findInstagram(requestMeta, env) {
+async function findInstagram(env) {
   const result = await requestMeta(env.META_PAGE_ID, env, {
     fields: "instagram_business_account{id,username}",
   });
@@ -62,26 +153,19 @@ async function findInstagram(requestMeta, env) {
   return result.payload?.instagram_business_account || null;
 }
 
-export async function createPausedWindowCampaign({
-  request,
-  env,
-  json,
-  validateAdminRequest,
-  getMetaAdAccountId,
-  requestMeta,
-}) {
-  const validationError = validateAdminRequest(request, env, ["POST"]);
+export async function createPausedWindowCampaign(request, env) {
+  const validationError = validateRequest(request, env);
   if (validationError) return validationError;
 
-  const accountId = getMetaAdAccountId(env);
+  const accountId = getAdAccountId(env);
   const created = { campaign: false, adSet: false, ad: false };
   const ids = { campaignId: null, adSetId: null, adId: null };
 
   try {
-    const location = await findCalgary(requestMeta, env);
-    if (!location.response.ok) return failure(json, location, "find_calgary_targeting", created, ids);
+    const location = await findCalgary(env);
+    if (!location.response.ok) return failure(location, "find_calgary_targeting", created, ids);
 
-    const instagram = await findInstagram(requestMeta, env);
+    const instagram = await findInstagram(env);
     const targeting = {
       age_min: 18,
       age_max: 65,
@@ -96,7 +180,7 @@ export async function createPausedWindowCampaign({
       fields: "id,name,status,effective_status,objective",
       limit: 200,
     });
-    if (!campaigns.response.ok) return failure(json, campaigns, "list_campaigns", created, ids);
+    if (!campaigns.response.ok) return failure(campaigns, "list_campaigns", created, ids);
 
     let campaign = findByName(campaigns.payload, CAMPAIGN.campaignName);
     if (!campaign) {
@@ -110,7 +194,7 @@ export async function createPausedWindowCampaign({
           special_ad_categories: JSON.stringify([]),
         },
       });
-      if (!result.response.ok) return failure(json, result, "create_campaign", created, ids);
+      if (!result.response.ok) return failure(result, "create_campaign", created, ids);
       campaign = { id: result.payload.id, name: CAMPAIGN.campaignName };
       created.campaign = true;
     }
@@ -120,7 +204,7 @@ export async function createPausedWindowCampaign({
       fields: "id,name,status,effective_status",
       limit: 100,
     });
-    if (!adSets.response.ok) return failure(json, adSets, "list_ad_sets", created, ids);
+    if (!adSets.response.ok) return failure(adSets, "list_ad_sets", created, ids);
 
     let adSet = findByName(adSets.payload, CAMPAIGN.adSetName);
     if (!adSet) {
@@ -142,7 +226,7 @@ export async function createPausedWindowCampaign({
           status: "PAUSED",
         },
       });
-      if (!result.response.ok) return failure(json, result, "create_ad_set", created, ids);
+      if (!result.response.ok) return failure(result, "create_ad_set", created, ids);
       adSet = { id: result.payload.id, name: CAMPAIGN.adSetName };
       created.adSet = true;
     }
@@ -152,7 +236,7 @@ export async function createPausedWindowCampaign({
       fields: "id,name,status,effective_status",
       limit: 100,
     });
-    if (!ads.response.ok) return failure(json, ads, "list_ads", created, ids);
+    if (!ads.response.ok) return failure(ads, "list_ads", created, ids);
 
     let ad = findByName(ads.payload, CAMPAIGN.adName);
     if (!ad) {
@@ -181,7 +265,7 @@ export async function createPausedWindowCampaign({
           creative: JSON.stringify({ object_story_spec: objectStorySpec }),
         },
       });
-      if (!result.response.ok) return failure(json, result, "create_ad", created, ids);
+      if (!result.response.ok) return failure(result, "create_ad", created, ids);
       ad = { id: result.payload.id, name: CAMPAIGN.adName };
       created.ad = true;
     }
@@ -189,6 +273,7 @@ export async function createPausedWindowCampaign({
 
     return json({
       ok: true,
+      apiVersion: META_API_VERSION,
       idempotent: !created.campaign && !created.adSet && !created.ad,
       created,
       ids,
