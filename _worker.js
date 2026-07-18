@@ -81,7 +81,7 @@ async function createAppSecretProof(accessToken, appSecret) {
     .join("");
 }
 
-async function handleMetaStatus(request, env) {
+function validateAdminRequest(request, env) {
   if (request.method !== "GET") {
     return json({ ok: false, error: "Method not allowed" }, 405);
   }
@@ -106,42 +106,68 @@ async function handleMetaStatus(request, env) {
     return json({ ok: false, error: "Missing Cloudflare secrets", missing }, 500);
   }
 
-  const accountId = env.META_AD_ACCOUNT_ID.startsWith("act_")
+  return null;
+}
+
+function getMetaAdAccountId(env) {
+  return env.META_AD_ACCOUNT_ID.startsWith("act_")
     ? env.META_AD_ACCOUNT_ID
     : `act_${env.META_AD_ACCOUNT_ID}`;
+}
 
-  const metaUrl = new URL(
-    `https://graph.facebook.com/${META_API_VERSION}/${accountId}`,
-  );
-  metaUrl.searchParams.set(
-    "fields",
-    "id,name,account_status,currency,timezone_name",
-  );
-  metaUrl.searchParams.set("access_token", env.META_ACCESS_TOKEN);
+async function buildMetaUrl(path, env, params = {}) {
+  const url = new URL(`https://graph.facebook.com/${META_API_VERSION}/${path}`);
+
+  for (const [name, value] of Object.entries(params)) {
+    url.searchParams.set(name, String(value));
+  }
+
+  url.searchParams.set("access_token", env.META_ACCESS_TOKEN);
 
   if (env.META_APP_SECRET) {
     const proof = await createAppSecretProof(
       env.META_ACCESS_TOKEN,
       env.META_APP_SECRET,
     );
-    metaUrl.searchParams.set("appsecret_proof", proof);
+    url.searchParams.set("appsecret_proof", proof);
   }
 
-  try {
-    const metaResponse = await fetch(metaUrl, {
-      headers: { accept: "application/json" },
-    });
-    const payload = await metaResponse.json();
+  return url;
+}
 
-    if (!metaResponse.ok) {
-      return json(
-        {
-          ok: false,
-          error: "Meta API request failed",
-          meta: payload,
-        },
-        metaResponse.status,
-      );
+async function requestMeta(path, env, params) {
+  const url = await buildMetaUrl(path, env, params);
+  const response = await fetch(url, {
+    headers: { accept: "application/json" },
+  });
+  const payload = await response.json();
+  return { response, payload };
+}
+
+function metaFailure(payload, status) {
+  return json(
+    {
+      ok: false,
+      error: "Meta API request failed",
+      meta: payload,
+    },
+    status,
+  );
+}
+
+async function handleMetaStatus(request, env) {
+  const validationError = validateAdminRequest(request, env);
+  if (validationError) return validationError;
+
+  const accountId = getMetaAdAccountId(env);
+
+  try {
+    const { response, payload } = await requestMeta(accountId, env, {
+      fields: "id,name,account_status,currency,timezone_name",
+    });
+
+    if (!response.ok) {
+      return metaFailure(payload, response.status);
     }
 
     return json({
@@ -163,12 +189,58 @@ async function handleMetaStatus(request, env) {
   }
 }
 
+async function handleMetaCampaigns(request, env) {
+  const validationError = validateAdminRequest(request, env);
+  if (validationError) return validationError;
+
+  const accountId = getMetaAdAccountId(env);
+
+  try {
+    const { response, payload } = await requestMeta(
+      `${accountId}/campaigns`,
+      env,
+      {
+        fields: "id,name,status,effective_status,objective,buying_type,created_time,updated_time",
+        limit: 100,
+      },
+    );
+
+    if (!response.ok) {
+      return metaFailure(payload, response.status);
+    }
+
+    const campaigns = Array.isArray(payload.data) ? payload.data : [];
+
+    return json({
+      ok: true,
+      apiVersion: META_API_VERSION,
+      adAccountId: accountId,
+      count: campaigns.length,
+      hasMore: Boolean(payload.paging?.next),
+      campaigns,
+    });
+  } catch (error) {
+    return json(
+      {
+        ok: false,
+        error: "Could not read Meta campaigns",
+        details: error instanceof Error ? error.message : String(error),
+      },
+      502,
+    );
+  }
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
     if (url.pathname === "/api/meta/status") {
       return handleMetaStatus(request, env);
+    }
+
+    if (url.pathname === "/api/meta/campaigns") {
+      return handleMetaCampaigns(request, env);
     }
 
     const response = await env.ASSETS.fetch(request);
