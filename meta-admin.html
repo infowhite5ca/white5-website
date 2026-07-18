@@ -22,10 +22,11 @@
     <form id="form" autocomplete="off">
       <label for="key">ADMIN_API_KEY</label>
       <input id="key" name="key" type="password" autocomplete="new-password" required />
-      <button type="button" data-endpoint="/api/meta/status" data-label="Testing Meta connection">Test Meta connection</button>
-      <button type="button" data-endpoint="/api/meta/campaigns" data-label="Reading campaigns">Read campaigns</button>
+      <button type="button" data-endpoint="/api/meta/status" data-method="GET" data-label="Testing Meta connection">Test Meta connection</button>
+      <button type="button" data-endpoint="/api/meta/campaigns" data-method="GET" data-label="Reading campaigns">Read campaigns</button>
+      <button type="button" data-endpoint="/api/meta/tracking" data-method="POST" data-label="Preparing Meta tracking" data-confirm="Prepare Meta tracking? This may create one Meta Pixel if the ad account has none. It cannot start ads or spend money.">Prepare Meta tracking</button>
     </form>
-    <p class="note">Both actions are read-only. They cannot create, edit, publish, or spend on ads.</p>
+    <p class="note">Connection and campaign checks are read-only. Prepare Meta tracking may create one Pixel only when none exists. No action can publish ads or spend money.</p>
     <pre id="result" aria-live="polite">Waiting for test.</pre>
   </main>
   <script>
@@ -33,7 +34,7 @@
     const result = document.getElementById('result');
     const buttons = [...document.querySelectorAll('[data-endpoint]')];
 
-    async function runRequest(endpoint, label) {
+    async function runRequest(endpoint, method, label) {
       const key = keyInput.value;
       if (!key) {
         keyInput.focus();
@@ -45,7 +46,7 @@
 
       try {
         const response = await fetch(endpoint, {
-          method: 'GET',
+          method,
           headers: { 'x-admin-key': key },
           cache: 'no-store',
         });
@@ -67,7 +68,8 @@
 
     buttons.forEach((button) => {
       button.addEventListener('click', () => {
-        runRequest(button.dataset.endpoint, button.dataset.label);
+        if (button.dataset.confirm && !window.confirm(button.dataset.confirm)) return;
+        runRequest(button.dataset.endpoint, button.dataset.method || 'GET', button.dataset.label);
       });
     });
   </script>

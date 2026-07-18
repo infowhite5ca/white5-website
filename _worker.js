@@ -81,8 +81,8 @@ async function createAppSecretProof(accessToken, appSecret) {
     .join("");
 }
 
-function validateAdminRequest(request, env) {
-  if (request.method !== "GET") {
+function validateAdminRequest(request, env, allowedMethods = ["GET"]) {
+  if (!allowedMethods.includes(request.method)) {
     return json({ ok: false, error: "Method not allowed" }, 405);
   }
 
@@ -135,11 +135,23 @@ async function buildMetaUrl(path, env, params = {}) {
   return url;
 }
 
-async function requestMeta(path, env, params) {
+async function requestMeta(path, env, params = {}, options = {}) {
   const url = await buildMetaUrl(path, env, params);
-  const response = await fetch(url, {
+  const fetchOptions = {
+    method: options.method || "GET",
     headers: { accept: "application/json" },
-  });
+  };
+
+  if (options.body) {
+    const form = new URLSearchParams();
+    for (const [name, value] of Object.entries(options.body)) {
+      form.set(name, String(value));
+    }
+    fetchOptions.headers["content-type"] = "application/x-www-form-urlencoded";
+    fetchOptions.body = form.toString();
+  }
+
+  const response = await fetch(url, fetchOptions);
   const payload = await response.json();
   return { response, payload };
 }
@@ -231,6 +243,64 @@ async function handleMetaCampaigns(request, env) {
   }
 }
 
+async function handleMetaTracking(request, env) {
+  const validationError = validateAdminRequest(request, env, ["POST"]);
+  if (validationError) return validationError;
+
+  const accountId = getMetaAdAccountId(env);
+
+  try {
+    const existing = await requestMeta(`${accountId}/adspixels`, env, {
+      fields: "id,name,last_fired_time",
+      limit: 100,
+    });
+
+    if (!existing.response.ok) {
+      return metaFailure(existing.payload, existing.response.status);
+    }
+
+    let pixels = Array.isArray(existing.payload.data) ? existing.payload.data : [];
+    let created = false;
+
+    if (pixels.length === 0) {
+      const createdPixel = await requestMeta(
+        `${accountId}/adspixels`,
+        env,
+        {},
+        {
+          method: "POST",
+          body: { name: "White5 Website Pixel" },
+        },
+      );
+
+      if (!createdPixel.response.ok) {
+        return metaFailure(createdPixel.payload, createdPixel.response.status);
+      }
+
+      created = true;
+      pixels = [{ id: createdPixel.payload.id, name: "White5 Website Pixel" }];
+    }
+
+    return json({
+      ok: true,
+      apiVersion: META_API_VERSION,
+      created,
+      pixel: pixels[0],
+      adsStarted: false,
+      spendEnabled: false,
+    });
+  } catch (error) {
+    return json(
+      {
+        ok: false,
+        error: "Could not prepare Meta tracking",
+        details: error instanceof Error ? error.message : String(error),
+      },
+      502,
+    );
+  }
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -241,6 +311,10 @@ export default {
 
     if (url.pathname === "/api/meta/campaigns") {
       return handleMetaCampaigns(request, env);
+    }
+
+    if (url.pathname === "/api/meta/tracking") {
+      return handleMetaTracking(request, env);
     }
 
     const response = await env.ASSETS.fetch(request);
