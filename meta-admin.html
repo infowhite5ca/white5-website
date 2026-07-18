@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex,nofollow,noarchive" />
+  <title>White5 Meta API Test</title>
+  <style>
+    :root { color-scheme: light dark; font-family: system-ui, sans-serif; }
+    body { margin: 0; padding: 24px; background: Canvas; color: CanvasText; }
+    main { max-width: 640px; margin: 40px auto; }
+    input, button { box-sizing: border-box; width: 100%; padding: 14px; font: inherit; margin-top: 12px; }
+    button { cursor: pointer; font-weight: 700; }
+    pre { margin-top: 20px; padding: 16px; overflow-wrap: anywhere; white-space: pre-wrap; border: 1px solid GrayText; border-radius: 8px; }
+    .note { opacity: .8; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>White5 Meta API Test</h1>
+    <p class="note">Enter the private ADMIN_API_KEY saved in Cloudflare. It is used only for this request and is not stored by this page.</p>
+    <form id="form" autocomplete="off">
+      <label for="key">ADMIN_API_KEY</label>
+      <input id="key" name="key" type="password" autocomplete="new-password" required />
+      <button type="submit">Test Meta connection</button>
+    </form>
+    <pre id="result" aria-live="polite">Waiting for test.</pre>
+  </main>
+  <script>
+    const form = document.getElementById('form');
+    const keyInput = document.getElementById('key');
+    const result = document.getElementById('result');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const key = keyInput.value;
+      if (!key) return;
+
+      result.textContent = 'Testing...';
+      try {
+        const response = await fetch('/api/meta/status', {
+          method: 'GET',
+          headers: { 'x-admin-key': key },
+          cache: 'no-store',
+        });
+        const text = await response.text();
+        let output;
+        try {
+          output = JSON.stringify(JSON.parse(text), null, 2);
+        } catch {
+          output = text;
+        }
+        result.textContent = `HTTP ${response.status}\n${output}`;
+      } catch (error) {
+        result.textContent = `Request failed: ${error instanceof Error ? error.message : String(error)}`;
+      } finally {
+        keyInput.value = '';
+      }
+    });
+  </script>
+</body>
+</html>
