@@ -25,8 +25,9 @@
       <button type="button" data-endpoint="/api/meta/status" data-method="GET" data-label="Testing Meta connection">Test Meta connection</button>
       <button type="button" data-endpoint="/api/meta/campaigns" data-method="GET" data-label="Reading campaigns">Read campaigns</button>
       <button type="button" data-endpoint="/api/meta/tracking" data-method="POST" data-label="Preparing Meta tracking" data-confirm="Prepare Meta tracking? This may create one Meta Pixel if the ad account has none. It cannot start ads or spend money.">Prepare Meta tracking</button>
+      <button type="button" data-endpoint="/api/meta/create-window-campaign" data-method="POST" data-label="Creating PAUSED window campaign" data-confirm="Create the confirmed White5 Window & Screen Cleaning campaign? Budget: 20 CAD/day. Location: Calgary + 25 km. Destination: website. Campaign, ad set, and ad will all be PAUSED, so no money will be spent.">Create PAUSED window campaign</button>
     </form>
-    <p class="note">Connection and campaign checks are read-only. Prepare Meta tracking may create one Pixel only when none exists. No action can publish ads or spend money.</p>
+    <p class="note">Connection and campaign checks are read-only. Prepare Meta tracking may create one Pixel. The campaign button creates only the confirmed window campaign with every level PAUSED; it does not start delivery or spend money.</p>
     <pre id="result" aria-live="polite">Waiting for test.</pre>
   </main>
   <script>
