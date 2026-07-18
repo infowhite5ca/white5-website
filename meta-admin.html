@@ -18,27 +18,33 @@
 <body>
   <main>
     <h1>White5 Meta API Test</h1>
-    <p class="note">Enter the private ADMIN_API_KEY saved in Cloudflare. It is used only for this request and is not stored by this page.</p>
+    <p class="note">Enter the private ADMIN_API_KEY saved in Cloudflare. It is used only for the selected request and is not stored by this page.</p>
     <form id="form" autocomplete="off">
       <label for="key">ADMIN_API_KEY</label>
       <input id="key" name="key" type="password" autocomplete="new-password" required />
-      <button type="submit">Test Meta connection</button>
+      <button type="button" data-endpoint="/api/meta/status" data-label="Testing Meta connection">Test Meta connection</button>
+      <button type="button" data-endpoint="/api/meta/campaigns" data-label="Reading campaigns">Read campaigns</button>
     </form>
+    <p class="note">Both actions are read-only. They cannot create, edit, publish, or spend on ads.</p>
     <pre id="result" aria-live="polite">Waiting for test.</pre>
   </main>
   <script>
-    const form = document.getElementById('form');
     const keyInput = document.getElementById('key');
     const result = document.getElementById('result');
+    const buttons = [...document.querySelectorAll('[data-endpoint]')];
 
-    form.addEventListener('submit', async (event) => {
-      event.preventDefault();
+    async function runRequest(endpoint, label) {
       const key = keyInput.value;
-      if (!key) return;
+      if (!key) {
+        keyInput.focus();
+        return;
+      }
 
-      result.textContent = 'Testing...';
+      result.textContent = `${label}...`;
+      buttons.forEach((button) => { button.disabled = true; });
+
       try {
-        const response = await fetch('/api/meta/status', {
+        const response = await fetch(endpoint, {
           method: 'GET',
           headers: { 'x-admin-key': key },
           cache: 'no-store',
@@ -55,7 +61,14 @@
         result.textContent = `Request failed: ${error instanceof Error ? error.message : String(error)}`;
       } finally {
         keyInput.value = '';
+        buttons.forEach((button) => { button.disabled = false; });
       }
+    }
+
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        runRequest(button.dataset.endpoint, button.dataset.label);
+      });
     });
   </script>
 </body>
