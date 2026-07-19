@@ -1,6 +1,6 @@
 const MAX_FILES = 5;
 const MAX_FILE_BYTES = 800_000;
-const MAX_TOTAL_BYTES = 3_800_000;
+const MAX_TOTAL_BYTES = 3_200_000;
 const ALLOWED_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 
 function json(data, status = 200) {
@@ -29,6 +29,18 @@ function escapeHtml(value) {
 
 function listValues(formData, name) {
   return formData.getAll(name).map((value) => clean(value, 100)).filter(Boolean);
+}
+
+function arrayBufferToBase64(buffer) {
+  const bytes = new Uint8Array(buffer);
+  const chunkSize = 0x8000;
+  let binary = "";
+
+  for (let offset = 0; offset < bytes.length; offset += chunkSize) {
+    binary += String.fromCharCode(...bytes.subarray(offset, offset + chunkSize));
+  }
+
+  return btoa(binary);
 }
 
 async function verifyTurnstile(token, request, env) {
@@ -95,7 +107,7 @@ export async function handleDeckFenceQuote(request, env) {
     return json({ ok: false, error: "Invalid origin" }, 403);
   }
 
-  if (!env.EMAIL) {
+  if (!env.EMAIL_SERVICE) {
     return json({ ok: false, error: "Email service is not configured" }, 503);
   }
 
@@ -173,26 +185,31 @@ export async function handleDeckFenceQuote(request, env) {
       return json({ ok: false, error: "The combined photo size is too large." }, 400);
     }
     attachments.push({
-      content: await file.arrayBuffer(),
+      content: arrayBufferToBase64(await file.arrayBuffer()),
       filename: clean(file.name, 120) || `project-photo-${index + 1}.jpg`,
       type: file.type,
-      disposition: "attachment",
     });
   }
 
   try {
-    const result = await env.EMAIL.send({
-      to: "info@white5.ca",
-      from: { email: "website@white5.ca", name: "White5 Website" },
-      replyTo: fields.email ? { email: fields.email, name: fields.name } : undefined,
-      subject: `Deck/Fence Quote — ${fields.projectType} — ${fields.name}`,
-      text: buildText(fields),
-      html: buildHtml(fields),
-      attachments,
-      headers: { "X-White5-Form": "deck-fence-quote" },
+    const response = await env.EMAIL_SERVICE.fetch("https://email-service.internal/send", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        subject: `Deck/Fence Quote — ${fields.projectType} — ${fields.name}`,
+        text: buildText(fields),
+        html: buildHtml(fields),
+        replyTo: fields.email || "",
+        attachments,
+      }),
     });
 
-    return json({ ok: true, messageId: result.messageId });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok || !result.success) {
+      throw new Error(result.error || `Email service returned ${response.status}`);
+    }
+
+    return json({ ok: true, messageId: result.messageId || "" });
   } catch (error) {
     console.error("Deck/fence quote email failed", error);
     return json({ ok: false, error: "We could not send your request. Please call 403-479-3905." }, 502);
