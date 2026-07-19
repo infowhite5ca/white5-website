@@ -1,6 +1,7 @@
 // Force a fresh Cloudflare Pages preview deployment.
 import coreWorker from "./worker-core.js";
 import { createPausedWindowCampaignWithProfileRetry } from "./meta-window-campaign-profile-retry.js";
+import { updateWindowAdWithWebsiteAndWhatsApp } from "./meta-window-ad-multichannel.js";
 import { createPausedDeckFenceCampaignWithImageFallback } from "./meta-deck-fence-campaign-image-fallback.js";
 import { inspectDeckAd } from "./meta-deck-ad-inspector.js";
 import { handleDeckFenceQuoteV9 } from "./deck-fence-quote-api-v9.js";
@@ -26,6 +27,10 @@ export default {
 
     if (url.pathname === "/api/meta/create-window-campaign") {
       return createPausedWindowCampaignWithProfileRetry(request, env);
+    }
+
+    if (url.pathname === "/api/meta/update-window-ad-channels") {
+      return updateWindowAdWithWebsiteAndWhatsApp(request, env);
     }
 
     if (url.pathname === "/api/meta/create-deck-fence-campaign") {
