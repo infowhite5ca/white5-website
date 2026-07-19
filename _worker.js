@@ -9,11 +9,11 @@ import { handleDeckFenceConfigV6 } from "./deck-fence-quote-api-v6.js";
 import { handleZohoStatus, handleZohoTestSend } from "./zoho-diagnostic-api.js";
 import { handleZohoInbox, handleZohoMessage } from "./zoho-mail-reader-api.js";
 import { handleZohoTokenDiagnostic } from "./zoho-token-diagnostic.js";
-import { handleWhite5AiChat } from "./white5-ai-chat-api-v2.js";
+import { handleWhite5AiChat } from "./white5-ai-chat-api-v3.js";
 
 const CHAT_ASSETS = `
-  <link rel="stylesheet" href="/white5-ai-chat.css?v=8c7dbf4">
-  <script defer src="/white5-ai-chat.js?v=9018a8e"></script>
+  <link rel="stylesheet" href="/white5-ai-chat.css?v=photo-1">
+  <script defer src="/white5-ai-chat.js?v=photo-1"></script>
 `;
 
 class ChatHeadInjector {
