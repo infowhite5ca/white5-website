@@ -4,6 +4,7 @@ import { createPausedWindowCampaignWithProfileRetry } from "./meta-window-campai
 import { handleDeckFenceQuoteV6, handleDeckFenceConfigV6 } from "./deck-fence-quote-api-v6.js";
 import { handleZohoStatus, handleZohoTestSend } from "./zoho-diagnostic-api.js";
 import { handleZohoAttachmentDiagnostic } from "./zoho-attachment-diagnostic.js";
+import { handleZohoAttachmentDiagnosticLink } from "./zoho-attachment-link.js";
 
 class PrivacyFooterInjector {
   element(element) {
@@ -37,6 +38,10 @@ export default {
 
     if (url.pathname === "/api/zoho/attachment-diagnostic") {
       return handleZohoAttachmentDiagnostic(request, env);
+    }
+
+    if (url.pathname === "/api/zoho/attachment-diagnostic-7f3c9a2b") {
+      return handleZohoAttachmentDiagnosticLink(request, env);
     }
 
     const response = await coreWorker.fetch(request, env, ctx);
