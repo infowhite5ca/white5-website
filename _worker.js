@@ -1,6 +1,7 @@
 import coreWorker from "./worker-core.js";
 import { createPausedWindowCampaignWithProfileRetry } from "./meta-window-campaign-profile-retry.js";
 import { handleDeckFenceQuote, handleDeckFenceConfig } from "./deck-fence-quote-api.js";
+import { handleZohoStatus, handleZohoTestSend } from "./zoho-diagnostic-api.js";
 
 class PrivacyFooterInjector {
   element(element) {
@@ -24,10 +25,22 @@ export default {
       return handleDeckFenceConfig(request, env);
     }
 
+    if (url.pathname === "/api/zoho/status") {
+      return handleZohoStatus(request, env);
+    }
+
+    if (url.pathname === "/api/zoho/test-send") {
+      return handleZohoTestSend(request, env);
+    }
+
     const response = await coreWorker.fetch(request, env, ctx);
     const contentType = response.headers.get("content-type") || "";
 
-    if (!contentType.includes("text/html") || url.pathname.startsWith("/meta-admin")) {
+    if (
+      !contentType.includes("text/html")
+      || url.pathname.startsWith("/meta-admin")
+      || url.pathname.startsWith("/zoho-admin")
+    ) {
       return response;
     }
 
