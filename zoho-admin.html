@@ -12,7 +12,7 @@
     h1,h2{margin-top:0}p{line-height:1.55;color:#45647c}label{display:block;font-weight:700;margin:16px 0 7px}
     input,select,button{width:100%;padding:14px;border-radius:12px;font:inherit}input,select{border:1px solid #bfcfda;background:#fff;color:#0b1f33}
     .controls,.buttons{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}.controls{grid-template-columns:1fr 140px}
-    button{border:0;background:#0c4990;color:#fff;font-weight:700;cursor:pointer}button.secondary{background:#2a5035}button.read{width:auto;padding:9px 14px}
+    button{border:0;background:#0c4990;color:#fff;font-weight:700;cursor:pointer}button.secondary{background:#2a5035}button.diagnostic{background:#7a4f00}button.read{width:auto;padding:9px 14px}
     button:disabled{opacity:.55;cursor:wait}.warning{font-size:14px;color:#7a3c00;background:#fff4d8;border:1px solid #efd18a;padding:12px;border-radius:12px}
     #status{margin-top:16px;padding:13px;border-radius:12px;background:#e9f4fb;color:#174a68;white-space:pre-wrap;overflow-wrap:anywhere}
     #messages{display:grid;gap:12px;margin-top:16px}.message{border:1px solid #d5e2ea;border-radius:14px;padding:15px;background:#f8fcff}.message.unread{border-left:5px solid #0c4990}.message-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}.message h3{margin:0 0 5px;font-size:18px}.meta,.summary{color:#526f84;font-size:14px;line-height:1.45}.summary{margin-top:10px}
@@ -38,6 +38,7 @@
   <div class="buttons">
     <button type="button" id="loadInbox">Load Inbox</button>
     <button class="secondary" type="button" id="testConnection">Test connection</button>
+    <button class="diagnostic" type="button" id="diagnoseToken">Diagnose current token</button>
   </div>
 
   <div id="status" role="status" aria-live="polite">Waiting.</div>
@@ -60,7 +61,11 @@
   const viewerSubject = document.getElementById('viewerSubject');
   const viewerMeta = document.getElementById('viewerMeta');
   const viewerBody = document.getElementById('viewerBody');
-  const buttons = [document.getElementById('loadInbox'), document.getElementById('testConnection')];
+  const buttons = [
+    document.getElementById('loadInbox'),
+    document.getElementById('testConnection'),
+    document.getElementById('diagnoseToken'),
+  ];
   let currentMessages = [];
 
   function requireKey() {
@@ -146,7 +151,7 @@
     } catch (error) {
       const payload = error.payload || {};
       statusEl.textContent = payload.reauthorizationRequired
-        ? `Zoho needs a new refresh token with these scopes:\n${(payload.requiredScopes || []).join(', ')}\n\nGenerate a new grant code, exchange it, then replace ZOHO_REFRESH_TOKEN in Cloudflare.`
+        ? 'The token needs diagnosis. Press “Diagnose current token” below.'
         : error.message;
     }
   }
@@ -175,8 +180,31 @@
     } catch (error) { statusEl.textContent = error.message; }
   }
 
+  async function diagnoseToken() {
+    statusEl.textContent = 'Diagnosing the current Cloudflare Zoho token...';
+    try {
+      const payload = await api('/api/zoho/token-diagnostic');
+      if (!payload) return;
+      const meta = payload.tokenMetadata || {};
+      const account = payload.accountsTest || {};
+      const scopeText = meta.scopeReportedByZoho
+        ? (meta.grantedScopes || []).join(', ') || '(none reported)'
+        : 'Zoho did not include scope metadata in the refresh response';
+      statusEl.textContent = [
+        `Token refresh: ${payload.tokenRefreshOk ? 'working' : 'failed'}`,
+        `Granted scopes: ${scopeText}`,
+        `Missing scopes: ${(meta.missingScopes || []).join(', ') || 'none reported'}`,
+        `Location: ${meta.location || 'not reported'}`,
+        `Mail accounts authorization: ${account.authorized ? 'working' : 'rejected (HTTP ' + account.httpStatus + ')'}`,
+        '',
+        payload.interpretation || '',
+      ].join('\n');
+    } catch (error) { statusEl.textContent = error.message; }
+  }
+
   document.getElementById('loadInbox').addEventListener('click', loadInbox);
   document.getElementById('testConnection').addEventListener('click', testConnection);
+  document.getElementById('diagnoseToken').addEventListener('click', diagnoseToken);
 </script>
 </body>
 </html>
