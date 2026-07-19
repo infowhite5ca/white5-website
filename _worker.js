@@ -1,7 +1,8 @@
 // Force a fresh Cloudflare Pages preview deployment.
 import coreWorker from "./worker-core.js";
 import { createPausedWindowCampaignWithProfileRetry } from "./meta-window-campaign-profile-retry.js";
-import { handleDeckFenceQuoteV6, handleDeckFenceConfigV6 } from "./deck-fence-quote-api-v6.js";
+import { handleDeckFenceQuoteV7 } from "./deck-fence-quote-api-v7.js";
+import { handleDeckFenceConfigV6 } from "./deck-fence-quote-api-v6.js";
 import { handleZohoStatus, handleZohoTestSend } from "./zoho-diagnostic-api.js";
 import { handleZohoAttachmentDiagnostic } from "./zoho-attachment-diagnostic.js";
 import { handleZohoAttachmentDiagnosticLink } from "./zoho-attachment-link.js";
@@ -21,7 +22,7 @@ export default {
     }
 
     if (url.pathname === "/api/deck-fence-quote") {
-      return handleDeckFenceQuoteV6(request, env);
+      return handleDeckFenceQuoteV7(request, env);
     }
 
     if (url.pathname === "/api/deck-fence-config") {
