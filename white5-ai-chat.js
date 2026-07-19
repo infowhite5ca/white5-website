@@ -2,8 +2,14 @@
   if (window.__white5AiChatLoaded) return;
   window.__white5AiChatLoaded = true;
 
-  const STORAGE_KEY = "white5-ai-chat-v2";
+  const STORAGE_KEY = "white5-ai-chat-v3";
   const MAX_HISTORY = 12;
+  const MAX_IMAGES = 4;
+  const MAX_ORIGINAL_FILE_BYTES = 12 * 1024 * 1024;
+  const MAX_COMPRESSED_BYTES = 900 * 1024;
+  const MAX_DIMENSION = 1400;
+  const ALLOWED_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
+
   const root = document.createElement("div");
   root.id = "white5-ai-chat-root";
   root.innerHTML = `
@@ -30,15 +36,19 @@
         <button type="button" data-message="I need help with a deck or fence project.">Deck & fence</button>
       </div>
       <div class="white5-ai-compose">
+        <div class="white5-ai-attachments" aria-label="Selected photos" hidden></div>
+        <div class="white5-ai-attachment-status" role="status" aria-live="polite"></div>
         <form class="white5-ai-form">
-          <textarea class="white5-ai-input" rows="1" maxlength="1400" placeholder="What would you like cleaned?" aria-label="Your message"></textarea>
+          <button class="white5-ai-attach" type="button" aria-label="Add photos" title="Add up to 4 photos">📎</button>
+          <input class="white5-ai-file-input" type="file" accept="image/jpeg,image/png,image/webp" multiple hidden>
+          <textarea class="white5-ai-input" rows="1" maxlength="1400" placeholder="Describe the job or add a photo…" aria-label="Your message"></textarea>
           <button class="white5-ai-send" type="submit" aria-label="Send message">➜</button>
         </form>
         <div class="white5-ai-actions">
           <a href="/services.html#estimate">Get Quote</a>
           <a href="tel:14034793905">Call 403-479-3905</a>
         </div>
-        <div class="white5-ai-note">Quick estimates are approximate. Please don’t share payment information.</div>
+        <div class="white5-ai-note">Add up to 4 photos. Photos are sent for AI analysis and are not automatically added to a quote. Don’t upload IDs or payment information.</div>
       </div>
     </section>
   `;
@@ -51,10 +61,16 @@
   const form = root.querySelector(".white5-ai-form");
   const input = root.querySelector(".white5-ai-input");
   const sendButton = root.querySelector(".white5-ai-send");
+  const attachButton = root.querySelector(".white5-ai-attach");
+  const fileInput = root.querySelector(".white5-ai-file-input");
+  const attachmentsElement = root.querySelector(".white5-ai-attachments");
+  const attachmentStatus = root.querySelector(".white5-ai-attachment-status");
   const quickButtons = [...root.querySelectorAll(".white5-ai-quick button")];
 
   let history = loadHistory();
+  let selectedImages = [];
   let busy = false;
+  let processingPhotos = false;
 
   function loadHistory() {
     try {
@@ -90,6 +106,20 @@
     messagesElement.scrollTop = messagesElement.scrollHeight;
   }
 
+  function appendImageGallery(parent, images) {
+    if (!Array.isArray(images) || !images.length) return;
+    const gallery = document.createElement("div");
+    gallery.className = "white5-ai-message-images";
+    images.forEach((image, index) => {
+      const img = document.createElement("img");
+      img.src = image.dataUrl;
+      img.alt = image.name || `Attached photo ${index + 1}`;
+      img.loading = "lazy";
+      gallery.appendChild(img);
+    });
+    parent.appendChild(gallery);
+  }
+
   function createMessage(role, text = "", options = {}) {
     const wrapper = document.createElement("div");
     wrapper.className = `white5-ai-message is-${role}`;
@@ -98,7 +128,12 @@
     if (options.typing) {
       bubble.innerHTML = '<span class="white5-ai-typing" aria-label="White5 AI is typing"><span></span><span></span><span></span></span>';
     } else {
-      bubble.textContent = text;
+      if (text) {
+        const textElement = document.createElement("div");
+        textElement.textContent = text;
+        bubble.appendChild(textElement);
+      }
+      appendImageGallery(bubble, options.images || []);
     }
     wrapper.appendChild(bubble);
     messagesElement.appendChild(wrapper);
@@ -114,7 +149,7 @@
 
     createMessage(
       "assistant",
-      "Hi — I can help you narrow down a White5 quote in about a minute. What would you like cleaned?",
+      "Hi — I can help you narrow down a White5 quote in about a minute. Describe the job or attach up to four photos.",
     );
   }
 
@@ -122,12 +157,174 @@
     busy = value;
     input.disabled = value;
     sendButton.disabled = value;
+    attachButton.disabled = value || processingPhotos;
     quickButtons.forEach((button) => { button.disabled = value; });
+    attachmentsElement.querySelectorAll("button").forEach((button) => { button.disabled = value; });
   }
 
   function resizeInput() {
     input.style.height = "auto";
     input.style.height = `${Math.min(input.scrollHeight, 112)}px`;
+  }
+
+  function setAttachmentStatus(message = "", isError = false) {
+    attachmentStatus.textContent = message;
+    attachmentStatus.classList.toggle("is-error", Boolean(isError));
+  }
+
+  function renderAttachments() {
+    attachmentsElement.replaceChildren();
+    attachmentsElement.hidden = selectedImages.length === 0;
+
+    selectedImages.forEach((image, index) => {
+      const item = document.createElement("div");
+      item.className = "white5-ai-attachment";
+
+      const img = document.createElement("img");
+      img.src = image.dataUrl;
+      img.alt = image.name || `Selected photo ${index + 1}`;
+
+      const remove = document.createElement("button");
+      remove.type = "button";
+      remove.setAttribute("aria-label", `Remove ${image.name || `photo ${index + 1}`}`);
+      remove.textContent = "×";
+      remove.disabled = busy;
+      remove.addEventListener("click", () => {
+        selectedImages.splice(index, 1);
+        renderAttachments();
+        setAttachmentStatus(selectedImages.length ? `${selectedImages.length} of ${MAX_IMAGES} photos selected.` : "");
+      });
+
+      item.append(img, remove);
+      attachmentsElement.appendChild(item);
+    });
+  }
+
+  function loadImage(url) {
+    return new Promise((resolve, reject) => {
+      const image = new Image();
+      image.onload = () => resolve(image);
+      image.onerror = () => reject(new Error("This photo could not be opened."));
+      image.src = url;
+    });
+  }
+
+  function canvasToBlob(canvas, quality) {
+    return new Promise((resolve, reject) => {
+      canvas.toBlob(
+        (blob) => blob ? resolve(blob) : reject(new Error("This photo could not be compressed.")),
+        "image/jpeg",
+        quality,
+      );
+    });
+  }
+
+  function blobToDataUrl(blob) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result || ""));
+      reader.onerror = () => reject(new Error("This photo could not be prepared."));
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  async function compressImage(file) {
+    if (!ALLOWED_TYPES.has(file.type)) {
+      throw new Error("Only JPG, PNG, and WebP photos are supported.");
+    }
+    if (file.size > MAX_ORIGINAL_FILE_BYTES) {
+      throw new Error(`${file.name || "One photo"} is larger than 12 MB.`);
+    }
+
+    const objectUrl = URL.createObjectURL(file);
+    try {
+      const image = await loadImage(objectUrl);
+      let dimensionLimit = MAX_DIMENSION;
+      let finalBlob = null;
+      let finalWidth = 0;
+      let finalHeight = 0;
+
+      for (let attempt = 0; attempt < 3; attempt += 1) {
+        const scale = Math.min(1, dimensionLimit / Math.max(image.naturalWidth, image.naturalHeight));
+        const width = Math.max(1, Math.round(image.naturalWidth * scale));
+        const height = Math.max(1, Math.round(image.naturalHeight * scale));
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const context = canvas.getContext("2d", { alpha: false });
+        if (!context) throw new Error("Your browser could not prepare this photo.");
+        context.fillStyle = "#ffffff";
+        context.fillRect(0, 0, width, height);
+        context.drawImage(image, 0, 0, width, height);
+
+        for (const quality of [0.82, 0.72, 0.62, 0.54]) {
+          const blob = await canvasToBlob(canvas, quality);
+          finalBlob = blob;
+          finalWidth = width;
+          finalHeight = height;
+          if (blob.size <= MAX_COMPRESSED_BYTES) break;
+        }
+
+        if (finalBlob && finalBlob.size <= MAX_COMPRESSED_BYTES) break;
+        dimensionLimit = Math.round(dimensionLimit * 0.78);
+      }
+
+      if (!finalBlob || finalBlob.size > 1100 * 1024) {
+        throw new Error(`${file.name || "One photo"} could not be reduced enough. Try a smaller image.`);
+      }
+
+      return {
+        name: String(file.name || "photo.jpg").slice(0, 120),
+        dataUrl: await blobToDataUrl(finalBlob),
+        size: finalBlob.size,
+        width: finalWidth,
+        height: finalHeight,
+      };
+    } finally {
+      URL.revokeObjectURL(objectUrl);
+    }
+  }
+
+  async function addFiles(fileList) {
+    const files = [...(fileList || [])];
+    if (!files.length) return;
+
+    const spacesLeft = MAX_IMAGES - selectedImages.length;
+    if (spacesLeft <= 0) {
+      setAttachmentStatus(`You can attach up to ${MAX_IMAGES} photos.`, true);
+      return;
+    }
+
+    processingPhotos = true;
+    attachButton.disabled = true;
+    setAttachmentStatus("Preparing photos…");
+
+    try {
+      const accepted = files.slice(0, spacesLeft);
+      for (const file of accepted) {
+        const compressed = await compressImage(file);
+        selectedImages.push(compressed);
+        renderAttachments();
+      }
+
+      if (files.length > spacesLeft) {
+        setAttachmentStatus(`Added ${accepted.length} photo(s). Maximum is ${MAX_IMAGES}.`, true);
+      } else {
+        setAttachmentStatus(`${selectedImages.length} of ${MAX_IMAGES} photos selected.`);
+      }
+    } catch (error) {
+      setAttachmentStatus(error instanceof Error ? error.message : "A photo could not be prepared.", true);
+    } finally {
+      processingPhotos = false;
+      attachButton.disabled = busy;
+      fileInput.value = "";
+    }
+  }
+
+  function clearAttachments() {
+    selectedImages = [];
+    renderAttachments();
+    setAttachmentStatus("");
   }
 
   function extractCompletedText(response) {
@@ -141,13 +338,23 @@
     return "";
   }
 
-  async function streamReply(messages, bubble) {
+  async function streamReply(messages, bubble, images) {
+    const apiMessages = messages.map((message) => ({ ...message }));
+    if (images.length && apiMessages.length) {
+      const latest = apiMessages[apiMessages.length - 1];
+      latest.content = `${latest.content}\n\n[Customer attached ${images.length} photo(s) to this message.]`;
+    }
+
     const response = await fetch("/api/ai-chat", {
       method: "POST",
       headers: { "content-type": "application/json" },
       cache: "no-store",
       body: JSON.stringify({
-        messages,
+        messages: apiMessages,
+        images: images.map((image) => ({
+          name: image.name,
+          dataUrl: image.dataUrl,
+        })),
         page: {
           path: `${location.pathname}${location.hash}`,
           title: document.title,
@@ -225,21 +432,26 @@
 
   async function sendMessage(text) {
     const message = String(text || "").trim().slice(0, 1400);
-    if (!message || busy) return;
+    const photos = selectedImages.slice();
+    if ((!message && !photos.length) || busy || processingPhotos) return;
 
     setOpen(true);
-    createMessage("user", message);
-    history.push({ role: "user", content: message });
+    const displayText = message || (photos.length === 1 ? "Photo attached" : `${photos.length} photos attached`);
+    createMessage("user", displayText, { images: photos });
+
+    const historyText = message || `I attached ${photos.length} photo${photos.length === 1 ? "" : "s"} for review.`;
+    history.push({ role: "user", content: historyText });
     history = history.slice(-MAX_HISTORY);
     saveHistory();
 
     input.value = "";
     resizeInput();
+    clearAttachments();
     setBusy(true);
     const assistantBubble = createMessage("assistant", "", { typing: true });
 
     try {
-      const reply = await streamReply(history, assistantBubble);
+      const reply = await streamReply(history, assistantBubble, photos);
       const finalReply = reply || "Tell me what you need cleaned and I’ll help with the next step.";
       assistantBubble.textContent = finalReply;
       history.push({ role: "assistant", content: finalReply });
@@ -259,6 +471,10 @@
 
   launcher.addEventListener("click", () => setOpen(!panel.classList.contains("is-open")));
   closeButton.addEventListener("click", () => setOpen(false));
+  attachButton.addEventListener("click", () => {
+    if (!busy && !processingPhotos) fileInput.click();
+  });
+  fileInput.addEventListener("change", () => addFiles(fileInput.files));
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     sendMessage(input.value);
