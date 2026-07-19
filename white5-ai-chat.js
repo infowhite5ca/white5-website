@@ -2,21 +2,21 @@
   if (window.__white5AiChatLoaded) return;
   window.__white5AiChatLoaded = true;
 
-  const STORAGE_KEY = "white5-ai-chat-v1";
+  const STORAGE_KEY = "white5-ai-chat-v2";
   const MAX_HISTORY = 12;
   const root = document.createElement("div");
   root.id = "white5-ai-chat-root";
   root.innerHTML = `
     <button class="white5-ai-launcher" type="button" aria-expanded="false" aria-controls="white5-ai-panel">
       <span class="white5-ai-launcher-icon" aria-hidden="true">AI</span>
-      <span>Chat with White5</span>
+      <span>Get a quick quote</span>
     </button>
     <section class="white5-ai-panel" id="white5-ai-panel" aria-label="White5 AI chat" aria-hidden="true">
       <header class="white5-ai-header">
         <div class="white5-ai-brand">
           <div class="white5-ai-avatar" aria-hidden="true">W5</div>
           <div>
-            <div class="white5-ai-title">White5 AI Assistant</div>
+            <div class="white5-ai-title">White5 Quick Quote</div>
             <div class="white5-ai-subtitle"><span class="white5-ai-dot"></span>Available now</div>
           </div>
         </div>
@@ -24,21 +24,21 @@
       </header>
       <div class="white5-ai-messages" role="log" aria-live="polite" aria-relevant="additions text"></div>
       <div class="white5-ai-quick" aria-label="Suggested questions">
-        <button type="button" data-message="I need a quote. What details do you need?">Get a quote</button>
-        <button type="button" data-message="Tell me about window cleaning.">Window cleaning</button>
-        <button type="button" data-message="Tell me about gutter and eavestrough cleaning.">Eavestroughs</button>
+        <button type="button" data-message="I need a quick quote.">Quick quote</button>
+        <button type="button" data-message="I need window cleaning.">Windows</button>
+        <button type="button" data-message="I need gutter or eavestrough cleaning.">Eavestroughs</button>
         <button type="button" data-message="I need help with a deck or fence project.">Deck & fence</button>
       </div>
       <div class="white5-ai-compose">
         <form class="white5-ai-form">
-          <textarea class="white5-ai-input" rows="1" maxlength="1400" placeholder="Ask about services or a quote…" aria-label="Your message"></textarea>
+          <textarea class="white5-ai-input" rows="1" maxlength="1400" placeholder="What would you like cleaned?" aria-label="Your message"></textarea>
           <button class="white5-ai-send" type="submit" aria-label="Send message">➜</button>
         </form>
         <div class="white5-ai-actions">
           <a href="/services.html#estimate">Get Quote</a>
           <a href="tel:14034793905">Call 403-479-3905</a>
         </div>
-        <div class="white5-ai-note">AI assistant. Estimates and availability require confirmation. Do not share sensitive information.</div>
+        <div class="white5-ai-note">Quick estimates are approximate. Please don’t share payment information.</div>
       </div>
     </section>
   `;
@@ -114,7 +114,7 @@
 
     createMessage(
       "assistant",
-      "Hi! I’m White5’s AI assistant. I can help with window cleaning, eavestrough cleaning, deck and fence work, service areas, and quote preparation. What can I help you with?",
+      "Hi — I can help you narrow down a White5 quote in about a minute. What would you like cleaned?",
     );
   }
 
@@ -240,7 +240,7 @@
 
     try {
       const reply = await streamReply(history, assistantBubble);
-      const finalReply = reply || "Please use the quote form or call 403-479-3905 so White5 can help directly.";
+      const finalReply = reply || "Tell me what you need cleaned and I’ll help with the next step.";
       assistantBubble.textContent = finalReply;
       history.push({ role: "assistant", content: finalReply });
       history = history.slice(-MAX_HISTORY);
@@ -249,7 +249,7 @@
       assistantBubble.classList.add("is-error");
       assistantBubble.textContent = error instanceof Error
         ? error.message
-        : "White5 AI is temporarily unavailable. Please use the quote form or call 403-479-3905.";
+        : "White5 AI is temporarily unavailable. Please try again shortly.";
     } finally {
       setBusy(false);
       input.focus();
