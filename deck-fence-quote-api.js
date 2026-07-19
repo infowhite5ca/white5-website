@@ -4,6 +4,9 @@ const MAX_TOTAL_BYTES = 3_200_000;
 const ALLOWED_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 const TURNSTILE_TEST_SITE_KEY = "1x00000000000000000000AA";
 const TURNSTILE_TEST_SECRET_KEY = "1x0000000000000000000000000000000AA";
+const ZOHO_TOKEN_URL = "https://accounts.zohocloud.ca/oauth/v2/token";
+const ZOHO_MAIL_API = "https://mail.zohocloud.ca/api";
+const WHITE5_EMAIL = "info@white5.ca";
 
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
@@ -31,18 +34,6 @@ function escapeHtml(value) {
 
 function listValues(formData, name) {
   return formData.getAll(name).map((value) => clean(value, 100)).filter(Boolean);
-}
-
-function arrayBufferToBase64(buffer) {
-  const bytes = new Uint8Array(buffer);
-  const chunkSize = 0x8000;
-  let binary = "";
-
-  for (let offset = 0; offset < bytes.length; offset += chunkSize) {
-    binary += String.fromCharCode(...bytes.subarray(offset, offset + chunkSize));
-  }
-
-  return btoa(binary);
 }
 
 function isPreviewRequest(request) {
@@ -76,35 +67,143 @@ async function verifyTurnstile(token, request, env) {
   return response.json();
 }
 
-function buildText(fields) {
-  return [
-    "New Deck / Fence Quote Request",
-    "",
-    `Name: ${fields.name}`,
-    `Phone: ${fields.phone}`,
-    `Email: ${fields.email || "Not provided"}`,
-    `Preferred contact: ${fields.preferredContact}`,
-    "",
-    `Project type: ${fields.projectType}`,
-    `Services: ${fields.services.join(", ")}`,
-    `Project size: ${fields.projectSize}`,
-    `Approx. square footage: ${fields.squareFootage || "Not provided"}`,
-    `Desired start: ${fields.desiredStart}`,
-    `Budget: ${fields.budget}`,
-    "",
-    `Street address: ${fields.streetAddress}`,
-    `City: ${fields.city}`,
-    `Postal code: ${fields.postalCode || "Not provided"}`,
-    "",
-    `Additional notes: ${fields.notes || "None"}`,
-    "",
-    `Submitted: ${new Date().toISOString()}`,
-  ].join("\n");
-}
-
 function buildHtml(fields) {
   const row = (label, value) => `<tr><th style="padding:8px 12px;text-align:left;background:#eef7ff;border:1px solid #d6e5ef">${escapeHtml(label)}</th><td style="padding:8px 12px;border:1px solid #d6e5ef">${escapeHtml(value || "Not provided")}</td></tr>`;
   return `<!doctype html><html><body style="font-family:Arial,sans-serif;color:#0b1f33"><h2>New Deck / Fence Quote Request</h2><table style="border-collapse:collapse;width:100%;max-width:760px">${row("Name", fields.name)}${row("Phone", fields.phone)}${row("Email", fields.email)}${row("Preferred contact", fields.preferredContact)}${row("Project type", fields.projectType)}${row("Services", fields.services.join(", "))}${row("Project size", fields.projectSize)}${row("Approx. square footage", fields.squareFootage)}${row("Desired start", fields.desiredStart)}${row("Budget", fields.budget)}${row("Street address", fields.streetAddress)}${row("City", fields.city)}${row("Postal code", fields.postalCode)}${row("Additional notes", fields.notes)}${row("Submitted", new Date().toISOString())}</table></body></html>`;
+}
+
+function hasRequiredZohoSecrets(env) {
+  return Boolean(env.ZOHO_CLIENT_ID && env.ZOHO_CLIENT_SECRET && env.ZOHO_REFRESH_TOKEN);
+}
+
+async function getZohoAccessToken(env) {
+  const body = new URLSearchParams({
+    grant_type: "refresh_token",
+    client_id: env.ZOHO_CLIENT_ID,
+    client_secret: env.ZOHO_CLIENT_SECRET,
+    refresh_token: env.ZOHO_REFRESH_TOKEN,
+  });
+
+  const response = await fetch(ZOHO_TOKEN_URL, {
+    method: "POST",
+    headers: {
+      accept: "application/json",
+      "content-type": "application/x-www-form-urlencoded",
+    },
+    body,
+  });
+  const result = await response.json().catch(() => ({}));
+
+  if (!response.ok || !result.access_token) {
+    throw new Error(`Zoho token refresh failed: ${result.error || response.status}`);
+  }
+
+  return result.access_token;
+}
+
+function accountContainsAddress(account, address) {
+  const target = address.toLowerCase();
+  const direct = [
+    account.primaryEmailAddress,
+    account.mailboxAddress,
+    account.incomingUserName,
+  ].filter(Boolean).map((value) => String(value).toLowerCase());
+
+  const emailAddresses = Array.isArray(account.emailAddress)
+    ? account.emailAddress.map((item) => String(item?.mailId || "").toLowerCase())
+    : [];
+  const sendAddresses = Array.isArray(account.sendMailDetails)
+    ? account.sendMailDetails.map((item) => String(item?.fromAddress || "").toLowerCase())
+    : [];
+
+  return [...direct, ...emailAddresses, ...sendAddresses].includes(target);
+}
+
+async function getZohoMailAccount(accessToken) {
+  const response = await fetch(`${ZOHO_MAIL_API}/accounts`, {
+    headers: {
+      accept: "application/json",
+      authorization: `Zoho-oauthtoken ${accessToken}`,
+    },
+  });
+  const result = await response.json().catch(() => ({}));
+  const accounts = Array.isArray(result.data) ? result.data : [];
+  const account = accounts.find((item) => accountContainsAddress(item, WHITE5_EMAIL));
+
+  if (!response.ok || !account?.accountId) {
+    throw new Error(`Zoho account lookup failed: ${result?.status?.description || response.status}`);
+  }
+
+  return {
+    accountId: String(account.accountId),
+    fromAddress: WHITE5_EMAIL,
+  };
+}
+
+async function uploadZohoAttachment(accessToken, accountId, file, fallbackName) {
+  const fileName = clean(file.name, 120) || fallbackName;
+  const url = `${ZOHO_MAIL_API}/accounts/${encodeURIComponent(accountId)}/messages/attachments?fileName=${encodeURIComponent(fileName)}&isInline=false`;
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      accept: "application/json",
+      authorization: `Zoho-oauthtoken ${accessToken}`,
+      "content-type": file.type || "application/octet-stream",
+    },
+    body: file,
+  });
+  const result = await response.json().catch(() => ({}));
+  const data = result.data;
+
+  if (!response.ok || !data?.storeName || !data?.attachmentPath || !data?.attachmentName) {
+    throw new Error(`Zoho attachment upload failed: ${result?.status?.description || response.status}`);
+  }
+
+  return {
+    storeName: data.storeName,
+    attachmentPath: data.attachmentPath,
+    attachmentName: data.attachmentName,
+  };
+}
+
+async function sendZohoMail(accessToken, account, fields, files) {
+  const attachments = [];
+  for (const [index, file] of files.entries()) {
+    attachments.push(await uploadZohoAttachment(
+      accessToken,
+      account.accountId,
+      file,
+      `project-photo-${index + 1}.jpg`,
+    ));
+  }
+
+  const payload = {
+    fromAddress: account.fromAddress,
+    toAddress: WHITE5_EMAIL,
+    subject: `Deck/Fence Quote — ${fields.projectType} — ${fields.name}`,
+    content: buildHtml(fields),
+    mailFormat: "html",
+    encoding: "UTF-8",
+  };
+  if (attachments.length) payload.attachments = attachments;
+
+  const response = await fetch(`${ZOHO_MAIL_API}/accounts/${encodeURIComponent(account.accountId)}/messages`, {
+    method: "POST",
+    headers: {
+      accept: "application/json",
+      authorization: `Zoho-oauthtoken ${accessToken}`,
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+  const result = await response.json().catch(() => ({}));
+  const zohoStatus = Number(result?.status?.code || 0);
+
+  if (!response.ok || (zohoStatus && zohoStatus >= 300)) {
+    throw new Error(`Zoho send failed: ${result?.status?.description || response.status}`);
+  }
+
+  return result;
 }
 
 export async function handleDeckFenceQuote(request, env) {
@@ -118,8 +217,8 @@ export async function handleDeckFenceQuote(request, env) {
     return json({ ok: false, error: "Invalid origin" }, 403);
   }
 
-  if (!env.EMAIL_SERVICE) {
-    return json({ ok: false, error: "Email service is not configured" }, 503);
+  if (!hasRequiredZohoSecrets(env)) {
+    return json({ ok: false, error: "Zoho Mail is not configured" }, 503);
   }
 
   let formData;
@@ -183,8 +282,7 @@ export async function handleDeckFenceQuote(request, env) {
   }
 
   let totalBytes = 0;
-  const attachments = [];
-  for (const [index, file] of files.entries()) {
+  for (const file of files) {
     if (!ALLOWED_IMAGE_TYPES.has(file.type)) {
       return json({ ok: false, error: "Photos must be JPG, PNG, or WebP." }, 400);
     }
@@ -195,34 +293,15 @@ export async function handleDeckFenceQuote(request, env) {
     if (totalBytes > MAX_TOTAL_BYTES) {
       return json({ ok: false, error: "The combined photo size is too large." }, 400);
     }
-    attachments.push({
-      content: arrayBufferToBase64(await file.arrayBuffer()),
-      filename: clean(file.name, 120) || `project-photo-${index + 1}.jpg`,
-      type: file.type,
-    });
   }
 
   try {
-    const response = await env.EMAIL_SERVICE.fetch("https://email-service.internal/send", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({
-        subject: `Deck/Fence Quote — ${fields.projectType} — ${fields.name}`,
-        text: buildText(fields),
-        html: buildHtml(fields),
-        replyTo: fields.email || "",
-        attachments,
-      }),
-    });
-
-    const result = await response.json().catch(() => ({}));
-    if (!response.ok || !result.success) {
-      throw new Error(result.error || `Email service returned ${response.status}`);
-    }
-
-    return json({ ok: true, messageId: result.messageId || "" });
+    const accessToken = await getZohoAccessToken(env);
+    const account = await getZohoMailAccount(accessToken);
+    const result = await sendZohoMail(accessToken, account, fields, files);
+    return json({ ok: true, messageId: clean(result?.data?.messageId || "", 200) });
   } catch (error) {
-    console.error("Deck/fence quote email failed", error);
+    console.error("Deck/fence quote Zoho email failed", error);
     return json({ ok: false, error: "We could not send your request. Please call 403-479-3905." }, 502);
   }
 }
