@@ -126,7 +126,7 @@ async function uploadOneAttachment(accessToken, accountId, file, index) {
     headers: {
       accept: "application/json",
       authorization: `Zoho-oauthtoken ${accessToken}`,
-      "content-type": "application/json",
+      "content-type": file.type || "application/octet-stream",
     },
     body: await file.arrayBuffer(),
   });
