@@ -175,7 +175,6 @@ export async function handleWhite5AiChat(request, env) {
     headers: {
       "content-type": "text/event-stream; charset=utf-8",
       "cache-control": "no-store, no-transform",
-      connection: "keep-alive",
       "x-accel-buffering": "no",
       "x-content-type-options": "nosniff",
     },
