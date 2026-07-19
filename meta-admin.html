@@ -13,6 +13,7 @@
     button { cursor: pointer; font-weight: 700; }
     button.deck { border: 2px solid #4aa36b; }
     button.check { border: 2px solid #3a87d8; }
+    button.window { border: 2px solid #25d366; }
     pre { margin-top: 20px; padding: 16px; overflow-wrap: anywhere; white-space: pre-wrap; border: 1px solid GrayText; border-radius: 8px; }
     .note { opacity: .8; line-height: 1.5; }
   </style>
@@ -24,6 +25,7 @@
     <form id="form" autocomplete="off">
       <label for="key">ADMIN_API_KEY</label>
       <input id="key" name="key" type="password" autocomplete="new-password" required />
+      <button class="window" type="button" data-endpoint="/api/meta/update-window-ad-channels" data-method="POST" data-label="Updating window ad contact channels" data-confirm="Update the existing Window & Screen Cleaning ad? The Get Quote button will lead to the White5 website quote calculator, and a direct WhatsApp link to +1 403-479-3905 will be added to the primary text. Campaign and ad-set budgets will not change. The existing ad status will be preserved.">Update window ad: website + WhatsApp</button>
       <button class="check" type="button" data-endpoint="/api/meta/deck-ad" data-method="GET" data-label="Checking deck ad destination">Check deck ad destination</button>
       <button type="button" data-endpoint="/api/meta/status" data-method="GET" data-label="Testing Meta connection">Test Meta connection</button>
       <button type="button" data-endpoint="/api/meta/campaigns" data-method="GET" data-label="Reading campaigns">Read campaigns</button>
@@ -31,7 +33,7 @@
       <button class="deck" type="button" data-endpoint="/api/meta/create-deck-fence-campaign" data-method="POST" data-label="Creating PAUSED deck and fence campaign" data-confirm="Create the White5 Deck & Fence Renovation campaign? Configured budget: 20 CAD/day. Targeting: Calgary + 25 km, ages 25–65+. Objective: website leads. Campaign, ad set, and ad will all remain PAUSED. Ads will not run and no money will be spent.">Create PAUSED deck & fence campaign</button>
       <button type="button" data-endpoint="/api/meta/create-window-campaign" data-method="POST" data-label="Creating PAUSED window campaign" data-confirm="Create the confirmed White5 Window & Screen Cleaning campaign? Budget: 20 CAD/day. Location: Calgary + 25 km. Destination: website. Campaign, ad set, and ad will all be PAUSED, so no money will be spent.">Create PAUSED window campaign</button>
     </form>
-    <p class="note">The destination check is read-only. It verifies the current live Meta creative and reports whether it uses the White5 quote form or Messenger. It does not edit, publish, activate, or spend anything.</p>
+    <p class="note">The window update keeps one Get Quote button to the website calculator and adds a direct WhatsApp link in the ad text. It does not change the campaign or ad-set budget, and it preserves the ad's current active/paused status.</p>
     <pre id="result" aria-live="polite">Waiting for request.</pre>
   </main>
   <script>
