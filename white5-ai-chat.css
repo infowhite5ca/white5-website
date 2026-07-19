@@ -20,6 +20,8 @@
 .white5-ai-message.is-assistant .white5-ai-bubble{background:#fff;border:1px solid #d7e7ef;border-bottom-left-radius:5px;color:#17394e}
 .white5-ai-message.is-user .white5-ai-bubble{background:#0c4990;color:#fff;border-bottom-right-radius:5px}
 .white5-ai-bubble.is-error{background:#fff4eb!important;border-color:#edb887!important;color:#7a3500!important}
+.white5-ai-message-images{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:8px}
+.white5-ai-message-images img{display:block;width:100%;height:86px;object-fit:cover;border-radius:10px;background:#dce9ef}
 .white5-ai-typing{display:inline-flex;gap:4px;align-items:center;min-height:18px}
 .white5-ai-typing span{width:6px;height:6px;border-radius:50%;background:#65889d;animation:white5Typing 1s infinite ease-in-out}
 .white5-ai-typing span:nth-child(2){animation-delay:.15s}.white5-ai-typing span:nth-child(3){animation-delay:.3s}
@@ -28,14 +30,24 @@
 .white5-ai-quick::-webkit-scrollbar{display:none}
 .white5-ai-quick button{flex:0 0 auto;border:1px solid #bfd6e3;border-radius:999px;padding:8px 11px;background:#f7fbfd;color:#174a68;font:700 12px/1.2 Arial,sans-serif;cursor:pointer}
 .white5-ai-compose{padding:11px 12px 12px;background:#fff;border-top:1px solid #e1ecf2}
-.white5-ai-form{display:grid;grid-template-columns:1fr 44px;gap:8px;align-items:end}
+.white5-ai-attachments{display:flex;gap:8px;overflow-x:auto;margin:0 0 8px;padding:2px;scrollbar-width:thin}
+.white5-ai-attachments[hidden]{display:none}
+.white5-ai-attachment{position:relative;flex:0 0 66px;width:66px;height:58px;border-radius:11px;overflow:hidden;border:1px solid #c7dce7;background:#eef6fa}
+.white5-ai-attachment img{display:block;width:100%;height:100%;object-fit:cover}
+.white5-ai-attachment button{position:absolute;top:3px;right:3px;width:22px;height:22px;padding:0;border:0;border-radius:50%;background:rgba(7,26,47,.86);color:#fff;font:700 17px/1 Arial,sans-serif;cursor:pointer}
+.white5-ai-attachment-status{min-height:0;margin:0 2px 7px;color:#567486;font-size:11px;line-height:1.25}
+.white5-ai-attachment-status:empty{display:none}
+.white5-ai-attachment-status.is-error{color:#9a3f00}
+.white5-ai-form{display:grid;grid-template-columns:44px 1fr 44px;gap:8px;align-items:end}
+.white5-ai-attach,.white5-ai-send{width:44px;height:44px;border:0;border-radius:14px;cursor:pointer}
+.white5-ai-attach{background:#edf5f9;color:#174a68;border:1px solid #c8dce6;font-size:19px}
 .white5-ai-input{width:100%;min-height:44px;max-height:112px;resize:none;border:1px solid #bfd0da;border-radius:14px;background:#fff;color:#0b1f33;padding:11px 12px;font:14px/1.4 Arial,sans-serif;outline:none}
-.white5-ai-send{width:44px;height:44px;border:0;border-radius:14px;background:#0c4990;color:#fff;font-size:20px;cursor:pointer}
-.white5-ai-send:disabled,.white5-ai-input:disabled{opacity:.58;cursor:wait}
+.white5-ai-send{background:#0c4990;color:#fff;font-size:20px}
+.white5-ai-send:disabled,.white5-ai-attach:disabled,.white5-ai-input:disabled,.white5-ai-attachment button:disabled{opacity:.58;cursor:wait}
 .white5-ai-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}
 .white5-ai-actions a{display:flex;align-items:center;justify-content:center;min-height:38px;border-radius:11px;text-decoration:none;font:700 12.5px/1 Arial,sans-serif}
 .white5-ai-actions a:first-child{background:#e9f5fb;color:#0c4990;border:1px solid #c7e1ee}
 .white5-ai-actions a:last-child{background:#edf7ef;color:#245b35;border:1px solid #cce5d2}
 .white5-ai-note{margin:8px 2px 0;color:#66808f;font-size:10.5px;line-height:1.35;text-align:center}
-@media(max-width:640px){.white5-ai-launcher{right:12px;bottom:88px;min-height:54px;padding:0 15px}.white5-ai-panel{left:10px;right:10px;bottom:82px;width:auto;height:min(68vh,620px);border-radius:20px}.white5-ai-bubble{max-width:90%}}
+@media(max-width:640px){.white5-ai-launcher{right:12px;bottom:88px;min-height:54px;padding:0 15px}.white5-ai-panel{left:10px;right:10px;bottom:82px;width:auto;height:min(72vh,650px);border-radius:20px}.white5-ai-bubble{max-width:90%}.white5-ai-message-images img{height:78px}}
 @media(prefers-reduced-motion:reduce){.white5-ai-launcher,.white5-ai-panel,.white5-ai-messages{transition:none;animation:none;scroll-behavior:auto}}
