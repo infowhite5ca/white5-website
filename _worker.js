@@ -13,7 +13,7 @@ import { handleWhite5AiChat } from "./white5-ai-chat-api-v2.js";
 
 const CHAT_ASSETS = `
   <link rel="stylesheet" href="/white5-ai-chat.css?v=8c7dbf4">
-  <script defer src="/white5-ai-chat.js?v=8c7dbf4"></script>
+  <script defer src="/white5-ai-chat.js?v=9018a8e"></script>
 `;
 
 class ChatHeadInjector {
