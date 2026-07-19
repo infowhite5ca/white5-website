@@ -149,7 +149,12 @@
         const response = await fetch('/api/deck-fence-quote', { method: 'POST', body: data });
         const result = await response.json();
         if (!response.ok || !result.ok) throw new Error(result.error || 'Could not send request');
-        setStatus('Thank you! We received your request and will contact you the same day.', 'success');
+        const previewDiagnostic = location.hostname.endsWith('.pages.dev')
+          ? (result.senderMode === 'self'
+              ? ' Zoho used the same sender and recipient address.'
+              : ' Zoho used a separate sender address.')
+          : '';
+        setStatus('Thank you! We received your request and will contact you the same day.' + previewDiagnostic, 'success');
         if (typeof white5_report_conversion_event === 'function') white5_report_conversion_event();
         if (typeof white5_report_meta_lead === 'function') white5_report_meta_lead();
         form.reset();

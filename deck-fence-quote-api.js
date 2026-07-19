@@ -134,9 +134,37 @@ async function getZohoMailAccount(accessToken) {
     throw new Error(`Zoho account lookup failed: ${result?.status?.description || response.status}`);
   }
 
+  const primaryAddress = clean(
+    account.primaryEmailAddress || account.mailboxAddress || account.incomingUserName || "",
+    320,
+  );
+  const activeSendAddresses = Array.isArray(account.sendMailDetails)
+    ? account.sendMailDetails
+        .filter((item) => item?.status !== false && item?.fromAddress)
+        .map((item) => clean(item.fromAddress, 320))
+        .filter(Boolean)
+    : [];
+  const target = WHITE5_EMAIL.toLowerCase();
+  const preferredWebsiteAddress = activeSendAddresses.find(
+    (address) => address.toLowerCase() === "website@white5.ca",
+  );
+  const distinctPrimary = primaryAddress && primaryAddress.toLowerCase() !== target
+    ? primaryAddress
+    : "";
+  const distinctActive = activeSendAddresses.find(
+    (address) => address.toLowerCase() !== target,
+  );
+  const fromAddress = preferredWebsiteAddress
+    || distinctPrimary
+    || distinctActive
+    || primaryAddress
+    || activeSendAddresses[0]
+    || WHITE5_EMAIL;
+
   return {
     accountId: String(account.accountId),
-    fromAddress: WHITE5_EMAIL,
+    fromAddress,
+    senderMode: fromAddress.toLowerCase() === target ? "self" : "separate",
   };
 }
 
@@ -304,7 +332,11 @@ export async function handleDeckFenceQuote(request, env) {
     const accessToken = await getZohoAccessToken(env);
     const account = await getZohoMailAccount(accessToken);
     const result = await sendZohoMail(accessToken, account, fields, files);
-    return json({ ok: true, messageId: clean(result?.data?.messageId || "", 200) });
+    return json({
+      ok: true,
+      messageId: clean(result?.data?.messageId || "", 200),
+      senderMode: isPreviewRequest(request) ? account.senderMode : undefined,
+    });
   } catch (error) {
     console.error("Deck/fence quote Zoho email failed", error);
     const diagnostic = error instanceof Error ? error.message : String(error);
