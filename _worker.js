@@ -1,5 +1,6 @@
 import coreWorker from "./worker-core.js";
 import { createPausedWindowCampaignWithProfileRetry } from "./meta-window-campaign-profile-retry.js";
+import { handleDeckFenceQuote, handleDeckFenceConfig } from "./deck-fence-quote-api.js";
 
 class PrivacyFooterInjector {
   element(element) {
@@ -13,6 +14,14 @@ export default {
 
     if (url.pathname === "/api/meta/create-window-campaign") {
       return createPausedWindowCampaignWithProfileRetry(request, env);
+    }
+
+    if (url.pathname === "/api/deck-fence-quote") {
+      return handleDeckFenceQuote(request, env);
+    }
+
+    if (url.pathname === "/api/deck-fence-config") {
+      return handleDeckFenceConfig(request, env);
     }
 
     const response = await coreWorker.fetch(request, env, ctx);
