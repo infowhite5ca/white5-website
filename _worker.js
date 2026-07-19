@@ -1,7 +1,7 @@
 // Force a fresh Cloudflare Pages preview deployment.
 import coreWorker from "./worker-core.js";
 import { createPausedWindowCampaignWithProfileRetry } from "./meta-window-campaign-profile-retry.js";
-import { createPausedDeckFenceCampaignWithBudgetFix } from "./meta-deck-fence-campaign-budget-fix.js";
+import { createPausedDeckFenceCampaignWithImageFallback } from "./meta-deck-fence-campaign-image-fallback.js";
 import { handleDeckFenceQuoteV9 } from "./deck-fence-quote-api-v9.js";
 import { handleDeckFenceConfigV6 } from "./deck-fence-quote-api-v6.js";
 import { handleZohoStatus, handleZohoTestSend } from "./zoho-diagnostic-api.js";
@@ -28,7 +28,7 @@ export default {
     }
 
     if (url.pathname === "/api/meta/create-deck-fence-campaign") {
-      return createPausedDeckFenceCampaignWithBudgetFix(request, env);
+      return createPausedDeckFenceCampaignWithImageFallback(request, env);
     }
 
     if (url.pathname === "/api/deck-fence-quote") {
