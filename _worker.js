@@ -9,7 +9,7 @@ import { handleDeckFenceConfigV6 } from "./deck-fence-quote-api-v6.js";
 import { handleZohoStatus, handleZohoTestSend } from "./zoho-diagnostic-api.js";
 import { handleZohoInbox, handleZohoMessage } from "./zoho-mail-reader-api.js";
 import { handleZohoTokenDiagnostic } from "./zoho-token-diagnostic.js";
-import { handleWhite5AiChat } from "./white5-ai-chat-api.js";
+import { handleWhite5AiChat } from "./white5-ai-chat-api-v2.js";
 
 const CHAT_ASSETS = `
   <link rel="stylesheet" href="/white5-ai-chat.css?v=8c7dbf4">
