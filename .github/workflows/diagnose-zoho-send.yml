@@ -1,0 +1,38 @@
+name: Diagnose Zoho send response
+
+on:
+  push:
+    branches:
+      - white5-deck-fence-leads
+    paths:
+      - tools/diagnose_zoho_send.py
+      - .github/workflows/diagnose-zoho-send.yml
+
+permissions:
+  contents: write
+
+jobs:
+  update-zoho-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+        with:
+          ref: white5-deck-fence-leads
+          fetch-depth: 0
+
+      - name: Apply stricter Zoho response validation
+        run: python tools/diagnose_zoho_send.py
+
+      - name: Remove one-time helper files
+        run: |
+          rm -f tools/diagnose_zoho_send.py
+          rm -f .github/workflows/diagnose-zoho-send.yml
+
+      - name: Commit diagnostics update
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Require verified Zoho message ID"
+          git push origin HEAD:white5-deck-fence-leads
