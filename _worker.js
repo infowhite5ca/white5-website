@@ -1,3 +1,4 @@
+// Force a fresh Cloudflare Pages preview deployment.
 import coreWorker from "./worker-core.js";
 import { createPausedWindowCampaignWithProfileRetry } from "./meta-window-campaign-profile-retry.js";
 import { handleDeckFenceQuoteV6, handleDeckFenceConfigV6 } from "./deck-fence-quote-api-v6.js";
