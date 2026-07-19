@@ -198,9 +198,14 @@ async function sendZohoMail(accessToken, account, fields, files) {
   });
   const result = await response.json().catch(() => ({}));
   const zohoStatus = Number(result?.status?.code || 0);
+  const messageId = clean(result?.data?.messageId || "", 200);
+  const description = clean(result?.status?.description || "", 500);
+  const moreInfo = clean(result?.data?.moreInfo || "", 500);
 
-  if (!response.ok || (zohoStatus && zohoStatus >= 300)) {
-    throw new Error(`Zoho send failed: ${result?.status?.description || response.status}`);
+  if (!response.ok || zohoStatus !== 200 || !messageId) {
+    throw new Error(
+      `Zoho send failed: HTTP ${response.status}; API ${zohoStatus || "missing"}; ${description || moreInfo || "missing messageId"}`,
+    );
   }
 
   return result;
@@ -302,7 +307,13 @@ export async function handleDeckFenceQuote(request, env) {
     return json({ ok: true, messageId: clean(result?.data?.messageId || "", 200) });
   } catch (error) {
     console.error("Deck/fence quote Zoho email failed", error);
-    return json({ ok: false, error: "We could not send your request. Please call 403-479-3905." }, 502);
+    const diagnostic = error instanceof Error ? error.message : String(error);
+    return json({
+      ok: false,
+      error: isPreviewRequest(request)
+        ? diagnostic
+        : "We could not send your request. Please call 403-479-3905.",
+    }, 502);
   }
 }
 
