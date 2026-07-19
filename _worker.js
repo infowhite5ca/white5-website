@@ -1,6 +1,6 @@
 import coreWorker from "./worker-core.js";
 import { createPausedWindowCampaignWithProfileRetry } from "./meta-window-campaign-profile-retry.js";
-import { handleDeckFenceQuoteV5, handleDeckFenceConfigV5 } from "./deck-fence-quote-api-v5.js";
+import { handleDeckFenceQuoteV6, handleDeckFenceConfigV6 } from "./deck-fence-quote-api-v6.js";
 import { handleZohoStatus, handleZohoTestSend } from "./zoho-diagnostic-api.js";
 
 class PrivacyFooterInjector {
@@ -18,11 +18,11 @@ export default {
     }
 
     if (url.pathname === "/api/deck-fence-quote") {
-      return handleDeckFenceQuoteV5(request, env);
+      return handleDeckFenceQuoteV6(request, env);
     }
 
     if (url.pathname === "/api/deck-fence-config") {
-      return handleDeckFenceConfigV5(request, env);
+      return handleDeckFenceConfigV6(request, env);
     }
 
     if (url.pathname === "/api/zoho/status") {
