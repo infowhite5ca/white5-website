@@ -3,6 +3,7 @@ import coreWorker from "./worker-core.js";
 import { createPausedWindowCampaignWithProfileRetry } from "./meta-window-campaign-profile-retry.js";
 import { handleDeckFenceQuoteV6, handleDeckFenceConfigV6 } from "./deck-fence-quote-api-v6.js";
 import { handleZohoStatus, handleZohoTestSend } from "./zoho-diagnostic-api.js";
+import { handleZohoAttachmentDiagnostic } from "./zoho-attachment-diagnostic.js";
 
 class PrivacyFooterInjector {
   element(element) {
@@ -32,6 +33,10 @@ export default {
 
     if (url.pathname === "/api/zoho/test-send") {
       return handleZohoTestSend(request, env);
+    }
+
+    if (url.pathname === "/api/zoho/attachment-diagnostic") {
+      return handleZohoAttachmentDiagnostic(request, env);
     }
 
     const response = await coreWorker.fetch(request, env, ctx);
