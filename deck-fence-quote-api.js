@@ -2,6 +2,8 @@ const MAX_FILES = 5;
 const MAX_FILE_BYTES = 800_000;
 const MAX_TOTAL_BYTES = 3_200_000;
 const ALLOWED_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
+const TURNSTILE_TEST_SITE_KEY = "1x00000000000000000000AA";
+const TURNSTILE_TEST_SECRET_KEY = "1x0000000000000000000000000000000AA";
 
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
@@ -43,13 +45,22 @@ function arrayBufferToBase64(buffer) {
   return btoa(binary);
 }
 
+function isPreviewRequest(request) {
+  const hostname = new URL(request.url).hostname.toLowerCase();
+  return hostname.endsWith(".white5-website.pages.dev") && hostname !== "white5-website.pages.dev";
+}
+
 async function verifyTurnstile(token, request, env) {
-  if (!env.TURNSTILE_SECRET_KEY) {
+  const secret = isPreviewRequest(request)
+    ? TURNSTILE_TEST_SECRET_KEY
+    : env.TURNSTILE_SECRET_KEY;
+
+  if (!secret) {
     return { success: false, configurationError: true };
   }
 
   const body = new URLSearchParams({
-    secret: env.TURNSTILE_SECRET_KEY,
+    secret,
     response: token,
   });
   const ip = request.headers.get("CF-Connecting-IP");
@@ -220,8 +231,13 @@ export function handleDeckFenceConfig(request, env) {
   if (request.method !== "GET") {
     return json({ ok: false, error: "Method not allowed" }, 405);
   }
+
+  const siteKey = isPreviewRequest(request)
+    ? TURNSTILE_TEST_SITE_KEY
+    : env.TURNSTILE_SITE_KEY;
+
   return json({
-    ok: Boolean(env.TURNSTILE_SITE_KEY),
-    turnstileSiteKey: env.TURNSTILE_SITE_KEY || "",
-  }, env.TURNSTILE_SITE_KEY ? 200 : 503);
+    ok: Boolean(siteKey),
+    turnstileSiteKey: siteKey || "",
+  }, siteKey ? 200 : 503);
 }
