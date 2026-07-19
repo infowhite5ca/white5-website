@@ -8,6 +8,7 @@ import { handleDeckFenceQuoteV9 } from "./deck-fence-quote-api-v9.js";
 import { handleDeckFenceConfigV6 } from "./deck-fence-quote-api-v6.js";
 import { handleZohoStatus, handleZohoTestSend } from "./zoho-diagnostic-api.js";
 import { handleZohoInbox, handleZohoMessage } from "./zoho-mail-reader-api.js";
+import { handleZohoTokenDiagnostic } from "./zoho-token-diagnostic.js";
 
 class PrivacyFooterInjector {
   element(element) {
@@ -64,6 +65,10 @@ export default {
 
     if (url.pathname === "/api/zoho/message") {
       return handleZohoMessage(request, env);
+    }
+
+    if (url.pathname === "/api/zoho/token-diagnostic") {
+      return handleZohoTokenDiagnostic(request, env);
     }
 
     const response = await coreWorker.fetch(request, env, ctx);
