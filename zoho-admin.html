@@ -4,72 +4,179 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="robots" content="noindex,nofollow,noarchive">
-  <title>White5 Zoho Mail Test</title>
+  <title>White5 Zoho Mail</title>
   <style>
     :root{font-family:Arial,sans-serif;color-scheme:light}
-    body{margin:0;padding:24px;background:#071a2f;color:#eef7ff}
-    main{max-width:720px;margin:30px auto;background:#fff;color:#0b1f33;border-radius:20px;padding:24px;box-shadow:0 18px 46px rgba(0,0,0,.28)}
-    h1{margin-top:0}p{line-height:1.55;color:#45647c}
-    label{display:block;font-weight:700;margin:18px 0 7px}
-    input,button{width:100%;box-sizing:border-box;padding:14px;border-radius:12px;font:inherit}
-    input{border:1px solid #bfcfda}
-    .buttons{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
-    button{border:0;background:#0c4990;color:#fff;font-weight:700;cursor:pointer}
-    button.secondary{background:#2a5035}
-    button:disabled{opacity:.55;cursor:wait}
-    pre{margin:18px 0 0;padding:16px;border-radius:12px;background:#071a2f;color:#eef7ff;white-space:pre-wrap;overflow-wrap:anywhere;min-height:90px}
-    .warning{font-size:14px;color:#7a3c00;background:#fff4d8;border:1px solid #efd18a;padding:12px;border-radius:12px}
-    @media(max-width:560px){.buttons{grid-template-columns:1fr}}
+    *{box-sizing:border-box}body{margin:0;padding:24px;background:#071a2f;color:#eef7ff}
+    main{max-width:860px;margin:30px auto;background:#fff;color:#0b1f33;border-radius:20px;padding:24px;box-shadow:0 18px 46px rgba(0,0,0,.28)}
+    h1,h2{margin-top:0}p{line-height:1.55;color:#45647c}label{display:block;font-weight:700;margin:16px 0 7px}
+    input,select,button{width:100%;padding:14px;border-radius:12px;font:inherit}input,select{border:1px solid #bfcfda;background:#fff;color:#0b1f33}
+    .controls,.buttons{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}.controls{grid-template-columns:1fr 140px}
+    button{border:0;background:#0c4990;color:#fff;font-weight:700;cursor:pointer}button.secondary{background:#2a5035}button.read{width:auto;padding:9px 14px}
+    button:disabled{opacity:.55;cursor:wait}.warning{font-size:14px;color:#7a3c00;background:#fff4d8;border:1px solid #efd18a;padding:12px;border-radius:12px}
+    #status{margin-top:16px;padding:13px;border-radius:12px;background:#e9f4fb;color:#174a68;white-space:pre-wrap;overflow-wrap:anywhere}
+    #messages{display:grid;gap:12px;margin-top:16px}.message{border:1px solid #d5e2ea;border-radius:14px;padding:15px;background:#f8fcff}.message.unread{border-left:5px solid #0c4990}.message-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}.message h3{margin:0 0 5px;font-size:18px}.meta,.summary{color:#526f84;font-size:14px;line-height:1.45}.summary{margin-top:10px}
+    #viewer{margin-top:20px;border:1px solid #bfcfda;border-radius:14px;padding:18px;display:none}#viewerBody{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.55;color:#233f55}
+    details{margin-top:18px}pre{padding:14px;border-radius:12px;background:#071a2f;color:#eef7ff;white-space:pre-wrap;overflow-wrap:anywhere}
+    @media(max-width:620px){body{padding:12px}main{padding:18px}.buttons,.controls{grid-template-columns:1fr}.message-head{display:block}.message-head button{margin-top:12px;width:100%}}
   </style>
 </head>
 <body>
 <main>
-  <h1>White5 Zoho Mail Test</h1>
-  <p>This page tests the existing Zoho Mail API connection without exposing or storing your Zoho credentials.</p>
-  <p class="warning">The second button sends one real test email to info@white5.ca.</p>
+  <h1>White5 Zoho Mail</h1>
+  <p>Secure read-only access to <strong>info@white5.ca</strong>. The key stays only in this browser tab and is never saved to local storage.</p>
+  <p class="warning">Reading requires a Zoho refresh token authorized for: ZohoMail.accounts.READ, ZohoMail.folders.READ, ZohoMail.messages.READ, and ZohoMail.messages.CREATE. CREATE is retained so the website form can continue sending email.</p>
+
   <label for="key">ADMIN_API_KEY from Cloudflare</label>
   <input id="key" type="password" autocomplete="new-password" required>
-  <div class="buttons">
-    <button type="button" data-endpoint="/api/zoho/status" data-method="GET" data-label="Testing Zoho connection">Test connection</button>
-    <button class="secondary" type="button" data-endpoint="/api/zoho/test-send" data-method="POST" data-label="Sending test email" data-confirm="Send one real Zoho API test email to info@white5.ca?">Send test email</button>
+
+  <div class="controls">
+    <div><label for="mailStatus">Inbox view</label><select id="mailStatus"><option value="unread">Unread</option><option value="all">Latest messages</option><option value="read">Read</option></select></div>
+    <div><label for="limit">Limit</label><select id="limit"><option>10</option><option selected>20</option><option>30</option><option>50</option></select></div>
   </div>
-  <pre id="result" aria-live="polite">Waiting for test.</pre>
+
+  <div class="buttons">
+    <button type="button" id="loadInbox">Load Inbox</button>
+    <button class="secondary" type="button" id="testConnection">Test connection</button>
+  </div>
+
+  <div id="status" role="status" aria-live="polite">Waiting.</div>
+  <section id="messages" aria-label="Zoho Inbox messages"></section>
+  <section id="viewer" aria-label="Selected email">
+    <h2 id="viewerSubject">Email</h2>
+    <p id="viewerMeta"></p>
+    <div id="viewerBody"></div>
+  </section>
+
+  <details><summary>Technical response</summary><pre id="raw">No request yet.</pre></details>
+  <p><a href="/zoho-token-exchange.html" rel="nofollow">Open private Zoho token exchange page</a></p>
 </main>
 <script>
   const keyInput = document.getElementById('key');
-  const result = document.getElementById('result');
-  const buttons = [...document.querySelectorAll('[data-endpoint]')];
+  const statusEl = document.getElementById('status');
+  const rawEl = document.getElementById('raw');
+  const messagesEl = document.getElementById('messages');
+  const viewer = document.getElementById('viewer');
+  const viewerSubject = document.getElementById('viewerSubject');
+  const viewerMeta = document.getElementById('viewerMeta');
+  const viewerBody = document.getElementById('viewerBody');
+  const buttons = [document.getElementById('loadInbox'), document.getElementById('testConnection')];
+  let currentMessages = [];
 
-  async function run(button) {
+  function requireKey() {
     const key = keyInput.value.trim();
     if (!key) {
       keyInput.focus();
-      result.textContent = 'Enter ADMIN_API_KEY first.';
+      statusEl.textContent = 'Enter ADMIN_API_KEY first.';
+      return null;
+    }
+    return key;
+  }
+
+  function setBusy(value) { buttons.forEach(button => { button.disabled = value; }); }
+
+  async function api(endpoint) {
+    const key = requireKey();
+    if (!key) return null;
+    setBusy(true);
+    try {
+      const response = await fetch(endpoint, { headers: { 'x-admin-key': key }, cache: 'no-store' });
+      const payload = await response.json().catch(() => ({ ok:false, error:'Non-JSON response' }));
+      rawEl.textContent = `HTTP ${response.status}\n${JSON.stringify(payload, null, 2)}`;
+      if (!response.ok || !payload.ok) throw Object.assign(new Error(payload.error || `HTTP ${response.status}`), { payload });
+      return payload;
+    } finally { setBusy(false); }
+  }
+
+  function formatDate(value) {
+    const number = Number(value);
+    if (!Number.isFinite(number)) return '';
+    return new Date(number).toLocaleString();
+  }
+
+  function htmlToText(html) {
+    const doc = new DOMParser().parseFromString(String(html || ''), 'text/html');
+    return (doc.body.textContent || '').replace(/\n{3,}/g, '\n\n').trim();
+  }
+
+  function renderMessages(messages, requestedStatus) {
+    currentMessages = messages;
+    messagesEl.replaceChildren();
+    viewer.style.display = 'none';
+    if (!messages.length) {
+      statusEl.textContent = `No ${requestedStatus === 'all' ? '' : requestedStatus + ' '}messages found.`;
       return;
     }
-    if (button.dataset.confirm && !window.confirm(button.dataset.confirm)) return;
+    statusEl.textContent = `Loaded ${messages.length} ${requestedStatus === 'all' ? 'latest' : requestedStatus} message(s).`;
 
-    result.textContent = button.dataset.label + '...';
-    buttons.forEach(item => { item.disabled = true; });
+    messages.forEach((message, index) => {
+      const card = document.createElement('article');
+      card.className = 'message' + (requestedStatus === 'unread' ? ' unread' : '');
+      const head = document.createElement('div');
+      head.className = 'message-head';
+      const titleWrap = document.createElement('div');
+      const title = document.createElement('h3');
+      title.textContent = message.subject || '(No subject)';
+      const meta = document.createElement('div');
+      meta.className = 'meta';
+      meta.textContent = `${message.sender || message.fromAddress || 'Unknown sender'}${message.fromAddress ? ' — ' + message.fromAddress : ''}${formatDate(message.receivedTime) ? ' · ' + formatDate(message.receivedTime) : ''}${message.hasAttachment ? ' · Attachment' : ''}`;
+      titleWrap.append(title, meta);
+      const read = document.createElement('button');
+      read.type = 'button';
+      read.className = 'read';
+      read.textContent = 'Read';
+      read.addEventListener('click', () => readMessage(index));
+      head.append(titleWrap, read);
+      const summary = document.createElement('div');
+      summary.className = 'summary';
+      summary.textContent = htmlToText(message.summary).slice(0, 500);
+      card.append(head, summary);
+      messagesEl.append(card);
+    });
+  }
+
+  async function loadInbox() {
+    const status = document.getElementById('mailStatus').value;
+    const limit = document.getElementById('limit').value;
+    statusEl.textContent = 'Loading Zoho Inbox...';
+    messagesEl.replaceChildren();
     try {
-      const response = await fetch(button.dataset.endpoint, {
-        method: button.dataset.method,
-        headers: { 'x-admin-key': key },
-        cache: 'no-store',
-      });
-      const text = await response.text();
-      let output = text;
-      try { output = JSON.stringify(JSON.parse(text), null, 2); } catch {}
-      result.textContent = `HTTP ${response.status}\n${output}`;
+      const payload = await api(`/api/zoho/inbox?status=${encodeURIComponent(status)}&limit=${encodeURIComponent(limit)}`);
+      if (payload) renderMessages(payload.messages || [], payload.requestedStatus || status);
     } catch (error) {
-      result.textContent = `Request failed: ${error instanceof Error ? error.message : String(error)}`;
-    } finally {
-      keyInput.value = '';
-      buttons.forEach(item => { item.disabled = false; });
+      const payload = error.payload || {};
+      statusEl.textContent = payload.reauthorizationRequired
+        ? `Zoho needs a new refresh token with these scopes:\n${(payload.requiredScopes || []).join(', ')}\n\nGenerate a new grant code, exchange it, then replace ZOHO_REFRESH_TOKEN in Cloudflare.`
+        : error.message;
     }
   }
 
-  buttons.forEach(button => button.addEventListener('click', () => run(button)));
+  async function readMessage(index) {
+    const message = currentMessages[index];
+    if (!message) return;
+    statusEl.textContent = 'Reading email...';
+    try {
+      const payload = await api(`/api/zoho/message?folderId=${encodeURIComponent(message.folderId)}&messageId=${encodeURIComponent(message.messageId)}`);
+      if (!payload) return;
+      viewerSubject.textContent = message.subject || '(No subject)';
+      viewerMeta.textContent = `${message.sender || message.fromAddress || 'Unknown sender'}${message.fromAddress ? ' — ' + message.fromAddress : ''}${formatDate(message.receivedTime) ? ' · ' + formatDate(message.receivedTime) : ''}`;
+      viewerBody.textContent = htmlToText(payload.content) || '(No readable content)';
+      viewer.style.display = 'block';
+      viewer.scrollIntoView({ behavior:'smooth', block:'start' });
+      statusEl.textContent = 'Email loaded. No message was changed or marked as read by this page.';
+    } catch (error) { statusEl.textContent = error.message; }
+  }
+
+  async function testConnection() {
+    statusEl.textContent = 'Testing Zoho connection...';
+    try {
+      const payload = await api('/api/zoho/status');
+      if (payload) statusEl.textContent = `Connected to ${payload.recipient}.`;
+    } catch (error) { statusEl.textContent = error.message; }
+  }
+
+  document.getElementById('loadInbox').addEventListener('click', loadInbox);
+  document.getElementById('testConnection').addEventListener('click', testConnection);
 </script>
 </body>
 </html>
