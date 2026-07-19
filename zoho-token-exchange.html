@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>Zoho Token Exchange</title>
+  <style>
+    body{font-family:Arial,sans-serif;background:#071a2f;color:#eef7ff;margin:0;padding:24px}
+    main{max-width:640px;margin:auto;background:#fff;color:#0b1f33;border-radius:18px;padding:24px}
+    h1{margin-top:0}label{display:block;font-weight:700;margin:16px 0 6px}
+    input{width:100%;box-sizing:border-box;padding:12px;border:1px solid #bfcfda;border-radius:10px;font:inherit}
+    button{margin-top:20px;width:100%;padding:14px;border:0;border-radius:999px;background:#0c4990;color:#fff;font-size:18px;font-weight:700}
+    .note{font-size:14px;line-height:1.5;color:#45647c}
+  </style>
+</head>
+<body>
+<main>
+  <h1>Zoho token exchange</h1>
+  <p class="note">This static page sends the three values directly from your browser to Zoho Canada. White5 does not receive or store them. After Zoho returns JSON, save the <strong>refresh_token</strong> privately and do not paste it into chat.</p>
+  <form method="post" action="https://accounts.zohocloud.ca/oauth/v2/token" autocomplete="off">
+    <label for="code">Grant code</label>
+    <input id="code" name="code" required autocapitalize="off" spellcheck="false">
+    <label for="client_id">Client ID</label>
+    <input id="client_id" name="client_id" required autocapitalize="off" spellcheck="false">
+    <label for="client_secret">Client Secret</label>
+    <input id="client_secret" name="client_secret" type="password" required autocapitalize="off" spellcheck="false">
+    <input type="hidden" name="grant_type" value="authorization_code">
+    <button type="submit">Exchange code</button>
+  </form>
+</main>
+</body>
+</html>

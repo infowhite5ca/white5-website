@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>White5 Zoho Mail Test</title>
+  <style>
+    :root{font-family:Arial,sans-serif;color-scheme:light}
+    body{margin:0;padding:24px;background:#071a2f;color:#eef7ff}
+    main{max-width:720px;margin:30px auto;background:#fff;color:#0b1f33;border-radius:20px;padding:24px;box-shadow:0 18px 46px rgba(0,0,0,.28)}
+    h1{margin-top:0}p{line-height:1.55;color:#45647c}
+    label{display:block;font-weight:700;margin:18px 0 7px}
+    input,button{width:100%;box-sizing:border-box;padding:14px;border-radius:12px;font:inherit}
+    input{border:1px solid #bfcfda}
+    .buttons{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+    button{border:0;background:#0c4990;color:#fff;font-weight:700;cursor:pointer}
+    button.secondary{background:#2a5035}
+    button:disabled{opacity:.55;cursor:wait}
+    pre{margin:18px 0 0;padding:16px;border-radius:12px;background:#071a2f;color:#eef7ff;white-space:pre-wrap;overflow-wrap:anywhere;min-height:90px}
+    .warning{font-size:14px;color:#7a3c00;background:#fff4d8;border:1px solid #efd18a;padding:12px;border-radius:12px}
+    @media(max-width:560px){.buttons{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<main>
+  <h1>White5 Zoho Mail Test</h1>
+  <p>This page tests the existing Zoho Mail API connection without exposing or storing your Zoho credentials.</p>
+  <p class="warning">The second button sends one real test email to info@white5.ca.</p>
+  <label for="key">ADMIN_API_KEY from Cloudflare</label>
+  <input id="key" type="password" autocomplete="new-password" required>
+  <div class="buttons">
+    <button type="button" data-endpoint="/api/zoho/status" data-method="GET" data-label="Testing Zoho connection">Test connection</button>
+    <button class="secondary" type="button" data-endpoint="/api/zoho/test-send" data-method="POST" data-label="Sending test email" data-confirm="Send one real Zoho API test email to info@white5.ca?">Send test email</button>
+  </div>
+  <pre id="result" aria-live="polite">Waiting for test.</pre>
+</main>
+<script>
+  const keyInput = document.getElementById('key');
+  const result = document.getElementById('result');
+  const buttons = [...document.querySelectorAll('[data-endpoint]')];
+
+  async function run(button) {
+    const key = keyInput.value.trim();
+    if (!key) {
+      keyInput.focus();
+      result.textContent = 'Enter ADMIN_API_KEY first.';
+      return;
+    }
+    if (button.dataset.confirm && !window.confirm(button.dataset.confirm)) return;
+
+    result.textContent = button.dataset.label + '...';
+    buttons.forEach(item => { item.disabled = true; });
+    try {
+      const response = await fetch(button.dataset.endpoint, {
+        method: button.dataset.method,
+        headers: { 'x-admin-key': key },
+        cache: 'no-store',
+      });
+      const text = await response.text();
+      let output = text;
+      try { output = JSON.stringify(JSON.parse(text), null, 2); } catch {}
+      result.textContent = `HTTP ${response.status}\n${output}`;
+    } catch (error) {
+      result.textContent = `Request failed: ${error instanceof Error ? error.message : String(error)}`;
+    } finally {
+      keyInput.value = '';
+      buttons.forEach(item => { item.disabled = false; });
+    }
+  }
+
+  buttons.forEach(button => button.addEventListener('click', () => run(button)));
+</script>
+</body>
+</html>
