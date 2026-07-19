@@ -200,7 +200,7 @@ export async function createPausedDeckFenceCampaign(request, env) {
 
     const instagram = await findInstagram(env);
     const targeting = {
-      age_min: 30,
+      age_min: 25,
       age_max: 65,
       geo_locations: {
         cities: [{ key: String(location.payload.key), radius: 25, distance_unit: "kilometer" }],
@@ -294,7 +294,7 @@ export async function createPausedDeckFenceCampaign(request, env) {
         pixelId: CAMPAIGN.pixelId,
         dailyBudget: "20 CAD",
         location: "Calgary + 25 km, people living in this location",
-        age: "30–65+",
+        age: "25–65+",
         platforms: instagram ? ["facebook", "instagram"] : ["facebook"],
         landingPageUrl: CAMPAIGN.landingPageUrl,
         imageUrl: CAMPAIGN.imageUrl,
