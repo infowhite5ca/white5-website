@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>White5 Font Preview</title>
+  <style>
+    @font-face {
+      font-family: "White5Preview";
+      src: url("White5-Regular Font.ttf?v=001002") format("truetype");
+      font-display: block;
+    }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(180deg,#0c4990,#2a5035,#86854d);
+      color: white;
+      padding: 28px;
+    }
+    main { width: min(100%, 1100px); }
+    h1 { font: 700 clamp(34px,7vw,84px)/1.15 "White5Preview", sans-serif; margin: 0 0 28px; text-shadow: 0 3px 5px rgba(0,0,0,.65); }
+    p { font: 700 clamp(28px,6vw,72px)/1.25 "White5Preview", sans-serif; margin: 18px 0; text-shadow: 0 3px 5px rgba(0,0,0,.65); }
+    .pairs { font-size: clamp(24px,5vw,60px); }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>White5 Font — corrected preview</h1>
+    <p>Calgary</p>
+    <p>Frequently</p>
+    <p>Margaret</p>
+    <p class="pairs">lg · rg · ry · ly · g · q · y</p>
+  </main>
+</body>
+</html>
