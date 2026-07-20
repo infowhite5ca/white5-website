@@ -1,0 +1,90 @@
+openapi: 3.1.0
+info:
+  title: White5 Meta Ads Read-Only API
+  version: 1.0.0
+  description: >-
+    Private read-only access to the White5 Meta ad account. This API can test
+    the Meta connection, list campaigns, and read performance for the White5
+    Window & Screen Cleaning and Deck & Fence Renovation campaigns. It cannot
+    create, edit, activate, pause, or spend on ads.
+servers:
+  - url: https://www.white5.ca
+components:
+  securitySchemes:
+    adminKey:
+      type: apiKey
+      in: header
+      name: x-admin-key
+  schemas:
+    JsonObject:
+      type: object
+      additionalProperties: true
+security:
+  - adminKey: []
+paths:
+  /api/meta/status:
+    get:
+      operationId: getWhite5MetaStatus
+      summary: Test the secure White5 Meta API connection
+      description: Returns safe ad-account metadata and never returns secret values.
+      responses:
+        "200":
+          description: Meta connection is working.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JsonObject"
+        "401":
+          description: The private admin key is missing or invalid.
+        "500":
+          description: Required Cloudflare secrets are missing.
+  /api/meta/campaigns:
+    get:
+      operationId: listWhite5MetaCampaigns
+      summary: List campaigns in the White5 Meta ad account
+      description: Read-only campaign names, IDs, objectives, and delivery statuses.
+      responses:
+        "200":
+          description: Campaign list returned.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JsonObject"
+        "401":
+          description: The private admin key is missing or invalid.
+  /api/meta/insights:
+    get:
+      operationId: getWhite5MetaCampaignInsights
+      summary: Read White5 Meta campaign performance
+      description: >-
+        Returns spend, impressions, reach, frequency, clicks, link clicks, CTR,
+        CPC, CPM, leads, cost per lead, actions, and campaign status for the two
+        White5 campaigns. Defaults to the last seven days.
+      parameters:
+        - name: since
+          in: query
+          required: false
+          description: Start date in YYYY-MM-DD. Supply together with until.
+          schema:
+            type: string
+            format: date
+        - name: until
+          in: query
+          required: false
+          description: Inclusive end date in YYYY-MM-DD. Supply together with since.
+          schema:
+            type: string
+            format: date
+      responses:
+        "200":
+          description: Campaign performance returned.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JsonObject"
+        "400":
+          description: Invalid or incomplete date range.
+        "401":
+          description: The private admin key is missing or invalid.
+        "502":
+          description: Meta rejected or could not complete the insights request.
