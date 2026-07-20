@@ -29,10 +29,12 @@
       <button class="check" type="button" data-endpoint="/api/meta/deck-ad" data-method="GET" data-label="Checking deck ad destination">Check deck ad destination</button>
       <button type="button" data-endpoint="/api/meta/status" data-method="GET" data-label="Testing Meta connection">Test Meta connection</button>
       <button type="button" data-endpoint="/api/meta/campaigns" data-method="GET" data-label="Reading campaigns">Read campaigns</button>
+      <button class="check" type="button" data-endpoint="/api/meta/insights" data-method="GET" data-label="Reading Window and Deck/Fence campaign performance">Read campaign performance — last 7 days</button>
       <button type="button" data-endpoint="/api/meta/tracking" data-method="POST" data-label="Preparing Meta tracking" data-confirm="Prepare Meta tracking? This may create one Meta Pixel if the ad account has none. It cannot start ads or spend money.">Prepare Meta tracking</button>
       <button class="deck" type="button" data-endpoint="/api/meta/create-deck-fence-campaign" data-method="POST" data-label="Creating PAUSED deck and fence campaign" data-confirm="Create the White5 Deck & Fence Renovation campaign? Configured budget: 20 CAD/day. Targeting: Calgary + 25 km, ages 25–65+. Objective: website leads. Campaign, ad set, and ad will all remain PAUSED. Ads will not run and no money will be spent.">Create PAUSED deck & fence campaign</button>
       <button type="button" data-endpoint="/api/meta/create-window-campaign" data-method="POST" data-label="Creating PAUSED window campaign" data-confirm="Create the confirmed White5 Window & Screen Cleaning campaign? Budget: 20 CAD/day. Location: Calgary + 25 km. Destination: website. Campaign, ad set, and ad will all be PAUSED, so no money will be spent.">Create PAUSED window campaign</button>
     </form>
+    <p class="note">Performance is read-only and returns spend, impressions, reach, clicks, CTR, CPC, CPM, leads, cost per lead, and current campaign status. It cannot edit or activate ads.</p>
     <p class="note">The window update keeps one Get Quote button to the website calculator and adds a direct WhatsApp link in the ad text. It does not change the campaign or ad-set budget, and it preserves the ad's current active/paused status.</p>
     <pre id="result" aria-live="polite">Waiting for request.</pre>
   </main>
