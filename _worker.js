@@ -4,7 +4,7 @@ import { createPausedWindowCampaignWithProfileRetry } from "./meta-window-campai
 import { updateWindowAdWithWebsiteAndWhatsApp } from "./meta-window-ad-multichannel.js";
 import { createPausedDeckFenceCampaignWithImageFallback } from "./meta-deck-fence-campaign-image-fallback.js";
 import { inspectDeckAd } from "./meta-deck-ad-inspector.js";
-import { handleMetaInsights } from "./meta-insights-api.js";
+import { handleMetaInsights } from "./meta-insights-api-v2.js";
 import { handleDeckFenceQuoteV9 } from "./deck-fence-quote-api-v9.js";
 import { handleDeckFenceConfigV6 } from "./deck-fence-quote-api-v6.js";
 import { handleZohoStatus, handleZohoTestSend } from "./zoho-diagnostic-api.js";
