@@ -1,12 +1,12 @@
 openapi: 3.1.0
 info:
   title: White5 Meta Ads Read-Only API
-  version: 1.0.0
+  version: 1.1.0
   description: >-
     Private read-only access to the White5 Meta ad account. This API can test
-    the Meta connection, list campaigns, and read performance for the White5
-    Window & Screen Cleaning and Deck & Fence Renovation campaigns. It cannot
-    create, edit, activate, pause, or spend on ads.
+    the Meta connection, list campaigns, and read performance for every campaign
+    returned by the connected Meta ad account. It cannot create, edit, activate,
+    pause, archive, or spend on ads.
 servers:
   - url: https://www.white5.ca
 components:
@@ -55,11 +55,11 @@ paths:
   /api/meta/insights:
     get:
       operationId: getWhite5MetaCampaignInsights
-      summary: Read White5 Meta campaign performance
+      summary: Read performance for all White5 Meta campaigns
       description: >-
         Returns spend, impressions, reach, frequency, clicks, link clicks, CTR,
-        CPC, CPM, leads, cost per lead, actions, and campaign status for the two
-        White5 campaigns. Defaults to the last seven days.
+        CPC, CPM, leads, cost per lead, actions, and campaign status for every
+        campaign returned by the Meta ad account. Defaults to the last seven days.
       parameters:
         - name: since
           in: query
@@ -87,4 +87,4 @@ paths:
         "401":
           description: The private admin key is missing or invalid.
         "502":
-          description: Meta rejected or could not complete the insights request.
+          description: Meta rejected or could not complete one or more insights requests.
