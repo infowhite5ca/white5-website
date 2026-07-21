@@ -1,8 +1,4 @@
 const META_API_VERSION = "v25.0";
-const TARGET_CAMPAIGN_NAMES = Object.freeze([
-  "White5 | Window & Screen Cleaning | Calgary",
-  "White5 | Deck & Fence Renovation | Calgary",
-]);
 
 function json(data, status = 200) {
   return new Response(JSON.stringify(data, null, 2), {
@@ -142,6 +138,15 @@ function normalizeInsights(row) {
   };
 }
 
+function statusRank(campaign) {
+  const status = campaign?.effective_status || campaign?.status || "";
+  if (status === "ACTIVE") return 0;
+  if (status === "PAUSED") return 1;
+  if (status === "IN_PROCESS" || status === "WITH_ISSUES") return 2;
+  if (status === "ARCHIVED") return 3;
+  return 4;
+}
+
 async function loadCampaignInsights(campaign, env, rangeParams) {
   const fields = [
     "campaign_id",
@@ -174,7 +179,16 @@ async function loadCampaignInsights(campaign, env, rangeParams) {
   if (!response.ok) {
     return {
       ok: false,
-      campaign,
+      campaign: {
+        id: campaign.id,
+        name: campaign.name,
+        status: campaign.status,
+        effectiveStatus: campaign.effective_status,
+        objective: campaign.objective,
+        buyingType: campaign.buying_type,
+        createdTime: campaign.created_time,
+        updatedTime: campaign.updated_time,
+      },
       meta: payload,
       httpStatus: response.status,
     };
@@ -189,6 +203,8 @@ async function loadCampaignInsights(campaign, env, rangeParams) {
       status: campaign.status,
       effectiveStatus: campaign.effective_status,
       objective: campaign.objective,
+      buyingType: campaign.buying_type,
+      createdTime: campaign.created_time,
       updatedTime: campaign.updated_time,
     },
     insights: normalizeInsights(row),
@@ -225,7 +241,7 @@ export async function handleMetaInsights(request, env) {
 
   try {
     const campaignsResponse = await requestMeta(`${accountId}/campaigns`, env, {
-      fields: "id,name,status,effective_status,objective,updated_time",
+      fields: "id,name,status,effective_status,objective,buying_type,created_time,updated_time",
       limit: 200,
     });
 
@@ -237,20 +253,17 @@ export async function handleMetaInsights(request, env) {
       }, campaignsResponse.response.status);
     }
 
-    const allCampaigns = Array.isArray(campaignsResponse.payload?.data)
+    const allCampaigns = (Array.isArray(campaignsResponse.payload?.data)
       ? campaignsResponse.payload.data
-      : [];
-
-    const targetCampaigns = TARGET_CAMPAIGN_NAMES
-      .map((name) => allCampaigns.find((campaign) => campaign?.name === name))
-      .filter(Boolean);
-
-    const missingCampaignNames = TARGET_CAMPAIGN_NAMES.filter(
-      (name) => !targetCampaigns.some((campaign) => campaign.name === name),
-    );
+      : [])
+      .sort((a, b) => {
+        const rankDifference = statusRank(a) - statusRank(b);
+        if (rankDifference !== 0) return rankDifference;
+        return String(a?.name || "").localeCompare(String(b?.name || ""));
+      });
 
     const results = await Promise.all(
-      targetCampaigns.map((campaign) =>
+      allCampaigns.map((campaign) =>
         loadCampaignInsights(campaign, env, rangeParams)),
     );
 
@@ -261,10 +274,13 @@ export async function handleMetaInsights(request, env) {
       apiVersion: META_API_VERSION,
       adAccountId: accountId,
       range: since && until ? { since, until } : { datePreset: "last_7d" },
-      campaignCount: targetCampaigns.length,
-      missingCampaignNames,
+      campaignCount: allCampaigns.length,
+      successfulCampaignCount: results.length - failed.length,
+      failedCampaignCount: failed.length,
+      hasMoreCampaigns: Boolean(campaignsResponse.payload?.paging?.next),
       campaigns: results,
       appSecretProofEnabled: Boolean(env.META_APP_SECRET),
+      readOnly: true,
     }, failed.length === 0 ? 200 : 502);
   } catch (error) {
     return json({
