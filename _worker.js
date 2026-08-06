@@ -127,6 +127,83 @@ const SERVICES_BACKGROUND_STYLES = `
   </style>
 `;
 
+const HOME_SERVICE_STYLES = `
+  <style id="white5-home-service-backgrounds">
+    #services .services-grid > .service-card {
+      overflow: hidden;
+      position: relative;
+      isolation: isolate;
+      min-height: 390px;
+      background-size: cover;
+      background-repeat: no-repeat;
+      border-color: rgba(255,255,255,.24);
+      box-shadow: 0 18px 46px rgba(0,0,0,.3);
+    }
+
+    #services .services-grid > .service-card:nth-child(1) {
+      background-image:
+        linear-gradient(180deg, rgba(4,18,30,.42), rgba(4,18,30,.82)),
+        url('/images/window-cleaning-4.jpg');
+      background-position: center 44%;
+    }
+
+    #services .services-grid > .service-card:nth-child(2) {
+      background-image:
+        linear-gradient(180deg, rgba(4,22,25,.42), rgba(4,22,25,.82)),
+        url('/images/gutter-cleaning-1.jpg');
+      background-position: center 46%;
+    }
+
+    #services .services-grid > .service-card:nth-child(3) {
+      background-image:
+        linear-gradient(180deg, rgba(5,17,27,.38), rgba(5,17,27,.82)),
+        url('/images/home-power-washing-deck.webp');
+      background-position: center 48%;
+    }
+
+    #services .service-card h3,
+    #services .service-card p,
+    #services .service-card li {
+      color: #fff;
+      text-shadow: 0 2px 5px rgba(0,0,0,.9);
+    }
+
+    #services .service-card ul {
+      color: #fff;
+    }
+
+    #services .service-card .ghost-btn {
+      background: rgba(5,18,30,.58);
+      border-color: rgba(255,255,255,.26);
+      backdrop-filter: blur(5px);
+    }
+
+    @media (max-width: 1060px) {
+      #services .services-grid > .service-card {
+        min-height: 360px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      #services .services-grid > .service-card {
+        min-height: 380px;
+      }
+
+      #services .services-grid > .service-card:nth-child(1) {
+        background-position: 48% center;
+      }
+
+      #services .services-grid > .service-card:nth-child(2) {
+        background-position: 56% center;
+      }
+
+      #services .services-grid > .service-card:nth-child(3) {
+        background-position: 52% center;
+      }
+    }
+  </style>
+`;
+
 const HOME_FAQ_CONTENT = `<div class="container">
   <div class="section-head">
     <h2>Frequently Asked Questions</h2>
@@ -289,7 +366,9 @@ export default {
       .on("#consent", new ConsentInputInjector());
 
     if (url.pathname === "/" || url.pathname === "/index.html") {
-      rewriter = rewriter.on("#faq", new HomeFaqRewriter());
+      rewriter = rewriter
+        .on("head", new HtmlAppender(HOME_SERVICE_STYLES))
+        .on("#faq", new HomeFaqRewriter());
     }
 
     if (url.pathname === "/services" || url.pathname === "/services.html") {
