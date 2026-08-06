@@ -266,16 +266,6 @@ class HtmlAppender {
   }
 }
 
-class TextRewriter {
-  constructor(text) {
-    this.text = text;
-  }
-
-  element(element) {
-    element.setInnerContent(this.text);
-  }
-}
-
 class NavigationFaqInjector {
   element(element) {
     element.append('<a href="/faq.html">FAQ</a>', { html: true });
@@ -378,15 +368,11 @@ export default {
     if (url.pathname === "/" || url.pathname === "/index.html") {
       rewriter = rewriter
         .on("head", new HtmlAppender(HOME_SERVICE_STYLES))
-        .on("#power-washing h3", new TextRewriter("Power Washing / Deck Restoration"))
         .on("#faq", new HomeFaqRewriter());
     }
 
     if (url.pathname === "/services" || url.pathname === "/services.html") {
-      rewriter = rewriter
-        .on("head", new HtmlAppender(SERVICES_BACKGROUND_STYLES))
-        .on("#estimate > .container > .service-row:nth-of-type(3) .service-code", new TextRewriter("P.W / D.R"))
-        .on("#estimate > .container > .service-row:nth-of-type(3) .service-name strong", new TextRewriter("Power Washing / Deck Restoration"));
+      rewriter = rewriter.on("head", new HtmlAppender(SERVICES_BACKGROUND_STYLES));
     }
 
     return rewriter.transform(response);
