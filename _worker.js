@@ -17,6 +17,116 @@ const CHAT_ASSETS = `
   <script defer src="/white5-ai-chat.js?v=photo-1"></script>
 `;
 
+const SERVICES_BACKGROUND_STYLES = `
+  <style id="white5-service-backgrounds">
+    #estimate > .container > .service-row {
+      display: block;
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    #estimate > .container > .service-row:nth-of-type(1) {
+      background-image:
+        linear-gradient(180deg, rgba(4,18,30,.48), rgba(4,18,30,.76)),
+        url('/images/window-cleaning-4.jpg');
+      background-position: center 42%;
+    }
+
+    #estimate > .container > .service-row:nth-of-type(2) {
+      background-image:
+        linear-gradient(180deg, rgba(4,22,25,.46), rgba(4,22,25,.76)),
+        url('/images/gutter-cleaning-1.jpg');
+      background-position: center 45%;
+    }
+
+    #estimate > .container > .service-row:nth-of-type(3) {
+      background-image:
+        linear-gradient(180deg, rgba(5,17,27,.48), rgba(5,17,27,.78)),
+        url('/images/power-washing-1.jpg');
+      background-position: center 50%;
+    }
+
+    #estimate .service-row .service-photo {
+      display: none;
+    }
+
+    #estimate .service-row .service-content {
+      min-height: 520px;
+      padding: 26px;
+      border: 0;
+      border-radius: inherit;
+      background: linear-gradient(180deg, rgba(5,18,30,.08), rgba(5,18,30,.28));
+      box-shadow: none;
+      backdrop-filter: none;
+    }
+
+    #estimate .service-row .option-card {
+      background: rgba(7,25,35,.62);
+      border-color: rgba(255,255,255,.2);
+      box-shadow: 0 8px 22px rgba(0,0,0,.14);
+      backdrop-filter: blur(5px);
+    }
+
+    #estimate .service-row .service-toggle,
+    #estimate .service-row .counter button,
+    #estimate .service-row .story-btn,
+    #estimate .service-row .surface-btn,
+    #estimate .service-row .roof-btn {
+      background-color: rgba(7,25,35,.62);
+      backdrop-filter: blur(4px);
+    }
+
+    #estimate .service-row .note,
+    #estimate .service-row p,
+    #estimate .service-row .unit,
+    #estimate .service-row .counter-row {
+      color: rgba(245,251,255,.94);
+      text-shadow: 0 1px 3px rgba(0,0,0,.78);
+    }
+
+    @media (max-width: 1060px) {
+      #estimate .service-row .service-content {
+        min-height: 0;
+      }
+    }
+
+    @media (max-width: 640px) {
+      #estimate > .container > .service-row {
+        border-radius: 20px;
+        background-position: center;
+      }
+
+      #estimate > .container > .service-row:nth-of-type(1) {
+        background-position: 48% center;
+      }
+
+      #estimate > .container > .service-row:nth-of-type(2) {
+        background-position: 58% center;
+      }
+
+      #estimate > .container > .service-row:nth-of-type(3) {
+        background-position: 52% center;
+      }
+
+      #estimate .service-row .service-content {
+        padding: 18px;
+        background: linear-gradient(180deg, rgba(4,18,29,.2), rgba(4,18,29,.38));
+      }
+
+      #estimate .service-row .option-card {
+        background: rgba(7,25,35,.7);
+      }
+    }
+  </style>
+`;
+
 const HOME_FAQ_CONTENT = `<div class="container">
   <div class="section-head">
     <h2>Frequently Asked Questions</h2>
@@ -69,9 +179,13 @@ const HOME_FAQ_CONTENT = `<div class="container">
   </div>
 </div>`;
 
-class ChatHeadInjector {
+class HtmlAppender {
+  constructor(content) {
+    this.content = content;
+  }
+
   element(element) {
-    element.append(CHAT_ASSETS, { html: true });
+    element.append(this.content, { html: true });
   }
 }
 
@@ -169,13 +283,17 @@ export default {
     }
 
     let rewriter = new HTMLRewriter()
-      .on("head", new ChatHeadInjector())
+      .on("head", new HtmlAppender(CHAT_ASSETS))
       .on("nav.nav", new NavigationFaqInjector())
       .on("footer .container", new PrivacyFooterInjector())
       .on("#consent", new ConsentInputInjector());
 
     if (url.pathname === "/" || url.pathname === "/index.html") {
       rewriter = rewriter.on("#faq", new HomeFaqRewriter());
+    }
+
+    if (url.pathname === "/services" || url.pathname === "/services.html") {
+      rewriter = rewriter.on("head", new HtmlAppender(SERVICES_BACKGROUND_STYLES));
     }
 
     return rewriter.transform(response);
