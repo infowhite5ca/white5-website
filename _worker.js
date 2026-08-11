@@ -12,6 +12,26 @@ import { handleZohoInbox, handleZohoMessage } from "./zoho-mail-reader-api.js";
 import { handleZohoTokenDiagnostic } from "./zoho-token-diagnostic.js";
 import { handleWhite5AiChat } from "./white5-ai-chat-api-v3.js";
 
+const GOOGLE_ADS_TAG_ID = "AW-18208326566";
+const GOOGLE_ADS_TAG_SCRIPT = `
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ADS_TAG_ID}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '${GOOGLE_ADS_TAG_ID}');
+  </script>
+`;
+
+const GOOGLE_TAG_ALREADY_EMBEDDED_PATHS = new Set([
+  "/",
+  "/index.html",
+  "/gallery.html",
+  "/services.html",
+  "/deck-fence-quote.html",
+]);
+
 const CHAT_ASSETS = `
   <link rel="stylesheet" href="/white5-ai-chat.css?v=photo-1">
   <script defer src="/white5-ai-chat.js?v=photo-1"></script>
@@ -364,6 +384,10 @@ export default {
       .on("nav.nav", new NavigationFaqInjector())
       .on("footer .container", new PrivacyFooterInjector())
       .on("#consent", new ConsentInputInjector());
+
+    if (!GOOGLE_TAG_ALREADY_EMBEDDED_PATHS.has(url.pathname)) {
+      rewriter = rewriter.on("head", new HtmlAppender(GOOGLE_ADS_TAG_SCRIPT));
+    }
 
     if (url.pathname === "/" || url.pathname === "/index.html") {
       rewriter = rewriter
