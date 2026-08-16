@@ -11,6 +11,7 @@ import { handleZohoStatus, handleZohoTestSend } from "./zoho-diagnostic-api.js";
 import { handleZohoInbox, handleZohoMessage } from "./zoho-mail-reader-api.js";
 import { handleZohoTokenDiagnostic } from "./zoho-token-diagnostic.js";
 import { handleWhite5AiChat } from "./white5-ai-chat-api-v3.js";
+import { handleServiceRequest } from "./service-request-api.js";
 
 const GOOGLE_ADS_TAG_ID = "AW-18208326566";
 const GOOGLE_ADS_TAG_SCRIPT = `
@@ -317,6 +318,10 @@ export default {
 
     if (url.pathname === "/api/ai-chat") {
       return handleWhite5AiChat(request, env);
+    }
+
+    if (url.pathname === "/api/service-request") {
+      return handleServiceRequest(request, env);
     }
 
     if (url.pathname === "/api/meta/create-window-campaign") {
