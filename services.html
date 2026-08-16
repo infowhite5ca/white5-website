@@ -11,6 +11,7 @@
 
   gtag('config', 'AW-18208326566');
 </script>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Services and Estimate | White5 Exterior Cleaning</title>
   <meta name="description" content="Get an estimate for White5 window cleaning, gutter cleaning, eavestrough cleaning, siding washing, driveway washing, and deck or fence renovation services in Calgary." />
@@ -94,6 +95,13 @@
     .request-field label { color:#fff; font-weight:700; }
     input,textarea { width:100%; min-height:48px; border-radius:14px; border:1px solid rgba(255,255,255,.2); background:rgba(0,0,0,.18); color:#fff; padding:0 14px; font-size:16px; outline:none; }
     textarea { min-height:96px; padding:12px 14px; resize:vertical; }
+    .request-consent { display:flex; align-items:flex-start; gap:10px; color:var(--muted); line-height:1.45; }
+    .request-consent input { width:18px; min-height:18px; margin-top:2px; flex:0 0 auto; }
+    .request-consent a { text-decoration:underline; }
+    .request-status { min-height:24px; font-weight:700; }
+    .request-status.error { color:#ffd5d5; }
+    .request-status.success { color:#b9ffd1; }
+    .request-honeypot { position:absolute !important; left:-9999px !important; width:1px !important; height:1px !important; overflow:hidden !important; }
     footer { padding:26px 0 34px; color:rgba(238,247,255,.76); font-size:14px; border-top:1px solid rgba(255,255,255,.1); }
     @media (max-width:1060px) { .nav{display:none;} .service-row{grid-template-columns:1fr;} .option-grid{grid-template-columns:1fr;} .service-photo img{min-height:260px;} }
     @media (max-width:640px) { body{overflow-x:hidden;padding-bottom:92px;} .container{width:min(100% - 22px,var(--max));} .topbar-inner{justify-content:center;padding:10px 0;} .logo-img{width:118px;} .hero{padding:30px 0 20px;} .hero-inner{text-align:center;margin:0 auto;} h1{font-size:clamp(38px,12vw,54px);line-height:.98;} h2{font-size:31px;} h3{font-size:28px;} h4{font-size:24px;} p,.hero p,.section-head p{font-size:15.5px;line-height:1.55;} section{padding:26px 0;} .service-row{gap:14px;margin-bottom:16px;} .service-content,.summary-card,.result-box,.request-modal-card{border-radius:20px;padding:18px;} .service-photo{border-radius:20px;} .service-title-row{grid-template-columns:auto 1fr;}.service-toggle{grid-column:1 / -1;width:100%;} .service-name strong{font-size:28px;} .summary-buttons{flex-direction:column;} .estimate-btn,.water-btn,.request-btn{width:100%;min-height:52px;font-size:22px;padding:12px 16px;} .counter-row{align-items:flex-start;} .price{font-size:40px;} footer{padding:24px 0 30px;text-align:center;line-height:1.7;} .mobile-bottom-bar{position:fixed;left:10px;right:10px;bottom:10px;z-index:999;display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px;border-radius:18px;background:rgba(5,16,29,.92);border:1px solid rgba(255,255,255,.18);box-shadow:0 12px 34px rgba(0,0,0,.35);backdrop-filter:blur(12px);} .mobile-bottom-bar a{min-height:50px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;font-family:'White5',Arial,sans-serif;font-size:22px;font-weight:700;} .mobile-bottom-bar a.secondary{color:#fff;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);} }
@@ -134,11 +142,13 @@
     </div></section>
   </main>
   <footer><div class="container">© 2026 White5 Exterior Cleaning | Calgary, Alberta | <a href="mailto:info@white5.ca">info@white5.ca</a> | <a href="tel:14034793905">403-479-3905</a></div></footer>
-  <div class="request-modal" id="requestModal"><div class="request-modal-card"><div class="request-modal-top"><h3>Send Request</h3><button class="modal-close" type="button" onclick="closeRequestModal()">×</button></div><div class="request-form"><div class="request-field"><label for="customerName">Your Name</label><input id="customerName" type="text" placeholder="Your name"></div><div class="request-field"><label for="customerAddress">Property Address</label><input id="customerAddress" type="text" placeholder="Street address, Calgary"></div><div class="request-field"><label for="customerEmail">Email</label><input id="customerEmail" type="email" placeholder="your@email.com"></div><div class="request-field"><label for="customerPhone">Phone Number</label><input id="customerPhone" type="tel" placeholder="403-000-0000"></div><div class="request-field"><label for="customerNotes">Extra Notes</label><textarea id="customerNotes" placeholder="Add access information, preferred day, photos note, or other details."></textarea></div><button class="estimate-btn" type="button" onclick="sendRequestEmail()">Send Email Request</button></div></div></div>
+  <div class="request-modal" id="requestModal"><div class="request-modal-card"><div class="request-modal-top"><h3>Send Request</h3><button class="modal-close" type="button" onclick="closeRequestModal()">×</button></div><div class="request-form"><div class="request-field"><label for="customerName">Your Name</label><input id="customerName" type="text" placeholder="Your name"></div><div class="request-field"><label for="customerAddress">Property Address</label><input id="customerAddress" type="text" placeholder="Street address, Calgary"></div><div class="request-field"><label for="customerEmail">Email</label><input id="customerEmail" type="email" placeholder="your@email.com"></div><div class="request-field"><label for="customerPhone">Phone Number</label><input id="customerPhone" type="tel" placeholder="403-000-0000"></div><div class="request-field"><label for="customerNotes">Extra Notes</label><textarea id="customerNotes" placeholder="Add access information, preferred day, photos note, or other details."></textarea></div><div class="request-honeypot" aria-hidden="true"><label for="customerWebsite">Website</label><input id="customerWebsite" type="text" tabindex="-1" autocomplete="off"></div><div class="request-field"><div id="requestTurnstile"></div><input id="requestTurnstileToken" type="hidden"></div><label class="request-consent"><input id="requestConsent" type="checkbox"><span>I agree that White5 may contact me by phone, text, or email regarding this estimate request. See the <a href="/privacy.html">Privacy Policy</a>.</span></label><div id="requestStatus" class="request-status" role="status" aria-live="polite"></div><button class="estimate-btn" id="requestSubmitButton" type="button" onclick="sendRequestEmail()">Send Request</button></div></div></div>
   <script>
     const state = { includeWindow:true, includeGutter:false, includePower:false, windowStories:2, gutterStories:2, selectedSurface:'Driveway', roofFactor:.25, roofType:'Gable', lastEstimate:0 };
     const serviceFields = { window:['smallWindows','standardWindows','largeWindows','xlWindows','windowSqft'], gutter:['gutterLength'], power:['drivewaySqft','sidingSqft','fenceSqft','deckSqft','patioSqft'] };
     const surfaceIds = { Driveway:'drivewaySqft', Siding:'sidingSqft', Fence:'fenceSqft', Deck:'deckSqft', Patio:'patioSqft' };
+    let requestTurnstileWidgetId = null;
+    let requestTurnstileLoading = null;
     function getNumber(id){ const el=document.getElementById(id); return Number(el ? (el.value !== undefined ? el.value : el.textContent) : 0) || 0; }
     function setNumber(id,value){ const el=document.getElementById(id); if(el) el.textContent=Math.max(0,value); }
     function setServiceIncluded(service,included){ const key=service.charAt(0).toUpperCase()+service.slice(1); state['include'+key]=included; const toggle=document.getElementById('toggle'+key); if(toggle){ toggle.classList.toggle('active',included); toggle.textContent=included?'Included':'Add service'; } }
@@ -150,10 +160,79 @@
     function selectSurface(surface,button){ setServiceIncluded('power',true); state.selectedSurface=surface; document.querySelectorAll('.surface-btn').forEach(btn=>btn.classList.remove('active')); button.classList.add('active'); }
     function validateSelectedServices(){ if(!state.includeWindow && !state.includeGutter && !state.includePower){ alert('Please select at least one service: Window Cleaning, Gutter and Eavestrough Cleaning, or Power Washing.'); return false; } if(state.includeWindow && (getNumber('smallWindows')+getNumber('standardWindows')+getNumber('largeWindows')+getNumber('xlWindows') <= 0)){ alert('Please add at least one window for Window Cleaning.'); return false; } if(state.includeWindow && getNumber('windowSqft') <= 0){ alert('Please enter Window Cleaning Property Size.'); return false; } if(state.includeGutter && getNumber('gutterLength') <= 0){ alert('Please enter Gutter and Eavestrough Length.'); return false; } if(state.includePower && getNumber(surfaceIds[state.selectedSurface]) <= 0){ alert('Please enter surface size for ' + state.selectedSurface + '.'); return false; } return true; }
     function calculateEstimate(showResult=true){ if(!validateSelectedServices()) return null; const smallWindows=getNumber('smallWindows'), standardWindows=getNumber('standardWindows'), largeWindows=getNumber('largeWindows'), xlWindows=getNumber('xlWindows'), windowSqft=getNumber('windowSqft'); const gutterLength=getNumber('gutterLength'); const drivewaySqft=getNumber('drivewaySqft'), sidingSqft=getNumber('sidingSqft'), fenceSqft=getNumber('fenceSqft'), deckSqft=getNumber('deckSqft'), patioSqft=getNumber('patioSqft'); let windowPrice=0,gutterPrice=0,powerPrice=0; if(state.includeWindow){ windowPrice = smallWindows*5 + standardWindows*8 + largeWindows*12 + xlWindows*18; windowPrice += windowSqft*.015; if(state.windowStories===2) windowPrice += 35; if(state.windowStories===3) windowPrice += 75; windowPrice = Math.max(windowPrice,120); } if(state.includeGutter){ gutterPrice = gutterLength * (1.2 + state.roofFactor); if(state.gutterStories===2) gutterPrice += 30; if(state.gutterStories===3) gutterPrice += 70; gutterPrice = Math.max(gutterPrice,170); } if(state.includePower){ powerPrice = drivewaySqft*.18 + sidingSqft*.22 + fenceSqft*.18 + deckSqft*.22 + patioSqft*.18; powerPrice = Math.max(powerPrice,140); } const selected=[]; if(state.includeWindow) selected.push('Window Cleaning'); if(state.includeGutter) selected.push('Gutter and Eavestrough Cleaning'); if(state.includePower) selected.push('Power Washing'); const total=windowPrice+gutterPrice+powerPrice; state.lastEstimate=Math.round(total); document.getElementById('finalPrice').textContent='$'+state.lastEstimate; document.getElementById('estimateNote').textContent='Included services: '+selected.join(', ')+'. This is a starting estimate. Final price may change depending on access, dirt level, height, photos, and job details.'; if(showResult) document.getElementById('resultBox').classList.add('active'); return total; }
-    function openRequestModal(){ const estimate=calculateEstimate(false); if(estimate===null) return; document.getElementById('requestModal').classList.add('active'); document.body.style.overflow='hidden'; }
+    function setRequestStatus(message,type=''){ const el=document.getElementById('requestStatus'); el.textContent=message; el.className='request-status'+(type?' '+type:''); }
+    async function ensureRequestTurnstile(){
+      if(requestTurnstileWidgetId!==null) return;
+      if(requestTurnstileLoading) return requestTurnstileLoading;
+      requestTurnstileLoading=(async()=>{
+        const configResponse=await fetch('/api/deck-fence-config',{headers:{accept:'application/json'}});
+        const config=await configResponse.json().catch(()=>({}));
+        if(!configResponse.ok||!config.turnstileSiteKey) throw new Error('Spam protection is unavailable.');
+        for(let attempt=0;attempt<100&&!window.turnstile;attempt++) await new Promise(resolve=>setTimeout(resolve,100));
+        if(!window.turnstile) throw new Error('Spam protection did not load.');
+        requestTurnstileWidgetId=window.turnstile.render('#requestTurnstile',{
+          sitekey:config.turnstileSiteKey,
+          callback(token){ document.getElementById('requestTurnstileToken').value=token; setRequestStatus(''); },
+          'expired-callback'(){ document.getElementById('requestTurnstileToken').value=''; },
+          'error-callback'(){ document.getElementById('requestTurnstileToken').value=''; setRequestStatus('Spam protection failed to load. Please refresh and try again.','error'); }
+        });
+      })();
+      try{ await requestTurnstileLoading; } finally{ requestTurnstileLoading=null; }
+    }
+    function openRequestModal(){ const estimate=calculateEstimate(false); if(estimate===null) return; document.getElementById('requestModal').classList.add('active'); document.body.style.overflow='hidden'; ensureRequestTurnstile().catch(error=>setRequestStatus(error.message||'Spam protection is unavailable.','error')); }
     function closeRequestModal(){ document.getElementById('requestModal').classList.remove('active'); document.body.style.overflow=''; }
     function buildRequestBody(){ const selected=[]; if(state.includeWindow) selected.push('Window Cleaning'); if(state.includeGutter) selected.push('Gutter and Eavestrough Cleaning'); if(state.includePower) selected.push('Power Washing'); return `White5 Service Request\n\nCUSTOMER INFORMATION\nName: ${document.getElementById('customerName').value.trim()}\nAddress: ${document.getElementById('customerAddress').value.trim()}\nEmail: ${document.getElementById('customerEmail').value.trim()}\nPhone: ${document.getElementById('customerPhone').value.trim()}\n\nSELECTED SERVICES\n${selected.join(', ')}\n\nESTIMATED PRICE\nEstimated starting price: $${state.lastEstimate}\n\nWINDOW CLEANING\nIncluded: ${state.includeWindow?'Yes':'No'}\nSmall windows: ${getNumber('smallWindows')}\nStandard windows: ${getNumber('standardWindows')}\nLarge windows: ${getNumber('largeWindows')}\nExtra large windows: ${getNumber('xlWindows')}\nProperty size for windows: ${getNumber('windowSqft')} sq ft\nWindow stories: ${state.windowStories}\n\nGUTTER AND EAVESTROUGH CLEANING\nIncluded: ${state.includeGutter?'Yes':'No'}\nGutter and eavestrough length: ${getNumber('gutterLength')} ft\nRoof type: ${state.roofType}\nGutter stories: ${state.gutterStories}\n\nPOWER WASHING\nIncluded: ${state.includePower?'Yes':'No'}\nSelected surface: ${state.selectedSurface}\nDriveway washing: ${getNumber('drivewaySqft')} sq ft\nSiding washing: ${getNumber('sidingSqft')} sq ft\nFence renovation: ${getNumber('fenceSqft')} sq ft\nDeck renovation: ${getNumber('deckSqft')} sq ft\nPatio washing: ${getNumber('patioSqft')} sq ft\n\nCUSTOMER NOTES\n${document.getElementById('customerNotes').value.trim()}\n\nNOTE\nThis is a starting estimate. Final price may change depending on access, dirt level, height, photos, and job details.`; }
-    function sendRequestEmail(){ const estimate=calculateEstimate(false); if(estimate===null) return; const email=document.getElementById('customerEmail').value.trim(); const phone=document.getElementById('customerPhone').value.trim(); if(!email && !phone){ alert('Please enter your email or phone number.'); return; } white5_report_conversion_event(); window.location.href='mailto:info@white5.ca?subject='+encodeURIComponent('White5 Service Request')+'&body='+encodeURIComponent(buildRequestBody()); }
+    async function sendRequestEmail(){
+      const estimate=calculateEstimate(false);
+      if(estimate===null) return;
+      const name=document.getElementById('customerName').value.trim();
+      const address=document.getElementById('customerAddress').value.trim();
+      const email=document.getElementById('customerEmail').value.trim();
+      const phone=document.getElementById('customerPhone').value.trim();
+      const consent=document.getElementById('requestConsent').checked;
+      const turnstileToken=document.getElementById('requestTurnstileToken').value;
+      if(!name||!address){ setRequestStatus('Please enter your name and property address.','error'); return; }
+      if(!email&&!phone){ setRequestStatus('Please enter your email or phone number.','error'); return; }
+      if(!consent){ setRequestStatus('Please agree that White5 may contact you about this request.','error'); return; }
+      if(!turnstileToken){ setRequestStatus('Please complete the spam protection check.','error'); return; }
+      const services=[];
+      if(state.includeWindow) services.push('Window Cleaning');
+      if(state.includeGutter) services.push('Gutter and Eavestrough Cleaning');
+      if(state.includePower) services.push('Power Washing');
+      const button=document.getElementById('requestSubmitButton');
+      button.disabled=true;
+      button.textContent='Sending…';
+      setRequestStatus('Sending your request…');
+      try{
+        const response=await fetch('/api/service-request',{
+          method:'POST',
+          headers:{'content-type':'application/json','accept':'application/json'},
+          body:JSON.stringify({
+            name,address,email,phone,
+            notes:document.getElementById('customerNotes').value.trim(),
+            services,
+            estimate:state.lastEstimate,
+            details:buildRequestBody(),
+            consent,
+            turnstileToken,
+            website:document.getElementById('customerWebsite').value
+          })
+        });
+        const result=await response.json().catch(()=>({}));
+        if(!response.ok||result.ok!==true) throw new Error(result.error||'We could not send your request.');
+        white5_report_conversion_event();
+        setRequestStatus('Thank you! Your request was sent successfully. White5 will contact you soon.','success');
+        document.getElementById('requestTurnstileToken').value='';
+        if(window.turnstile&&requestTurnstileWidgetId!==null) window.turnstile.reset(requestTurnstileWidgetId);
+      }catch(error){
+        setRequestStatus(error.message||'We could not send your request. Please call 403-479-3905.','error');
+        document.getElementById('requestTurnstileToken').value='';
+        if(window.turnstile&&requestTurnstileWidgetId!==null) window.turnstile.reset(requestTurnstileWidgetId);
+      }finally{
+        button.disabled=false;
+        button.textContent='Send Request';
+      }
+    }
     document.addEventListener('keydown',event=>{ if(event.key==='Escape') closeRequestModal(); });
     document.getElementById('requestModal').addEventListener('click',function(event){ if(event.target===this) closeRequestModal(); });
   </script>
