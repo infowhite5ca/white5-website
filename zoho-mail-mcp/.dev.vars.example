@@ -1,0 +1,3 @@
+ZOHO_CLIENT_ID="replace-with-zoho-server-app-client-id"
+ZOHO_CLIENT_SECRET="replace-with-zoho-server-app-client-secret"
+ALLOWED_ZOHO_EMAIL="info@white5.ca"
