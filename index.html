@@ -2,13 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-    <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17206495005"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'AW-17206495005');
   gtag('config', 'AW-18208326566');
 </script>
@@ -184,7 +182,6 @@
     .quote-card,
     .service-card,
     .review-card {
-      background: var(--card);
       border: 1px solid var(--card-border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
@@ -194,13 +191,7 @@
     .contact-card { padding: 24px; background: url("wc-white5.jpg") center / cover no-repeat; }
     .contact-list { list-style: none; padding: 0; margin: 16px 0 0; display: grid; gap: 10px; }
     .contact-list strong { display: block; color: #fff; }
-    .social-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 18px;
-      align-items: center;
-    }
+    .social-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; align-items: center; }
     .social-link,
     .social-icon {
       width: 50px;
@@ -216,37 +207,61 @@
       overflow: hidden;
       transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
     }
-    .social-link:hover {
-      transform: translateY(-2px);
-      border-color: rgba(94,203,255,0.78);
-      box-shadow: 0 14px 28px rgba(0,0,0,0.3), 0 0 18px rgba(94,203,255,0.28), inset 0 1px 0 rgba(94,203,255,0.28);
-    }
+    .social-link:hover { transform: translateY(-2px); border-color: rgba(94,203,255,0.78); }
     .social-link img,
-    .social-icon img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      border-radius: 11px;
-    }
+    .social-icon img { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 11px; }
 
     section { padding: 34px 0; }
     .section-head { max-width: 760px; margin-bottom: 20px; }
     .section-head p { margin-top: 10px; font-size: 17px; }
 
-    .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; align-items: stretch; }
-    .service-card { padding: 20px; min-height: 100%; display: flex; flex-direction: column; background: linear-gradient(180deg, rgba(8,34,51,0.92), rgba(5,25,40,0.94)); }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      align-items: stretch;
+    }
+    .service-card {
+      padding: 20px;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(180deg, #0b2737 0%, #071d2b 100%) !important;
+      background-image: linear-gradient(180deg, #0b2737 0%, #071d2b 100%) !important;
+      overflow: hidden;
+    }
     .service-cover {
       width: 100%;
-      aspect-ratio: 4 / 3;
+      height: 220px;
+      flex: 0 0 220px;
       display: block;
       object-fit: cover;
+      object-position: center;
       border-radius: 16px;
-      margin-bottom: 18px;
+      margin: 0 0 18px;
       box-shadow: 0 12px 28px rgba(0,0,0,0.24);
     }
-    .service-card p { margin-top: 8px; }
-    .service-actions { display: flex; flex-direction: column; gap: 10px; margin-top: auto; padding-top: 18px; }
+    .service-card h3 {
+      min-height: 68px;
+      margin: 0 0 10px;
+      display: flex;
+      align-items: flex-start;
+    }
+    .service-card p {
+      margin-top: 0;
+      min-height: 126px;
+    }
+    .service-card ul {
+      min-height: 112px;
+      margin-top: 14px;
+    }
+    .service-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: auto;
+      padding-top: 18px;
+    }
     .service-actions a { width: 100%; }
 
     .quote-section { padding-top: 18px; }
@@ -256,35 +271,26 @@
     .quote-card p { color: #37566f; }
     .quote-calculator { display: grid; gap: 12px; margin-top: 16px; }
     .quote-calculator label { color: var(--ink); font-weight: 700; }
-    .quote-calculator input {
-      width: 100%;
-      min-height: 50px;
-      border-radius: 14px;
-      border: 1px solid rgba(11,31,51,0.18);
-      background: #fff;
-      color: var(--ink);
-      padding: 0 14px;
-      font-size: 16px;
-      outline: none;
-    }
+    .quote-calculator input { width: 100%; min-height: 50px; border-radius: 14px; border: 1px solid rgba(11,31,51,0.18); background: #fff; color: var(--ink); padding: 0 14px; font-size: 16px; outline: none; }
     .quote-result { padding: 12px 14px; border-radius: 14px; background: rgba(11,31,51,0.06); color: var(--ink); }
     .quote-result strong { display: block; margin-top: 3px; font-family: 'White5', Arial, sans-serif; font-size: 30px; }
 
     .reviews-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-    .review-card { padding: 18px; }
+    .review-card { padding: 18px; background: var(--card); }
     .stars { color: #ffd34d; letter-spacing: 1px; margin: 8px 0; }
     .faq-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
     .faq-card { padding: 18px; background: var(--card); border: 1px solid var(--card-border); border-radius: var(--radius); box-shadow: var(--shadow); backdrop-filter: blur(8px); }
     .faq-card p { margin-top: 8px; }
 
     .mobile-bottom-bar { display: none; }
-
     footer { padding: 26px 0 34px; color: rgba(238,247,255,0.76); font-size: 14px; border-top: 1px solid rgba(255,255,255,0.1); }
 
     @media (max-width: 1060px) {
       .nav { display: none; }
       .hero-grid, .quote-grid { grid-template-columns: 1fr; }
       .services-grid, .reviews-grid, .faq-grid { grid-template-columns: 1fr; }
+      .service-card h3, .service-card p, .service-card ul { min-height: 0; }
+      .service-cover { height: auto; flex-basis: auto; aspect-ratio: 4 / 3; }
     }
 
     @media (max-width: 640px) {
@@ -304,7 +310,6 @@
       .contact-card, .quote-card, .service-card, .review-card, .faq-card { border-radius: 20px; padding: 18px; }
       .contact-card { min-height: 360px; background-position: center top; }
       .services-grid, .reviews-grid { gap: 16px; }
-      .service-card { min-height: auto; }
       .quote-result strong { font-size: 26px; }
       footer { padding: 24px 0 30px; text-align: center; line-height: 1.7; }
       .mobile-bottom-bar {
@@ -349,12 +354,7 @@
       "url": "https://www.white5.ca/",
       "telephone": "+14034793905",
       "email": "info@white5.ca",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Calgary",
-        "addressRegion": "AB",
-        "addressCountry": "CA"
-      },
+      "address": {"@type": "PostalAddress","addressLocality": "Calgary","addressRegion": "AB","addressCountry": "CA"},
       "areaServed": ["Calgary", "Airdrie", "Okotoks", "Chestermere"],
       "description": "White5 provides window cleaning, gutter cleaning, eavestrough cleaning, and power washing services for homes in Calgary, Alberta.",
       "priceRange": "$$"
@@ -365,46 +365,11 @@
       "@context": "https://schema.org",
       "@type": "FAQPage",
       "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "How much does window cleaning cost in Calgary?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Window cleaning pricing depends on the number and size of windows, property size, stories, and access. White5 provides free estimates for Calgary homes."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Do you clean gutters and eavestroughs in Calgary?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Yes. White5 provides gutter cleaning and eavestrough cleaning in Calgary, including debris removal, downspout checks, and basic gutter inspection."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Do you offer power washing for driveways and patios?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Yes. White5 offers power washing for driveways, sidewalks, patios, decks, siding, fences, and other exterior surfaces."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Do you provide free estimates?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Yes. You can request a free estimate by phone or through the quote form. Photos and details help make the estimate more accurate."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "What areas do you serve?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "White5 serves Calgary and nearby areas including Airdrie, Okotoks, and Chestermere."
-          }
-        }
+        {"@type":"Question","name":"How much does window cleaning cost in Calgary?","acceptedAnswer":{"@type":"Answer","text":"Window cleaning pricing depends on the number and size of windows, property size, stories, and access. White5 provides free estimates for Calgary homes."}},
+        {"@type":"Question","name":"Do you clean gutters and eavestroughs in Calgary?","acceptedAnswer":{"@type":"Answer","text":"Yes. White5 provides gutter cleaning and eavestrough cleaning in Calgary, including debris removal, downspout checks, and basic gutter inspection."}},
+        {"@type":"Question","name":"Do you offer power washing for driveways and patios?","acceptedAnswer":{"@type":"Answer","text":"Yes. White5 offers power washing for driveways, sidewalks, patios, decks, siding, fences, and other exterior surfaces."}},
+        {"@type":"Question","name":"Do you provide free estimates?","acceptedAnswer":{"@type":"Answer","text":"Yes. You can request a free estimate by phone or through the quote form. Photos and details help make the estimate more accurate."}},
+        {"@type":"Question","name":"What areas do you serve?","acceptedAnswer":{"@type":"Answer","text":"White5 serves Calgary and nearby areas including Airdrie, Okotoks, and Chestermere."}}
       ]
     }
   </script>
@@ -413,43 +378,25 @@
     gtag('event', 'conversion', {'send_to': 'AW-17206495005/4T4mCJ7N-64cEJ2O2YxA'});
     gtag('event', 'conversion', {'send_to': 'AW-18208326566/BLZ_CNyjlcUcEKaHtOpD'});
   }
-
   function gtag_report_conversion(url) {
-    var callback = function () {
-      if (typeof(url) !== 'undefined') {
-        window.location = url;
-      }
-    };
-
+    var callback = function () { if (typeof(url) !== 'undefined') { window.location = url; } };
     gtag('event', 'conversion', {'send_to': 'AW-17206495005/4T4mCJ7N-64cEJ2O2YxA'});
-    gtag('event', 'conversion', {
-      'send_to': 'AW-18208326566/BLZ_CNyjlcUcEKaHtOpD',
-      'event_callback': callback
-    });
-
+    gtag('event', 'conversion', {'send_to': 'AW-18208326566/BLZ_CNyjlcUcEKaHtOpD','event_callback': callback});
     return false;
   }
 </script>
-
 </head>
 <body>
   <header class="topbar">
     <div class="container topbar-inner">
       <a href="index.html" aria-label="White5 home"><img src="logo.png" alt="White5 Exterior Cleaning logo" class="logo-img" /></a>
       <nav class="nav" aria-label="Main navigation">
-        <a href="#services">Services</a>
-        <a href="gallery.html">Gallery</a>
-        <a onclick="white5_report_conversion_event();" href="#quote">Estimate</a>
-        <a href="services.html">Details</a>
-        <a onclick="return gtag_report_conversion('tel:14034793905');" class="nav-cta" href="tel:14034793905">Call Now</a>
+        <a href="#services">Services</a><a href="gallery.html">Gallery</a><a onclick="white5_report_conversion_event();" href="#quote">Estimate</a><a href="services.html">Details</a><a onclick="return gtag_report_conversion('tel:14034793905');" class="nav-cta" href="tel:14034793905">Call Now</a>
       </nav>
     </div>
   </header>
 
-  <div class="mobile-bottom-bar">
-    <a onclick="return gtag_report_conversion('tel:14034793905');" href="tel:14034793905">Call</a>
-    <a onclick="white5_report_conversion_event();" class="secondary" href="#quote">Quote</a>
-  </div>
+  <div class="mobile-bottom-bar"><a onclick="return gtag_report_conversion('tel:14034793905');" href="tel:14034793905">Call</a><a onclick="white5_report_conversion_event();" class="secondary" href="#quote">Quote</a></div>
 
   <main>
     <section class="hero">
@@ -458,12 +405,8 @@
           <p class="eyebrow">White5 Exterior Cleaning | Calgary</p>
           <h1>Window Cleaning, Gutter and Eavestrough Cleaning, Power Washing in Calgary</h1>
           <p>White5 provides reliable exterior cleaning services for Calgary homes, including purified water window cleaning, gutter cleaning, eavestrough cleaning, and power washing. Honest work, careful service, and clear results.</p>
-          <div class="hero-actions">
-            <a onclick="white5_report_conversion_event();" class="water-btn" href="#quote">Get a Free Quote</a>
-            <a class="ghost-btn" href="gallery.html">View Gallery</a>
-          </div>
+          <div class="hero-actions"><a onclick="white5_report_conversion_event();" class="water-btn" href="#quote">Get a Free Quote</a><a class="ghost-btn" href="gallery.html">View Gallery</a></div>
         </div>
-
         <aside class="contact-card">
           <h3>Contact White5</h3>
           <p>Need window cleaning, gutter cleaning, eavestrough cleaning, or exterior cleaning in Calgary? Reach out directly for a quick estimate.</p>
@@ -486,10 +429,7 @@
 
     <section id="services">
       <div class="container">
-        <div class="section-head">
-          <h2>Exterior Cleaning Services</h2>
-          <p>Practical exterior cleaning services for Calgary homes.</p>
-        </div>
+        <div class="section-head"><h2>Exterior Cleaning Services</h2><p>Practical exterior cleaning services for Calgary homes.</p></div>
         <div class="services-grid">
           <article class="service-card" id="window-cleaning">
             <img class="service-cover" src="images/window-cleaning-1.jpg" alt="Window cleaning by White5 in Calgary" loading="lazy" decoding="async">
@@ -518,53 +458,27 @@
 
     <section class="quote-section" id="quote">
       <div class="container quote-grid">
-        <div class="section-head">
-          <h2>Quick Estimate</h2>
-          <p>Enter the approximate size of your house to get a simple starting estimate. For a detailed service estimate, use the services page.</p>
-          <div class="hero-actions"><a onclick="white5_report_conversion_event();" class="water-btn" href="services.html#quote">Detailed Estimate</a></div>
-        </div>
-        <aside class="quote-card">
-          <h3>Starting Price</h3>
-          <p>This simple calculator gives a starting point for exterior cleaning.</p>
-          <div class="quote-calculator">
-            <label for="houseSize">House size, sq ft</label>
-            <input id="houseSize" type="number" min="0" placeholder="Example: 1800">
-            <button type="button" onclick="white5_report_conversion_event(); calculateEstimate()">Calculate Estimate</button>
-            <div class="quote-result">Estimated starting price:<strong id="estimateOutput">$0</strong></div>
-          </div>
-        </aside>
+        <div class="section-head"><h2>Quick Estimate</h2><p>Enter the approximate size of your house to get a simple starting estimate. For a detailed service estimate, use the services page.</p><div class="hero-actions"><a onclick="white5_report_conversion_event();" class="water-btn" href="services.html#quote">Detailed Estimate</a></div></div>
+        <aside class="quote-card"><h3>Starting Price</h3><p>This simple calculator gives a starting point for exterior cleaning.</p><div class="quote-calculator"><label for="houseSize">House size, sq ft</label><input id="houseSize" type="number" min="0" placeholder="Example: 1800"><button type="button" onclick="white5_report_conversion_event(); calculateEstimate()">Calculate Estimate</button><div class="quote-result">Estimated starting price:<strong id="estimateOutput">$0</strong></div></div></aside>
       </div>
     </section>
 
-    <section id="faq">
-      <div class="container">
-        <div class="section-head"><h2>Frequently Asked Questions</h2><p>Helpful answers for exterior cleaning services in Calgary and nearby areas.</p></div>
-        <div class="faq-grid">
-          <article class="faq-card"><h3>How much does window cleaning cost in Calgary?</h3><p>Window cleaning pricing depends on the number and size of windows, property size, stories, and access. White5 provides free estimates for Calgary homes.</p></article>
-          <article class="faq-card"><h3>Do you clean gutters and eavestroughs in Calgary?</h3><p>Yes. White5 provides gutter cleaning and eavestrough cleaning in Calgary, including debris removal, downspout checks, and basic gutter inspection.</p></article>
-          <article class="faq-card"><h3>Do you offer power washing for driveways and patios?</h3><p>Yes. White5 offers power washing for driveways, sidewalks, patios, decks, siding, fences, and other exterior surfaces.</p></article>
-          <article class="faq-card"><h3>Do you provide free estimates?</h3><p>Yes. You can request a free estimate by phone or through the quote form. Photos and details help make the estimate more accurate.</p></article>
-          <article class="faq-card"><h3>What areas do you serve?</h3><p>White5 serves Calgary and nearby areas including Airdrie, Okotoks, and Chestermere.</p></article>
-        </div>
-      </div>
-    </section>
+    <section id="faq"><div class="container"><div class="section-head"><h2>Frequently Asked Questions</h2><p>Helpful answers for exterior cleaning services in Calgary and nearby areas.</p></div><div class="faq-grid">
+      <article class="faq-card"><h3>How much does window cleaning cost in Calgary?</h3><p>Window cleaning pricing depends on the number and size of windows, property size, stories, and access. White5 provides free estimates for Calgary homes.</p></article>
+      <article class="faq-card"><h3>Do you clean gutters and eavestroughs in Calgary?</h3><p>Yes. White5 provides gutter cleaning and eavestrough cleaning in Calgary, including debris removal, downspout checks, and basic gutter inspection.</p></article>
+      <article class="faq-card"><h3>Do you offer power washing for driveways and patios?</h3><p>Yes. White5 offers power washing for driveways, sidewalks, patios, decks, siding, fences, and other exterior surfaces.</p></article>
+      <article class="faq-card"><h3>Do you provide free estimates?</h3><p>Yes. You can request a free estimate by phone or through the quote form. Photos and details help make the estimate more accurate.</p></article>
+      <article class="faq-card"><h3>What areas do you serve?</h3><p>White5 serves Calgary and nearby areas including Airdrie, Okotoks, and Chestermere.</p></article>
+    </div></div></section>
 
-    <section id="reviews">
-      <div class="container">
-        <div class="section-head"><h2>Customer Reviews</h2><p>Recent feedback from White5 customers.</p></div>
-        <div class="reviews-grid">
-          <article class="review-card"><h3>Demetrius Lloyd</h3><div class="stars">★★★★★</div><p>Great service! Had my gutters cleaned fast, professionally, and thoroughly. Everything was cleaned properly and left tidy.</p></article>
-          <article class="review-card"><h3>Margaret Stewart</h3><div class="stars">★★★★★</div><p>I had Volodymyr pressure wash my house with 40 years of build up. He was amazing to get it back to looking new.</p></article>
-          <article class="review-card"><h3>Qasim S</h3><div class="stars">★★★★★</div><p>He cleaned the gutters on the backside of our home. He was polite, competent, thorough and showed the result of his work.</p></article>
-        </div>
-      </div>
-    </section>
+    <section id="reviews"><div class="container"><div class="section-head"><h2>Customer Reviews</h2><p>Recent feedback from White5 customers.</p></div><div class="reviews-grid">
+      <article class="review-card"><h3>Demetrius Lloyd</h3><div class="stars">★★★★★</div><p>Great service! Had my gutters cleaned fast, professionally, and thoroughly. Everything was cleaned properly and left tidy.</p></article>
+      <article class="review-card"><h3>Margaret Stewart</h3><div class="stars">★★★★★</div><p>I had Volodymyr pressure wash my house with 40 years of build up. He was amazing to get it back to looking new.</p></article>
+      <article class="review-card"><h3>Qasim S</h3><div class="stars">★★★★★</div><p>He cleaned the gutters on the backside of our home. He was polite, competent, thorough and showed the result of his work.</p></article>
+    </div></div></section>
   </main>
 
-  <footer>
-    <div class="container">© 2026 White5 Exterior Cleaning | Calgary, Alberta | <a href="mailto:info@white5.ca">info@white5.ca</a> | <a onclick="return gtag_report_conversion('tel:14034793905');" href="tel:14034793905">403-479-3905</a></div>
-  </footer>
-
+  <footer><div class="container">© 2026 White5 Exterior Cleaning | Calgary, Alberta | <a href="mailto:info@white5.ca">info@white5.ca</a> | <a onclick="return gtag_report_conversion('tel:14034793905');" href="tel:14034793905">403-479-3905</a></div></footer>
   <script>
     function calculateEstimate() {
       const size = Math.max(0, Number(document.getElementById('houseSize').value) || 0);
