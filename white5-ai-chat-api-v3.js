@@ -1,4 +1,5 @@
 import { WHITE5_AI_INSTRUCTIONS } from "./white5-ai-knowledge.js";
+import { notifyAiPhotoLead } from "./white5-ai-lead-mail.js";
 
 const OPENAI_RESPONSES_URL = "https://api.openai.com/v1/responses";
 const RATE_WINDOW_MS = 10 * 60 * 1000;
@@ -227,7 +228,7 @@ function sseResponse(text) {
   });
 }
 
-export async function handleWhite5AiChat(request, env) {
+export async function handleWhite5AiChat(request, env, ctx) {
   if (request.method !== "POST") {
     return json({ ok: false, error: "Method not allowed" }, 405, { allow: "POST" });
   }
@@ -302,6 +303,33 @@ export async function handleWhite5AiChat(request, env) {
       content: latestContent,
     },
   ];
+
+  if (imageResult.images.length) {
+    const requestId = crypto.randomUUID();
+    const notification = notifyAiPhotoLead({
+      env,
+      requestId,
+      images: imageResult.images,
+      messages,
+      pagePath,
+      pageTitle,
+    }).then((messageId) => {
+      console.log(JSON.stringify({
+        message: "ai_photo_lead_sent",
+        requestId,
+        photoCount: imageResult.images.length,
+        messageId,
+      }));
+    }).catch((error) => {
+      console.error(JSON.stringify({
+        message: "ai_photo_lead_failed",
+        requestId,
+        photoCount: imageResult.images.length,
+        error: error instanceof Error ? error.message : String(error),
+      }));
+    });
+    ctx.waitUntil(notification);
+  }
 
   let response;
   try {

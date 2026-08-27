@@ -35,7 +35,7 @@ const GOOGLE_TAG_ALREADY_EMBEDDED_PATHS = new Set([
 
 const CHAT_ASSETS = `
   <link rel="stylesheet" href="/white5-ai-chat.css?v=photo-1">
-  <script defer src="/white5-ai-chat.js?v=photo-1"></script>
+  <script defer src="/white5-ai-chat.js?v=photo-leads-1"></script>
 `;
 
 const SERVICES_BACKGROUND_STYLES = `
@@ -317,7 +317,7 @@ export default {
     const url = new URL(request.url);
 
     if (url.pathname === "/api/ai-chat") {
-      return handleWhite5AiChat(request, env);
+      return handleWhite5AiChat(request, env, ctx);
     }
 
     if (url.pathname === "/api/service-request") {

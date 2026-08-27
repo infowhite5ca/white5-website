@@ -48,7 +48,7 @@
           <a href="/services.html#estimate">Get Quote</a>
           <a href="tel:14034793905">Call 403-479-3905</a>
         </div>
-        <div class="white5-ai-note">Add up to 4 photos. Photos are sent for AI analysis and are not automatically added to a quote. Don’t upload IDs or payment information.</div>
+        <div class="white5-ai-note">Add up to 4 photos. Your photos and chat message are also emailed to White5 for follow-up. Don’t upload IDs or payment information.</div>
       </div>
     </section>
   `;
