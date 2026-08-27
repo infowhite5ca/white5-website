@@ -236,6 +236,15 @@
 
     .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
     .service-card { padding: 24px; min-height: 330px; display: flex; flex-direction: column; }
+    .service-cover {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      display: block;
+      object-fit: cover;
+      border-radius: 16px;
+      margin-bottom: 18px;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.24);
+    }
     .service-card p { margin-top: 8px; }
     .service-actions { display: flex; flex-direction: column; gap: 10px; margin-top: auto; padding-top: 18px; }
     .service-actions a { width: 100%; }
@@ -495,6 +504,7 @@
             <div class="service-actions"><a class="ghost-btn" href="gallery.html#gutter-cleaning">Gallery</a><a onclick="white5_report_conversion_event();" class="water-btn" href="services.html#quote">Get Quote</a></div>
           </article>
           <article class="service-card" id="power-washing">
+            <img class="service-cover" src="images/fence.png" alt="Before and after fence power washing by White5 in Calgary" loading="lazy" decoding="async">
             <h3>Power Washing in Calgary</h3>
             <p>Power washing and exterior surface care for Calgary homes, including deck and fence renovation prep, siding washing, and driveway washing.</p>
             <ul><li>Deck and fence renovation: washing, sanding, and staining prep</li><li>Siding washing</li><li>Driveway washing</li></ul>
