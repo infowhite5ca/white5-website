@@ -1,7 +1,7 @@
 #white5-ai-chat-root{font-family:Arial,sans-serif;color:#0b1f33;position:relative;z-index:2147482000}
 .white5-ai-launcher{position:fixed;right:18px;bottom:18px;z-index:2147482000;display:flex;align-items:center;gap:9px;min-height:58px;padding:0 18px;border:1px solid rgba(255,255,255,.48);border-radius:999px;background:linear-gradient(135deg,#0c4990,#2a5035);color:#fff;font:700 16px/1 Arial,sans-serif;box-shadow:0 14px 34px rgba(0,0,0,.35),0 0 0 4px rgba(94,203,255,.12);cursor:pointer;transition:transform .18s ease,box-shadow .18s ease}
 .white5-ai-launcher:hover{transform:translateY(-2px);box-shadow:0 18px 40px rgba(0,0,0,.4),0 0 0 5px rgba(94,203,255,.17)}
-.white5-ai-launcher:focus-visible,.white5-ai-panel button:focus-visible,.white5-ai-panel textarea:focus-visible,.white5-ai-panel a:focus-visible{outline:3px solid #ffd65c;outline-offset:2px}
+.white5-ai-launcher:focus-visible,.white5-ai-panel button:focus-visible,.white5-ai-panel textarea:focus-visible,.white5-ai-panel input:focus-visible,.white5-ai-panel a:focus-visible{outline:3px solid #ffd65c;outline-offset:2px}
 .white5-ai-launcher-icon{width:28px;height:28px;display:grid;place-items:center;border-radius:50%;background:rgba(255,255,255,.16);font-size:17px}
 .white5-ai-panel{position:fixed;right:18px;bottom:88px;z-index:2147482001;width:min(390px,calc(100vw - 28px));height:min(650px,calc(100vh - 116px));display:none;grid-template-rows:auto 1fr auto auto;background:#fff;border:1px solid rgba(11,31,51,.16);border-radius:22px;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.42)}
 .white5-ai-panel.is-open{display:grid;animation:white5AiOpen .18s ease-out}
@@ -38,6 +38,11 @@
 .white5-ai-attachment-status{min-height:0;margin:0 2px 7px;color:#567486;font-size:11px;line-height:1.25}
 .white5-ai-attachment-status:empty{display:none}
 .white5-ai-attachment-status.is-error{color:#9a3f00}
+.white5-ai-contact{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:0 0 8px}
+.white5-ai-contact input{min-width:0;height:36px;border:1px solid #c7d8e1;border-radius:10px;background:#f9fcfd;color:#0b1f33;padding:8px 10px;font:12px/1.2 Arial,sans-serif;outline:none}
+.white5-ai-contact-name{grid-column:1/-1}
+.white5-ai-contact input::placeholder{color:#718894}
+.white5-ai-contact input:disabled{opacity:.58;cursor:wait}
 .white5-ai-form{display:grid;grid-template-columns:44px 1fr 44px;gap:8px;align-items:end}
 .white5-ai-attach,.white5-ai-send{width:44px;height:44px;border:0;border-radius:14px;cursor:pointer}
 .white5-ai-attach{background:#edf5f9;color:#174a68;border:1px solid #c8dce6;font-size:19px}

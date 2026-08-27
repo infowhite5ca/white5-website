@@ -38,6 +38,11 @@
       <div class="white5-ai-compose">
         <div class="white5-ai-attachments" aria-label="Selected photos" hidden></div>
         <div class="white5-ai-attachment-status" role="status" aria-live="polite"></div>
+        <div class="white5-ai-contact" aria-label="Optional contact details">
+          <input class="white5-ai-contact-name" type="text" maxlength="100" autocomplete="name" placeholder="Name (optional)" aria-label="Name (optional)">
+          <input class="white5-ai-contact-email" type="email" maxlength="254" autocomplete="email" inputmode="email" placeholder="Email (optional)" aria-label="Email (optional)">
+          <input class="white5-ai-contact-phone" type="tel" maxlength="40" autocomplete="tel" inputmode="tel" placeholder="Phone (optional)" aria-label="Phone (optional)">
+        </div>
         <form class="white5-ai-form">
           <button class="white5-ai-attach" type="button" aria-label="Add photos" title="Add up to 4 photos">📎</button>
           <input class="white5-ai-file-input" type="file" accept="image/jpeg,image/png,image/webp" multiple hidden>
@@ -48,7 +53,7 @@
           <a href="/services.html#estimate">Get Quote</a>
           <a href="tel:14034793905">Call 403-479-3905</a>
         </div>
-        <div class="white5-ai-note">Add up to 4 photos. Your photos and chat message are also emailed to White5 for follow-up. Don’t upload IDs or payment information.</div>
+        <div class="white5-ai-note">Contact details are optional. Photos, your message, and any contact details you provide are emailed to White5 for follow-up. Don’t upload IDs or payment information.</div>
       </div>
     </section>
   `;
@@ -65,6 +70,10 @@
   const fileInput = root.querySelector(".white5-ai-file-input");
   const attachmentsElement = root.querySelector(".white5-ai-attachments");
   const attachmentStatus = root.querySelector(".white5-ai-attachment-status");
+  const contactName = root.querySelector(".white5-ai-contact-name");
+  const contactEmail = root.querySelector(".white5-ai-contact-email");
+  const contactPhone = root.querySelector(".white5-ai-contact-phone");
+  const contactInputs = [contactName, contactEmail, contactPhone];
   const quickButtons = [...root.querySelectorAll(".white5-ai-quick button")];
 
   let history = loadHistory();
@@ -158,6 +167,7 @@
     input.disabled = value;
     sendButton.disabled = value;
     attachButton.disabled = value || processingPhotos;
+    contactInputs.forEach((contactInput) => { contactInput.disabled = value; });
     quickButtons.forEach((button) => { button.disabled = value; });
     attachmentsElement.querySelectorAll("button").forEach((button) => { button.disabled = value; });
   }
@@ -355,6 +365,11 @@
           name: image.name,
           dataUrl: image.dataUrl,
         })),
+        contact: {
+          name: contactName.value.trim(),
+          email: contactEmail.value.trim(),
+          phone: contactPhone.value.trim(),
+        },
         page: {
           path: `${location.pathname}${location.hash}`,
           title: document.title,

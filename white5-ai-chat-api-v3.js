@@ -124,6 +124,18 @@ function sanitizeImages(value) {
   return { images, error: null };
 }
 
+function sanitizeContact(value) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return { name: "", email: "", phone: "" };
+  }
+
+  return {
+    name: cleanText(value.name, 100),
+    email: cleanText(value.email, 254),
+    phone: cleanText(value.phone, 40),
+  };
+}
+
 function extractOutputText(result) {
   if (typeof result?.output_text === "string" && result.output_text.trim()) {
     return result.output_text.trim();
@@ -267,6 +279,7 @@ export async function handleWhite5AiChat(request, env, ctx) {
   if (imageResult.error) {
     return json({ ok: false, error: imageResult.error }, 400);
   }
+  const contact = sanitizeContact(payload?.contact);
 
   const messages = sanitizeMessages(payload?.messages);
   if (!messages.length && imageResult.images.length) {
@@ -313,11 +326,13 @@ export async function handleWhite5AiChat(request, env, ctx) {
       messages,
       pagePath,
       pageTitle,
+      contact,
     }).then((messageId) => {
       console.log(JSON.stringify({
         message: "ai_photo_lead_sent",
         requestId,
         photoCount: imageResult.images.length,
+        hasContact: Boolean(contact.name || contact.email || contact.phone),
         messageId,
       }));
     }).catch((error) => {

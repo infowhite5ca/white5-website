@@ -136,6 +136,7 @@ function transcript(messages) {
 }
 
 async function sendPhotoLead(accessToken, account, details, attachments) {
+  const contact = details.contact || {};
   const content = [
     "NEW WHITE5 AI PHOTO LEAD",
     "",
@@ -143,6 +144,11 @@ async function sendPhotoLead(accessToken, account, details, attachments) {
     `Photos: ${details.photoCount}`,
     `Page: ${details.pageTitle} (${details.pagePath})`,
     `Submitted: ${new Date().toISOString()}`,
+    "",
+    "CONTACT DETAILS (OPTIONAL)",
+    `Name: ${clean(contact.name, 100) || "Not provided"}`,
+    `Email: ${clean(contact.email, 254) || "Not provided"}`,
+    `Phone: ${clean(contact.phone, 40) || "Not provided"}`,
     "",
     "CHAT TRANSCRIPT",
     transcript(details.messages),
@@ -178,7 +184,7 @@ async function sendPhotoLead(accessToken, account, details, attachments) {
   return messageId;
 }
 
-export async function notifyAiPhotoLead({ env, requestId, images, messages, pagePath, pageTitle }) {
+export async function notifyAiPhotoLead({ env, requestId, images, messages, pagePath, pageTitle, contact }) {
   const accessToken = await getAccessToken(env);
   const account = await getMailAccount(accessToken);
   const attachments = await uploadPhotos(accessToken, account.accountId, images);
@@ -188,5 +194,6 @@ export async function notifyAiPhotoLead({ env, requestId, images, messages, page
     messages,
     pagePath,
     pageTitle,
+    contact,
   }, attachments);
 }
