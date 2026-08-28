@@ -26,6 +26,18 @@ interface AuthDiagnostic {
   at: string;
 }
 
+export async function recordProtocolDiagnostic(
+  env: ConnectorEnv,
+  stage: "token_endpoint" | "mcp_access",
+  code: string,
+): Promise<void> {
+  await env.OAUTH_KV.put(
+    `auth-diagnostic:${stage}`,
+    JSON.stringify({ stage, code: code.slice(0, 300), at: new Date().toISOString() }),
+    { expirationTtl: AUTH_DIAGNOSTIC_TTL_SECONDS },
+  );
+}
+
 async function recordAuthDiagnostic(
   env: ConnectorEnv,
   stage: AuthDiagnostic["stage"],
@@ -209,8 +221,16 @@ export const authHandler: ExportedHandler<ConnectorEnv> = {
       return finishZohoAuthorization(request, env);
     }
     if (request.method === "GET" && url.pathname === "/auth-diagnostic") {
-      const diagnostic = await env.OAUTH_KV.get<AuthDiagnostic>(AUTH_DIAGNOSTIC_KEY, "json");
-      return Response.json(diagnostic ?? { stage: "none", code: "no_recent_attempt", at: null }, {
+      const [authorization, tokenEndpoint, mcpAccess] = await Promise.all([
+        env.OAUTH_KV.get<AuthDiagnostic>(AUTH_DIAGNOSTIC_KEY, "json"),
+        env.OAUTH_KV.get(`auth-diagnostic:token_endpoint`, "json"),
+        env.OAUTH_KV.get(`auth-diagnostic:mcp_access`, "json"),
+      ]);
+      return Response.json({
+        authorization: authorization ?? { stage: "none", code: "no_recent_attempt", at: null },
+        tokenEndpoint,
+        mcpAccess,
+      }, {
         headers: { "cache-control": "no-store" },
       });
     }
@@ -218,7 +238,7 @@ export const authHandler: ExportedHandler<ConnectorEnv> = {
       return Response.json({
         ok: true,
         service: "White5 Zoho Mail MCP",
-        version: "0.2.3",
+        version: "0.2.4",
         toolCount: 11,
         endpoint: "/mcp",
         authentication: "OAuth",
