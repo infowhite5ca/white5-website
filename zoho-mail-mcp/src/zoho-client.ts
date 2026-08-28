@@ -152,8 +152,9 @@ export async function zohoRequest(
   const payload = await parseJson(response);
   const apiCode = Number(asObject(payload.status).code ?? 0);
   if (!response.ok || (apiCode !== 0 && apiCode !== 200)) {
+    const description = zohoDescription(payload);
     throw new ZohoApiError(
-      `Zoho Mail API failed: ${zohoDescription(payload)}`,
+      `Zoho Mail API failed (HTTP ${response.status}): ${description}`,
       response.status === 401 || response.status === 403 ? response.status : 502,
     );
   }
