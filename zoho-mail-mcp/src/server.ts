@@ -2,7 +2,7 @@ import { McpServer } from "@modelcontextprotocol/server";
 import OAuthProvider from "@cloudflare/workers-oauth-provider";
 import { createMcpHandler, getMcpAuthContext } from "agents/mcp/server";
 import { z } from "zod";
-import { authHandler } from "./zoho-auth-handler";
+import { authHandler, recordProtocolDiagnostic } from "./zoho-auth-handler";
 import {
   type ConnectorEnv,
   type MailAuthProps,
@@ -504,7 +504,7 @@ const mcpHandler = {
   },
 } satisfies ExportedHandler<ConnectorEnv>;
 
-export default new OAuthProvider<ConnectorEnv>({
+const oauthProvider = new OAuthProvider<ConnectorEnv>({
   apiRoute: "/mcp",
   apiHandler: mcpHandler,
   defaultHandler: authHandler,
@@ -523,3 +523,22 @@ export default new OAuthProvider<ConnectorEnv>({
   refreshTokenTTL: 60 * 60 * 24 * 90,
   clientRegistrationTTL: 60 * 60 * 24 * 90,
 });
+
+export default {
+  async fetch(request, env, ctx) {
+    const response = await oauthProvider.fetch(request, env, ctx);
+    const pathname = new URL(request.url).pathname;
+    if (pathname === "/oauth/token") {
+      const payload: Record<string, unknown> = await response.clone()
+        .json<Record<string, unknown>>()
+        .catch(() => ({}));
+      const code = response.ok
+        ? "ok"
+        : `http_${response.status}:${String(payload.error ?? "unknown")}:${String(payload.error_description ?? "")}`;
+      await recordProtocolDiagnostic(env, "token_endpoint", code);
+    } else if (pathname === "/mcp") {
+      await recordProtocolDiagnostic(env, "mcp_access", `http_${response.status}`);
+    }
+    return response;
+  },
+} satisfies ExportedHandler<ConnectorEnv>;
