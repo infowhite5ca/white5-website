@@ -5,14 +5,18 @@ Private remote MCP connector for the `info@white5.ca` Zoho Mail mailbox. It is a
 ## Available tools
 
 - `list_folders` — list mailbox folders.
-- `list_emails` — list Inbox, Sent, or Drafts.
+- `list_emails` — list Inbox, Sent, Drafts, Spam, Trash, Archive, Notification, or Newsletter.
 - `search_emails` — search message text and metadata.
 - `read_email` — read one message body.
+- `mark_emails_read` — mark up to 50 messages as read or unread.
+- `archive_emails` — archive up to 50 messages.
+- `mark_emails_spam` — move up to 50 messages to Spam.
+- `delete_emails_to_trash` — move up to 50 confirmed messages to Trash; never permanently delete them.
 - `create_draft` — create a draft without sending.
 - `send_email` — send a new email after explicit user confirmation.
 - `reply_email` — send a reply after explicit user confirmation.
 
-Email deletion, bulk actions, mailbox settings, and attachments are intentionally excluded from the first version.
+Permanent deletion, mailbox settings, and attachments are intentionally excluded.
 
 ## Security model
 
@@ -73,6 +77,8 @@ The connector requests only:
 - `ZohoMail.folders.READ`
 - `ZohoMail.messages.READ`
 - `ZohoMail.messages.CREATE`
+- `ZohoMail.messages.UPDATE`
+- `ZohoMail.messages.DELETE`
 
 The Zoho authorization uses `access_type=offline` so the Worker receives a refresh token. Zoho access tokens are refreshed server-side when tools run.
 
@@ -96,4 +102,3 @@ npm run dry-run
 ```
 
 The dry run builds the exact Cloudflare Worker bundle without deploying it or sending email.
-
