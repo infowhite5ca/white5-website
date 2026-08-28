@@ -17,6 +17,7 @@ import {
 
 const READ_SCOPE = "mail:read";
 const WRITE_SCOPE = "mail:write";
+const SERVICE_ORIGIN = "https://white5-zoho-mail-mcp.volodymyronufriichuk68.workers.dev";
 const MAX_BODY_LENGTH = 50_000;
 const mailFolderSchema = z.enum([
   "inbox",
@@ -512,6 +513,8 @@ export default new OAuthProvider<ConnectorEnv>({
   clientRegistrationEndpoint: "/oauth/register",
   scopesSupported: [READ_SCOPE, WRITE_SCOPE],
   resourceMetadata: {
+    resource: `${SERVICE_ORIGIN}/mcp`,
+    authorization_servers: [SERVICE_ORIGIN],
     scopes_supported: [READ_SCOPE, WRITE_SCOPE],
     bearer_methods_supported: ["header"],
     resource_name: "White5 Zoho Mail",
