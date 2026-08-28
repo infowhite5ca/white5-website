@@ -6,6 +6,8 @@ export const ZOHO_MAIL_SCOPES = [
   "ZohoMail.folders.READ",
   "ZohoMail.messages.READ",
   "ZohoMail.messages.CREATE",
+  "ZohoMail.messages.UPDATE",
+  "ZohoMail.messages.DELETE",
 ] as const;
 
 export interface ConnectorEnv {
@@ -246,6 +248,9 @@ export async function findFolder(
     inbox: ["inbox"],
     sent: ["sent", "sent mail"],
     drafts: ["draft", "drafts"],
+    spam: ["spam", "junk"],
+    trash: ["trash", "deleted"],
+    archive: ["archive", "archived"],
   };
   const candidates = aliases[wanted] ?? [wanted];
   const folder = folders.find((item) =>
@@ -263,4 +268,3 @@ export function resultData(payload: JsonObject): JsonObject {
 export function resultItems(payload: JsonObject): unknown[] {
   return asArray(payload.data);
 }
-
