@@ -94,9 +94,16 @@ export async function exchangeAuthorizationCode(
   const payload = await parseJson(response);
   const accessToken = text(payload.access_token, 4_000);
   const refreshToken = text(payload.refresh_token, 4_000);
-  if (!response.ok || !accessToken || !refreshToken) {
+  const upstreamError = text(payload.error ?? payload.error_description, 300);
+  if (!response.ok || !accessToken) {
     throw new ZohoApiError(
-      `Zoho authorization failed: ${text(payload.error, 300) || response.status}`,
+      `Zoho authorization failed (HTTP ${response.status}): ${upstreamError || "missing access token"}`,
+      502,
+    );
+  }
+  if (!refreshToken) {
+    throw new ZohoApiError(
+      `Zoho authorization failed (HTTP ${response.status}): missing refresh token`,
       502,
     );
   }
