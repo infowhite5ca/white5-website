@@ -11,11 +11,47 @@ import {
 } from "./zoho-client";
 
 const AUTH_STATE_TTL_SECONDS = 10 * 60;
+const AUTH_DIAGNOSTIC_TTL_SECONDS = 15 * 60;
+const AUTH_DIAGNOSTIC_KEY = "auth-diagnostic:last";
 const CONNECTOR_SCOPES = ["mail:read", "mail:write"];
 
 interface StoredAuthorization {
   request: AuthRequest;
   createdAt: number;
+}
+
+interface AuthDiagnostic {
+  stage: "started" | "zoho_authorization" | "token_exchange" | "mailbox_verification" | "oauth_completion" | "completed";
+  code: string;
+  at: string;
+}
+
+async function recordAuthDiagnostic(
+  env: ConnectorEnv,
+  stage: AuthDiagnostic["stage"],
+  code: string,
+): Promise<void> {
+  await env.OAUTH_KV.put(
+    AUTH_DIAGNOSTIC_KEY,
+    JSON.stringify({ stage, code, at: new Date().toISOString() } satisfies AuthDiagnostic),
+    { expirationTtl: AUTH_DIAGNOSTIC_TTL_SECONDS },
+  );
+}
+
+function diagnosticCode(error: unknown): string {
+  const message = error instanceof Error ? error.message.toLowerCase() : "";
+  for (const code of [
+    "invalid_client",
+    "invalid_code",
+    "invalid_redirect_uri",
+    "invalid_scope",
+    "missing access token",
+    "missing refresh token",
+  ]) {
+    if (message.includes(code)) return code.replaceAll(" ", "_");
+  }
+  const status = message.match(/http (\d{3})/)?.[1];
+  return status ? `http_${status}` : "request_failed";
 }
 
 function safeOAuthError(error: AuthorizationError): Response {
@@ -66,6 +102,7 @@ async function beginZohoAuthorization(request: Request, env: ConnectorEnv): Prom
   await env.OAUTH_KV.put(`zoho-state:${state}`, JSON.stringify(stored), {
     expirationTtl: AUTH_STATE_TTL_SECONDS,
   });
+  await recordAuthDiagnostic(env, "started", "ok");
 
   const authorize = new URL(`${ZOHO_ACCOUNTS_BASE}/oauth/v2/auth`);
   authorize.searchParams.set("client_id", env.ZOHO_CLIENT_ID);
@@ -100,6 +137,7 @@ async function finishZohoAuthorization(request: Request, env: ConnectorEnv): Pro
 
   const upstreamError = url.searchParams.get("error");
   if (upstreamError) {
+    await recordAuthDiagnostic(env, "zoho_authorization", upstreamError.slice(0, 80));
     return redirectAuthorizationError(
       stored.request,
       "access_denied",
@@ -110,9 +148,25 @@ async function finishZohoAuthorization(request: Request, env: ConnectorEnv): Pro
   const code = url.searchParams.get("code") || "";
   if (!code) return redirectAuthorizationError(stored.request, "access_denied", "Zoho did not return an authorization code.");
 
+  let tokens: Awaited<ReturnType<typeof exchangeAuthorizationCode>>;
   try {
-    const tokens = await exchangeAuthorizationCode(env, code, callbackUri(request));
-    const mailbox = await identifyAllowedMailbox(env, tokens.accessToken);
+    tokens = await exchangeAuthorizationCode(env, code, callbackUri(request));
+  } catch (error) {
+    await recordAuthDiagnostic(env, "token_exchange", diagnosticCode(error));
+    const description = error instanceof Error ? error.message : "Zoho authorization failed.";
+    return redirectAuthorizationError(stored.request, "access_denied", description);
+  }
+
+  let mailbox: Awaited<ReturnType<typeof identifyAllowedMailbox>>;
+  try {
+    mailbox = await identifyAllowedMailbox(env, tokens.accessToken);
+  } catch (error) {
+    await recordAuthDiagnostic(env, "mailbox_verification", diagnosticCode(error));
+    const description = error instanceof Error ? error.message : "Zoho mailbox verification failed.";
+    return redirectAuthorizationError(stored.request, "access_denied", description);
+  }
+
+  try {
     const client = await env.OAUTH_PROVIDER.lookupClient(stored.request.clientId);
     if (!client) return new Response("OAuth client is no longer registered.", { status: 400 });
 
@@ -136,8 +190,10 @@ async function finishZohoAuthorization(request: Request, env: ConnectorEnv): Pro
       scope: scopes,
       props,
     });
+    await recordAuthDiagnostic(env, "completed", "ok");
     return Response.redirect(redirectTo, 302);
   } catch (error) {
+    await recordAuthDiagnostic(env, "oauth_completion", diagnosticCode(error));
     const description = error instanceof Error ? error.message : "Zoho authorization failed.";
     return redirectAuthorizationError(stored.request, "access_denied", description);
   }
@@ -152,11 +208,17 @@ export const authHandler: ExportedHandler<ConnectorEnv> = {
     if (request.method === "GET" && url.pathname === "/oauth/zoho/callback") {
       return finishZohoAuthorization(request, env);
     }
+    if (request.method === "GET" && url.pathname === "/auth-diagnostic") {
+      const diagnostic = await env.OAUTH_KV.get<AuthDiagnostic>(AUTH_DIAGNOSTIC_KEY, "json");
+      return Response.json(diagnostic ?? { stage: "none", code: "no_recent_attempt", at: null }, {
+        headers: { "cache-control": "no-store" },
+      });
+    }
     if (request.method === "GET" && url.pathname === "/") {
       return Response.json({
         ok: true,
         service: "White5 Zoho Mail MCP",
-        version: "0.2.1",
+        version: "0.2.2",
         toolCount: 11,
         endpoint: "/mcp",
         authentication: "OAuth",
