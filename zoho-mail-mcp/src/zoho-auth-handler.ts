@@ -188,7 +188,7 @@ async function finishZohoAuthorization(request: Request, env: ConnectorEnv): Pro
       return redirectAuthorizationError(stored.request, "invalid_scope", "No supported connector scope was requested.");
     }
     const props = {
-      userId: `zoho:${mailbox.accountId}:${mailbox.email}`,
+      userId: `zoho-${mailbox.accountId}`,
       email: mailbox.email,
       accountId: mailbox.accountId,
       fromAddress: mailbox.fromAddress,
@@ -238,7 +238,7 @@ export const authHandler: ExportedHandler<ConnectorEnv> = {
       return Response.json({
         ok: true,
         service: "White5 Zoho Mail MCP",
-        version: "0.2.4",
+        version: "0.2.5",
         toolCount: 11,
         endpoint: "/mcp",
         authentication: "OAuth",
