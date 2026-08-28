@@ -156,7 +156,7 @@ export const authHandler: ExportedHandler<ConnectorEnv> = {
       return Response.json({
         ok: true,
         service: "White5 Zoho Mail MCP",
-        version: "0.2.0",
+        version: "0.2.1",
         toolCount: 11,
         endpoint: "/mcp",
         authentication: "OAuth",
