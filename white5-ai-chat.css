@@ -56,3 +56,19 @@
 .white5-ai-note{margin:8px 2px 0;color:#66808f;font-size:10.5px;line-height:1.35;text-align:center}
 @media(max-width:640px){.white5-ai-launcher{right:12px;bottom:88px;min-height:54px;padding:0 15px}.white5-ai-panel{left:10px;right:10px;bottom:82px;width:auto;height:min(72vh,650px);border-radius:20px}.white5-ai-bubble{max-width:90%}.white5-ai-message-images img{height:78px}}
 @media(prefers-reduced-motion:reduce){.white5-ai-launcher,.white5-ai-panel,.white5-ai-messages{transition:none;animation:none;scroll-behavior:auto}}
+
+/* Mobile navigation: expose the site's existing nav instead of hiding it. */
+@media(max-width:1060px){
+  .topbar .topbar-inner{display:flex!important;flex-wrap:wrap!important;align-items:center!important;justify-content:center!important;gap:8px!important;padding:10px 0 8px!important}
+  .topbar .nav{display:flex!important;order:2;width:100%;max-width:100%;align-items:center;justify-content:flex-start;flex-wrap:nowrap!important;gap:8px!important;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;padding:2px 0 4px;font-size:17px!important;line-height:1.1;scrollbar-width:none}
+  .topbar .nav::-webkit-scrollbar{display:none}
+  .topbar .nav a{flex:0 0 auto;scroll-snap-align:start;display:inline-flex!important;align-items:center;justify-content:center;min-height:42px;padding:9px 14px;border:1px solid rgba(255,255,255,.18);border-radius:999px;background:rgba(255,255,255,.09);box-shadow:inset 0 1px 0 rgba(255,255,255,.08);white-space:nowrap;text-shadow:0 1px 2px rgba(0,0,0,.75),0 0 8px rgba(0,234,255,.35)!important}
+  .topbar .nav a:hover,.topbar .nav a:focus-visible{background:rgba(94,203,255,.16);border-color:rgba(94,203,255,.55)}
+  .topbar .nav .nav-cta{min-height:42px!important;padding:9px 16px!important}
+}
+@media(max-width:640px){
+  .topbar .topbar-inner{justify-content:center!important}
+  .topbar .logo-img{width:118px!important}
+  .topbar .nav{font-size:16px!important}
+  .topbar .nav a{min-height:40px;padding:8px 13px}
+}
