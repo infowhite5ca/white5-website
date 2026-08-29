@@ -1,0 +1,74 @@
+name: One-time White5 conversion tracking fix
+
+on:
+  push:
+    paths:
+      - '.github/workflows/one-time-fix-conversion-tracking.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix-conversion-tracking:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Replace false lead conversions with engagement events
+        shell: python
+        run: |
+          from pathlib import Path
+
+          index_path = Path('index.html')
+          index_text = index_path.read_text(encoding='utf-8')
+          index_old = """  function white5_report_conversion_event() {
+            gtag('event', 'conversion', {'send_to': 'AW-17206495005/4T4mCJ7N-64cEJ2O2YxA'});
+            gtag('event', 'conversion', {'send_to': 'AW-18208326566/BLZ_CNyjlcUcEKaHtOpD'});
+          }
+          function gtag_report_conversion(url) {
+            var callback = function () { if (typeof(url) !== 'undefined') { window.location = url; } };
+            gtag('event', 'conversion', {'send_to': 'AW-17206495005/4T4mCJ7N-64cEJ2O2YxA'});
+            gtag('event', 'conversion', {'send_to': 'AW-18208326566/BLZ_CNyjlcUcEKaHtOpD','event_callback': callback});
+            return false;
+          }
+          """
+          index_new = """  function white5_report_conversion_event() {
+            gtag('event', 'estimate_interest', {'event_category': 'engagement'});
+          }
+          function gtag_report_conversion(url) {
+            var eventName = (typeof url === 'string' && url.indexOf('tel:') === 0) ? 'phone_click' : 'contact_click';
+            gtag('event', eventName, {'event_category': 'engagement'});
+            if (typeof(url) !== 'undefined') { window.location = url; }
+            return false;
+          }
+          """
+          if index_old not in index_text:
+              raise SystemExit('Expected index.html conversion helper was not found; refusing to patch.')
+          index_path.write_text(index_text.replace(index_old, index_new, 1), encoding='utf-8')
+
+          gallery_path = Path('gallery.html')
+          gallery_text = gallery_path.read_text(encoding='utf-8')
+          gallery_old = """    function white5_report_conversion_event(){gtag('event','conversion',{'send_to':'AW-17206495005/4T4mCJ7N-64cEJ2O2YxA'});gtag('event','conversion',{'send_to':'AW-18208326566/BLZ_CNyjlcUcEKaHtOpD'});}
+              function gtag_report_conversion(url){var cb=function(){if(url)window.location=url};gtag('event','conversion',{'send_to':'AW-17206495005/4T4mCJ7N-64cEJ2O2YxA'});gtag('event','conversion',{'send_to':'AW-18208326566/BLZ_CNyjlcUcEKaHtOpD','event_callback':cb});return false;}
+          """
+          gallery_new = """    function white5_report_conversion_event(){gtag('event','estimate_interest',{'event_category':'engagement'});}
+              function gtag_report_conversion(url){var eventName=(typeof url==='string'&&url.indexOf('tel:')===0)?'phone_click':'contact_click';gtag('event',eventName,{'event_category':'engagement'});if(url)window.location=url;return false;}
+          """
+          if gallery_old not in gallery_text:
+              raise SystemExit('Expected gallery.html conversion helper was not found; refusing to patch.')
+          gallery_path.write_text(gallery_text.replace(gallery_old, gallery_new, 1), encoding='utf-8')
+
+          for path in (index_path, gallery_path):
+              text = path.read_text(encoding='utf-8')
+              if "gtag('event', 'conversion'" in text or "gtag('event','conversion'" in text:
+                  raise SystemExit(f'Google Ads conversion event still present in {path}')
+
+      - name: Commit tracking fix
+        run: |
+          git config user.name "White5 Automation"
+          git config user.email "info@white5.ca"
+          git add index.html gallery.html
+          git diff --cached --check
+          git commit -m "Fix false Google Ads conversion tracking"
+          git push
