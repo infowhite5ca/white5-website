@@ -267,6 +267,7 @@ type MetaOptions = {
   body?: Record<string, unknown>;
   authorization?: string;
   includeAppSecretProof?: boolean;
+  sanitizeResponse?: boolean;
 };
 
 class MetaApiError extends Error {
@@ -408,17 +409,18 @@ async function metaFetch(env: Env, path: string, options: MetaOptions = {}): Pro
   assertNoSecretFields(params);
   assertNoSecretFields(body);
 
+  const authorization = options.authorization || env.META_ACCESS_TOKEN;
   const url = new URL(`${GRAPH_ORIGIN}/${apiVersion(env)}/${path}`);
   addParams(url.searchParams, params);
   if (options.includeAppSecretProof !== false && env.META_APP_SECRET) {
     url.searchParams.set(
       "appsecret_proof",
-      await appSecretProof(env.META_ACCESS_TOKEN, env.META_APP_SECRET),
+      await appSecretProof(authorization, env.META_APP_SECRET),
     );
   }
 
   const headers = new Headers({ accept: "application/json" });
-  headers.set("authorization", `Bearer ${options.authorization || env.META_ACCESS_TOKEN}`);
+  headers.set("authorization", `Bearer ${authorization}`);
   const init: RequestInit = { method, headers };
   if (method !== "GET" && Object.keys(body).length > 0) {
     const form = new URLSearchParams();
@@ -430,7 +432,41 @@ async function metaFetch(env: Env, path: string, options: MetaOptions = {}): Pro
   const response = await fetch(url, init);
   const payload = await parseMetaResponse(response);
   if (!response.ok) throw new MetaApiError(response.status, payload);
-  return sanitizeMetaPayload(payload);
+  return options.sanitizeResponse === false ? payload : sanitizeMetaPayload(payload);
+}
+
+export async function getPageAccessToken(env: Env): Promise<string> {
+  const payload = await metaFetch(env, "me/assigned_pages", {
+    params: { fields: "id,name,access_token,tasks", limit: 100 },
+    sanitizeResponse: false,
+  }) as { data?: Array<Record<string, unknown>> };
+  const page = payload.data?.find((item) => String(item.id || "") === env.META_PAGE_ID);
+  const accessToken = page?.access_token;
+  if (typeof accessToken !== "string" || !accessToken) {
+    throw new Error(
+      `No Page access token is available for ${env.META_PAGE_ID}; assign the White5 Page to the System User with MANAGE_LEADS`,
+    );
+  }
+  return accessToken;
+}
+
+async function leadFetch(
+  env: Env,
+  path: string,
+  options: Omit<MetaOptions, "authorization"> = {},
+): Promise<unknown> {
+  const pageAccessToken = await getPageAccessToken(env);
+  return metaFetch(env, path, { ...options, authorization: pageAccessToken });
+}
+
+export async function fetchLeadForms(
+  env: Env,
+  limit: number,
+  after?: string,
+): Promise<unknown> {
+  return leadFetch(env, `${env.META_PAGE_ID}/leadgen_forms`, {
+    params: collectionParams("id,name,status,created_time,leads_count,locale", limit, after),
+  });
 }
 
 async function metaOutcome(
@@ -758,9 +794,7 @@ function createServer(env: Env): McpServer {
       inputSchema: { limit: limitSchema, after: z.string().min(1).max(1_000).optional() },
       annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
     },
-    async ({ limit, after }) => textResult(await metaFetch(env, `${env.META_PAGE_ID}/leadgen_forms`, {
-      params: collectionParams("id,name,status,created_time,leads_count,locale", limit, after),
-    })),
+    async ({ limit, after }) => textResult(await fetchLeadForms(env, limit, after)),
   );
 
   server.registerTool(
@@ -834,7 +868,7 @@ function createServer(env: Env): McpServer {
         case "creatives": return textResult(await metaFetch(env, `${adAccountId(env)}/adcreatives`, { params: collectionParams(CREATIVE_FIELDS, limit, after) }));
         case "page_access": return textResult(await metaOutcome(env, env.META_PAGE_ID, { params: { fields: "id,name,username,verification_status,tasks" } }));
         case "pixels": return textResult(await metaFetch(env, `${adAccountId(env)}/adspixels`, { params: { fields: "id,name,last_fired_time,is_created_by_business", limit } }));
-        case "lead_forms": return textResult(await metaFetch(env, `${env.META_PAGE_ID}/leadgen_forms`, { params: collectionParams("id,name,status,created_time,leads_count,locale", limit, after) }));
+        case "lead_forms": return textResult(await fetchLeadForms(env, limit, after));
       }
     },
   );
@@ -847,7 +881,11 @@ function createServer(env: Env): McpServer {
         inputSchema: { object_path: objectPathSchema, params: paramsSchema },
         annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
       },
-      async ({ object_path, params }) => textResult(await metaFetch(env, object_path, { params })),
+      async ({ object_path, params }) => textResult(
+        await (name === "get_lead_form" || name === "list_leads" || name === "get_lead"
+          ? leadFetch(env, object_path, { params })
+          : metaFetch(env, object_path, { params })),
+      ),
     );
   }
 
