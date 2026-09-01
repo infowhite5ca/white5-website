@@ -375,13 +375,12 @@
   </script>
   <script>
   function white5_report_conversion_event() {
-    gtag('event', 'conversion', {'send_to': 'AW-17206495005/4T4mCJ7N-64cEJ2O2YxA'});
-    gtag('event', 'conversion', {'send_to': 'AW-18208326566/BLZ_CNyjlcUcEKaHtOpD'});
+    gtag('event', 'estimate_interest', {'event_category': 'engagement'});
   }
   function gtag_report_conversion(url) {
-    var callback = function () { if (typeof(url) !== 'undefined') { window.location = url; } };
-    gtag('event', 'conversion', {'send_to': 'AW-17206495005/4T4mCJ7N-64cEJ2O2YxA'});
-    gtag('event', 'conversion', {'send_to': 'AW-18208326566/BLZ_CNyjlcUcEKaHtOpD','event_callback': callback});
+    var eventName = (typeof url === 'string' && url.indexOf('tel:') === 0) ? 'phone_click' : 'contact_click';
+    gtag('event', eventName, {'event_category': 'engagement'});
+    if (typeof(url) !== 'undefined') { window.location = url; }
     return false;
   }
 </script>
