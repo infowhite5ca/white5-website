@@ -287,16 +287,7 @@
     footer { padding: 26px 0 34px; color: rgba(238,247,255,0.76); font-size: 14px; border-top: 1px solid rgba(255,255,255,0.1); }
 
     @media (max-width: 1060px) {
-      .nav { display: none; }
-      .hero-grid, .quote-grid { grid-template-columns: 1fr; }
-      .services-grid, .reviews-grid, .faq-grid { grid-template-columns: 1fr; }
-      .service-card h3, .service-card p, .service-card ul { min-height: 0; }
-      .service-cover { height: auto; flex-basis: auto; aspect-ratio: 4 / 3; }
-    }
-
-    @media (max-width: 640px) {
-      body { overflow-x: hidden; padding-bottom: 92px; }
-      .container { width: min(100% - 22px, var(--max)); }
+      html, body { max-width: 100%; overflow-x: hidden; }
       .topbar { position: relative; }
       .topbar-inner {
         display: grid;
@@ -333,6 +324,15 @@
         grid-column: 1 / -1;
         color: #fff;
       }
+      .hero-grid, .quote-grid { grid-template-columns: 1fr; }
+      .services-grid, .reviews-grid, .faq-grid { grid-template-columns: 1fr; }
+      .service-card h3, .service-card p, .service-card ul { min-height: 0; }
+      .service-cover { height: auto; flex-basis: auto; aspect-ratio: 4 / 3; }
+    }
+
+    @media (max-width: 640px) {
+      body { overflow-x: hidden; padding-bottom: 92px; }
+      .container { width: min(100% - 22px, var(--max)); }
       .hero { padding: 30px 0 20px; }
       .hero-main { text-align: center; margin: 0 auto; }
       h1 { font-size: clamp(38px, 12vw, 54px); line-height: 0.98; }
