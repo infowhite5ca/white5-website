@@ -375,12 +375,13 @@
   </script>
   <script>
   function white5_report_conversion_event() {
-    gtag('event', 'estimate_interest', {'event_category': 'engagement'});
+    gtag('event', 'conversion', {'send_to': 'AW-17206495005/4T4mCJ7N-64cEJ2O2YxA'});
+    gtag('event', 'conversion', {'send_to': 'AW-18208326566/BLZ_CNyjlcUcEKaHtOpD'});
   }
   function gtag_report_conversion(url) {
-    var eventName = (typeof url === 'string' && url.indexOf('tel:') === 0) ? 'phone_click' : 'contact_click';
-    gtag('event', eventName, {'event_category': 'engagement'});
-    if (typeof(url) !== 'undefined') { window.location = url; }
+    var callback = function () { if (typeof(url) !== 'undefined') { window.location = url; } };
+    gtag('event', 'conversion', {'send_to': 'AW-17206495005/4T4mCJ7N-64cEJ2O2YxA'});
+    gtag('event', 'conversion', {'send_to': 'AW-18208326566/BLZ_CNyjlcUcEKaHtOpD','event_callback': callback});
     return false;
   }
 </script>
@@ -458,7 +459,6 @@
     <section class="quote-section" id="quote">
       <div class="container quote-grid">
         <div class="section-head"><h2>Quick Estimate</h2><p>Enter the approximate size of your house to get a simple starting estimate. For a detailed service estimate, use the services page.</p><div class="hero-actions"><a onclick="white5_report_conversion_event();" class="water-btn" href="services.html#quote">Detailed Estimate</a></div></div>
-        <aside class="quote-card"><h3>Starting Price</h3><p>This simple calculator gives a starting point for exterior cleaning.</p><div class="quote-calculator"><label for="houseSize">House size, sq ft</label><input id="houseSize" type="number" min="0" placeholder="Example: 1800"><button type="button" onclick="white5_report_conversion_event(); calculateEstimate()">Calculate Estimate</button><div class="quote-result">Estimated starting price:<strong id="estimateOutput">$0</strong></div></div></aside>
       </div>
     </section>
 
