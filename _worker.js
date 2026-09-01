@@ -225,6 +225,88 @@ const HOME_SERVICE_STYLES = `
   </style>
 `;
 
+const HOME_MOBILE_NAV_STYLES = `
+  <style id="white5-home-mobile-nav-fix">
+    @media (max-width: 1060px) {
+      html, body {
+        max-width: 100% !important;
+        overflow-x: hidden !important;
+      }
+
+      .topbar {
+        position: relative !important;
+        overflow: hidden !important;
+      }
+
+      .topbar .topbar-inner {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) !important;
+        justify-content: stretch !important;
+        gap: 12px !important;
+        padding: 12px 0 14px !important;
+      }
+
+      .topbar .topbar-inner > a {
+        justify-self: center !important;
+      }
+
+      .topbar .logo-img {
+        width: 108px !important;
+      }
+
+      .topbar .nav {
+        display: grid !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 8px !important;
+        margin: 0 !important;
+        overflow: visible !important;
+        font-size: 20px !important;
+      }
+
+      .topbar .nav a {
+        min-width: 0 !important;
+        width: 100% !important;
+        min-height: 46px !important;
+        padding: 0 10px !important;
+        margin: 0 !important;
+        border-radius: 999px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        white-space: nowrap !important;
+      }
+
+      .topbar .nav a[href$="faq.html"] {
+        order: 4 !important;
+      }
+
+      .topbar .nav .nav-cta {
+        order: 5 !important;
+        grid-column: 1 / -1 !important;
+        color: #fff !important;
+      }
+    }
+
+    @media (max-width: 390px) {
+      .topbar .logo-img {
+        width: 96px !important;
+      }
+
+      .topbar .nav {
+        gap: 7px !important;
+        font-size: 18px !important;
+      }
+
+      .topbar .nav a {
+        min-height: 44px !important;
+        padding: 0 8px !important;
+      }
+    }
+  </style>
+`;
+
 const HOME_FAQ_CONTENT = `<div class="container">
   <div class="section-head">
     <h2>Frequently Asked Questions</h2>
@@ -394,9 +476,11 @@ export default {
       rewriter = rewriter.on("head", new HtmlAppender(GOOGLE_ADS_TAG_SCRIPT));
     }
 
-    if (url.pathname === "/" || url.pathname === "/index.html") {
+    const isHomePage = url.pathname === "/" || url.pathname === "/index.html";
+
+    if (isHomePage) {
       rewriter = rewriter
-        .on("head", new HtmlAppender(HOME_SERVICE_STYLES))
+        .on("head", new HtmlAppender(HOME_SERVICE_STYLES + HOME_MOBILE_NAV_STYLES))
         .on("#faq", new HomeFaqRewriter());
     }
 
@@ -404,6 +488,23 @@ export default {
       rewriter = rewriter.on("head", new HtmlAppender(SERVICES_BACKGROUND_STYLES));
     }
 
-    return rewriter.transform(response);
+    const transformedResponse = rewriter.transform(response);
+
+    if (isHomePage) {
+      const freshHeaders = new Headers(transformedResponse.headers);
+      freshHeaders.set("Cache-Control", "no-store, no-cache, must-revalidate");
+      freshHeaders.set("Pragma", "no-cache");
+      freshHeaders.set("Expires", "0");
+      freshHeaders.delete("ETag");
+      freshHeaders.delete("Content-Length");
+
+      return new Response(transformedResponse.body, {
+        status: transformedResponse.status,
+        statusText: transformedResponse.statusText,
+        headers: freshHeaders,
+      });
+    }
+
+    return transformedResponse;
   },
 };
