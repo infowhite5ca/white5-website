@@ -38,6 +38,13 @@ const CHAT_ASSETS = `
   <script defer src="/white5-ai-chat.js?v=optional-contact-1"></script>
 `;
 
+const SITE_SHELL_ASSETS = `
+  <link rel="stylesheet" href="/site.css?v=ia-20260902">
+  <script defer src="/site.js?v=ia-20260902"></script>
+`;
+
+const SITE_HEADER_HTML = "<div class=\"site-header__inner\">\n  <a class=\"site-logo\" href=\"/\" aria-label=\"White5 home\"><img src=\"/logo.png\" alt=\"White5 Exterior Cleaning\"></a>\n  <button class=\"nav-toggle\" type=\"button\" aria-expanded=\"false\" aria-controls=\"site-menu\" aria-label=\"Open menu\"><span class=\"nav-toggle__bars\" aria-hidden=\"true\"></span></button>\n  <nav class=\"site-nav\" id=\"site-menu\" aria-label=\"Main navigation\">\n    <a href=\"/\">Home</a>\n    <div class=\"nav-dropdown\">\n      <button class=\"nav-dropdown__button\" type=\"button\" aria-expanded=\"false\">Services <span class=\"chevron\" aria-hidden=\"true\"></span></button>\n      <div class=\"nav-dropdown__menu\">\n        <a href=\"/window-cleaning.html\">Window Cleaning</a>\n        <a href=\"/gutter-cleaning.html\">Gutter Cleaning</a>\n        <a href=\"/pressure-washing.html\">Pressure Washing</a>\n        <a href=\"/deck-cleaning-staining.html\">Deck Cleaning &amp; Staining</a>\n      </div>\n    </div>\n    <a href=\"/#gallery\">Gallery</a>\n    <a href=\"/#about\">About</a>\n    <a href=\"/#contact\">Contact</a>\n    <a class=\"site-nav__cta\" href=\"/services.html#estimate\">Get Free Estimate</a>\n  </nav>\n</div>";
+
 const SERVICES_BACKGROUND_STYLES = `
   <style id="white5-service-backgrounds">
     #estimate > .container > .service-row {
@@ -369,21 +376,16 @@ class HtmlAppender {
   }
 }
 
-class NavigationFaqInjector {
+class MainHeaderRewriter {
   element(element) {
-    element.append('<a href="/faq.html">FAQ</a>', { html: true });
-  }
-}
-
-class HomeFaqRewriter {
-  element(element) {
-    element.setInnerContent(HOME_FAQ_CONTENT, { html: true });
+    element.setInnerContent(SITE_HEADER_HTML, { html: true });
+    element.setAttribute("class", "topbar site-header");
   }
 }
 
 class PrivacyFooterInjector {
   element(element) {
-    element.append(' | <a href="/faq.html">FAQ</a> | <a href="/privacy.html">Privacy Policy</a>', { html: true });
+    element.append(' | <a href="/#faq">FAQ</a> | <a href="/privacy.html">Privacy Policy</a>', { html: true });
   }
 }
 
@@ -397,6 +399,14 @@ class ConsentInputInjector {
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
+
+    if (url.pathname === "/faq" || url.pathname === "/faq.html") {
+      return Response.redirect(new URL("/#faq", url), 301);
+    }
+
+    if (url.pathname === "/gallery" || url.pathname === "/gallery.html") {
+      return Response.redirect(new URL("/#gallery", url), 301);
+    }
 
     if (url.pathname === "/api/ai-chat") {
       return handleWhite5AiChat(request, env, ctx);
@@ -467,8 +477,8 @@ export default {
     }
 
     let rewriter = new HTMLRewriter()
-      .on("head", new HtmlAppender(CHAT_ASSETS))
-      .on("nav.nav", new NavigationFaqInjector())
+      .on("head", new HtmlAppender(CHAT_ASSETS + SITE_SHELL_ASSETS))
+      .on("header.topbar", new MainHeaderRewriter())
       .on("footer .container", new PrivacyFooterInjector())
       .on("#consent", new ConsentInputInjector());
 
@@ -479,9 +489,7 @@ export default {
     const isHomePage = url.pathname === "/" || url.pathname === "/index.html";
 
     if (isHomePage) {
-      rewriter = rewriter
-        .on("head", new HtmlAppender(HOME_SERVICE_STYLES + HOME_MOBILE_NAV_STYLES))
-        .on("#faq", new HomeFaqRewriter());
+      rewriter = rewriter.on("head", new HtmlAppender(HOME_SERVICE_STYLES));
     }
 
     if (url.pathname === "/services" || url.pathname === "/services.html") {
