@@ -38,13 +38,6 @@ const CHAT_ASSETS = `
   <script defer src="/white5-ai-chat.js?v=optional-contact-1"></script>
 `;
 
-const SITE_SHELL_ASSETS = `
-  <link rel="stylesheet" href="/site.css?v=ia-20260902">
-  <script defer src="/site.js?v=ia-20260902"></script>
-`;
-
-const SITE_HEADER_HTML = "<div class=\"site-header__inner\">\n  <a class=\"site-logo\" href=\"/\" aria-label=\"White5 home\"><img src=\"/logo.png\" alt=\"White5 Exterior Cleaning\"></a>\n  <button class=\"nav-toggle\" type=\"button\" aria-expanded=\"false\" aria-controls=\"site-menu\" aria-label=\"Open menu\"><span class=\"nav-toggle__bars\" aria-hidden=\"true\"></span></button>\n  <nav class=\"site-nav\" id=\"site-menu\" aria-label=\"Main navigation\">\n    <a href=\"/\">Home</a>\n    <div class=\"nav-dropdown\">\n      <button class=\"nav-dropdown__button\" type=\"button\" aria-expanded=\"false\">Services <span class=\"chevron\" aria-hidden=\"true\"></span></button>\n      <div class=\"nav-dropdown__menu\">\n        <a href=\"/window-cleaning\">Window Cleaning</a>\n        <a href=\"/gutter-cleaning\">Gutter Cleaning</a>\n        <a href=\"/pressure-washing\">Pressure Washing</a>\n        <a href=\"/deck-cleaning-staining\">Deck Cleaning &amp; Staining</a>\n      </div>\n    </div>\n    <a href=\"/#gallery\">Gallery</a>\n    <a href=\"/#about\">About</a>\n    <a href=\"/#contact\">Contact</a>\n    <a class=\"site-nav__cta\" href=\"/services.html#estimate\">Get Free Estimate</a>\n  </nav>\n</div>";
-
 const SERVICES_BACKGROUND_STYLES = `
   <style id="white5-service-backgrounds">
     #estimate > .container > .service-row {
@@ -232,6 +225,140 @@ const HOME_SERVICE_STYLES = `
   </style>
 `;
 
+const HOME_MOBILE_NAV_STYLES = `
+  <style id="white5-home-mobile-nav-fix">
+    @media (max-width: 1060px) {
+      html, body {
+        max-width: 100% !important;
+        overflow-x: hidden !important;
+      }
+
+      .topbar {
+        position: relative !important;
+        overflow: hidden !important;
+      }
+
+      .topbar .topbar-inner {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) !important;
+        justify-content: stretch !important;
+        gap: 12px !important;
+        padding: 12px 0 14px !important;
+      }
+
+      .topbar .topbar-inner > a {
+        justify-self: center !important;
+      }
+
+      .topbar .logo-img {
+        width: 108px !important;
+      }
+
+      .topbar .nav {
+        display: grid !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 8px !important;
+        margin: 0 !important;
+        overflow: visible !important;
+        font-size: 20px !important;
+      }
+
+      .topbar .nav a {
+        min-width: 0 !important;
+        width: 100% !important;
+        min-height: 46px !important;
+        padding: 0 10px !important;
+        margin: 0 !important;
+        border-radius: 999px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        white-space: nowrap !important;
+      }
+
+      .topbar .nav a[href$="faq.html"] {
+        order: 4 !important;
+      }
+
+      .topbar .nav .nav-cta {
+        order: 5 !important;
+        grid-column: 1 / -1 !important;
+        color: #fff !important;
+      }
+    }
+
+    @media (max-width: 390px) {
+      .topbar .logo-img {
+        width: 96px !important;
+      }
+
+      .topbar .nav {
+        gap: 7px !important;
+        font-size: 18px !important;
+      }
+
+      .topbar .nav a {
+        min-height: 44px !important;
+        padding: 0 8px !important;
+      }
+    }
+  </style>
+`;
+
+const HOME_FAQ_CONTENT = `<div class="container">
+  <div class="section-head">
+    <h2>Frequently Asked Questions</h2>
+    <p>Clear answers about pricing, appointments, preparation, insurance, and expected results.</p>
+  </div>
+  <div class="faq-grid">
+    <article class="faq-card">
+      <h3>How much does window cleaning cost in Calgary?</h3>
+      <p>Pricing depends on the number and size of windows, property height, access, and the services selected. White5 provides free estimates, and clear photos help us quote more accurately.</p>
+    </article>
+    <article class="faq-card">
+      <h3>Do you clean gutters and eavestroughs in Calgary?</h3>
+      <p>Yes. Standard cleaning includes accessible debris removal, a basic downspout-flow check, and a visual inspection of the cleaned areas.</p>
+    </article>
+    <article class="faq-card">
+      <h3>Do you offer power washing for driveways and patios?</h3>
+      <p>Yes. White5 cleans suitable driveways, sidewalks, patios, siding, decks, fences, and other exterior surfaces using a method appropriate for the material and condition.</p>
+    </article>
+    <article class="faq-card">
+      <h3>Do you provide free estimates?</h3>
+      <p>Yes. Estimates are free. You can use the online estimator or send your address, service details, and photos for a more accurate quote.</p>
+    </article>
+    <article class="faq-card">
+      <h3>What areas do you serve?</h3>
+      <p>White5 serves Calgary and nearby communities, including Airdrie, Chestermere, and Okotoks. Availability may depend on the location and size of the job.</p>
+    </article>
+    <article class="faq-card">
+      <h3>Is White5 insured?</h3>
+      <p>Yes. White5 carries $2 million in liability insurance for exterior cleaning work. Proof of insurance can be provided when required.</p>
+    </article>
+    <article class="faq-card">
+      <h3>Do I need to be home?</h3>
+      <p>For exterior-only work, usually not, as long as safe access has been arranged. Someone must be present when interior access is required unless another arrangement is confirmed.</p>
+    </article>
+    <article class="faq-card">
+      <h3>What happens if the weather is bad?</h3>
+      <p>Light rain may not stop the work, but heavy rain, thunderstorms, strong winds, freezing temperatures, or unsafe roof conditions may require rescheduling.</p>
+    </article>
+    <article class="faq-card">
+      <h3>Will purified water remove hard-water stains?</h3>
+      <p>Purified water removes normal dirt and residue, but established mineral staining or glass damage may require separate restoration treatment.</p>
+    </article>
+    <article class="faq-card">
+      <h3>What should I send for an accurate quote?</h3>
+      <p>Send the property address, requested service, number of storeys, clear photos, access concerns, and details about heavy buildup, damage, or special stains.</p>
+    </article>
+  </div>
+  <div class="hero-actions">
+    <a class="water-btn" href="/faq.html">View All Questions</a>
+  </div>
+</div>`;
+
 class HtmlAppender {
   constructor(content) {
     this.content = content;
@@ -242,16 +369,21 @@ class HtmlAppender {
   }
 }
 
-class MainHeaderRewriter {
+class NavigationFaqInjector {
   element(element) {
-    element.setInnerContent(SITE_HEADER_HTML, { html: true });
-    element.setAttribute("class", "topbar site-header");
+    element.append('<a href="/faq.html">FAQ</a>', { html: true });
+  }
+}
+
+class HomeFaqRewriter {
+  element(element) {
+    element.setInnerContent(HOME_FAQ_CONTENT, { html: true });
   }
 }
 
 class PrivacyFooterInjector {
   element(element) {
-    element.append(' | <a href="/#faq">FAQ</a> | <a href="/privacy.html">Privacy Policy</a>', { html: true });
+    element.append(' | <a href="/faq.html">FAQ</a> | <a href="/privacy.html">Privacy Policy</a>', { html: true });
   }
 }
 
@@ -265,14 +397,6 @@ class ConsentInputInjector {
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
-
-    if (url.pathname === "/faq" || url.pathname === "/faq.html") {
-      return Response.redirect(new URL("/#faq", url), 301);
-    }
-
-    if (url.pathname === "/gallery" || url.pathname === "/gallery.html") {
-      return Response.redirect(new URL("/#gallery", url), 301);
-    }
 
     if (url.pathname === "/api/ai-chat") {
       return handleWhite5AiChat(request, env, ctx);
@@ -343,8 +467,8 @@ export default {
     }
 
     let rewriter = new HTMLRewriter()
-      .on("head", new HtmlAppender(CHAT_ASSETS + SITE_SHELL_ASSETS))
-      .on("header.topbar", new MainHeaderRewriter())
+      .on("head", new HtmlAppender(CHAT_ASSETS))
+      .on("nav.nav", new NavigationFaqInjector())
       .on("footer .container", new PrivacyFooterInjector())
       .on("#consent", new ConsentInputInjector());
 
@@ -355,7 +479,9 @@ export default {
     const isHomePage = url.pathname === "/" || url.pathname === "/index.html";
 
     if (isHomePage) {
-      rewriter = rewriter.on("head", new HtmlAppender(HOME_SERVICE_STYLES));
+      rewriter = rewriter
+        .on("head", new HtmlAppender(HOME_SERVICE_STYLES + HOME_MOBILE_NAV_STYLES))
+        .on("#faq", new HomeFaqRewriter());
     }
 
     if (url.pathname === "/services" || url.pathname === "/services.html") {
