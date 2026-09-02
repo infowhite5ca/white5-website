@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /meta-admin
+Disallow: /zoho-admin
+Disallow: /zoho-token-exchange
+
+Sitemap: https://www.white5.ca/sitemap.xml
