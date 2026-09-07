@@ -473,8 +473,12 @@ export default {
     let rewriter = new HTMLRewriter()
       .on("head", new HtmlAppender(CHAT_ASSETS))
       .on("nav.nav", new NavigationFaqInjector())
-      .on("footer:not(.site-footer) .container", new PrivacyFooterInjector())
       .on("#consent", new ConsentInputInjector());
+
+    const isWindowCleaningPage = url.pathname === "/window-cleaning" || url.pathname === "/window-cleaning.html";
+    if (!isWindowCleaningPage) {
+      rewriter = rewriter.on("footer .container", new PrivacyFooterInjector());
+    }
 
     if (!GOOGLE_TAG_ALREADY_EMBEDDED_PATHS.has(url.pathname)) {
       rewriter = rewriter.on("head", new HtmlAppender(GOOGLE_ADS_TAG_SCRIPT));
