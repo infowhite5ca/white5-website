@@ -2,7 +2,7 @@ import { createPausedDeckFenceCampaignWithBudgetFix } from "./meta-deck-fence-ca
 
 const META_API_VERSION = "v25.0";
 const AD_NAME = "White5 | Deck & Fence Renovation | Deck Photo 1";
-const LANDING_PAGE_URL = "https://www.white5.ca/deck-fence-quote.html";
+const LANDING_PAGE_URL = "https://www.white5.ca/deck-fence-cleaning";
 const FALLBACK_IMAGE_URL = "https://www.white5.ca/images/power-washing-1.jpg";
 
 function json(data, status = 200) {

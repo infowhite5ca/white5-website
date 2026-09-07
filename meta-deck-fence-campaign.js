@@ -6,7 +6,7 @@ const CAMPAIGN = Object.freeze({
   adName: "White5 | Deck & Fence Renovation | Deck Photo 1",
   dailyBudgetMinor: 2000,
   pixelId: "1587609516129238",
-  landingPageUrl: "https://www.white5.ca/deck-fence-quote.html",
+  landingPageUrl: "https://www.white5.ca/deck-fence-cleaning",
   imageUrl: "https://www.white5.ca/images/meta-deck-ad.jpg",
   primaryText: "Calgary homeowners — is your deck or fence looking grey, worn, or weathered? White5 provides careful washing, sanding, staining, and minor wood repairs. Send us a few photos and request your free estimate online.",
   headline: "Restore Your Deck or Fence",

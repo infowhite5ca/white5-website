@@ -398,6 +398,11 @@ export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
 
+    if (url.pathname === "/deck-fence-quote" || url.pathname === "/deck-fence-quote.html") {
+      url.pathname = "/deck-fence-cleaning";
+      return Response.redirect(url.toString(), 301);
+    }
+
     if (url.pathname === "/api/ai-chat") {
       return handleWhite5AiChat(request, env, ctx);
     }
@@ -475,7 +480,7 @@ export default {
       .on("nav.nav", new NavigationFaqInjector())
       .on("#consent", new ConsentInputInjector());
 
-    const serviceLandingPaths = ["/window-cleaning", "/gutter-cleaning", "/pressure-washing"];
+    const serviceLandingPaths = ["/window-cleaning", "/gutter-cleaning", "/pressure-washing", "/deck-fence-cleaning"];
     const isServiceLandingPage = serviceLandingPaths.some(path => url.pathname === path || url.pathname === `${path}.html`);
     if (!isServiceLandingPage) {
       rewriter = rewriter.on("footer .container", new PrivacyFooterInjector());
