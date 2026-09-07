@@ -1,6 +1,6 @@
 const META_API_VERSION = "v25.0";
 const DECK_AD_ID = "120250694591460755";
-const EXPECTED_URL = "https://www.white5.ca/deck-fence-quote.html";
+const EXPECTED_URL = "https://www.white5.ca/deck-fence-cleaning";
 
 function json(data, status = 200) {
   return new Response(JSON.stringify(data, null, 2), {
