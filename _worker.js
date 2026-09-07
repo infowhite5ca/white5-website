@@ -11,7 +11,7 @@ import { handleZohoStatus, handleZohoTestSend } from "./zoho-diagnostic-api.js";
 import { handleZohoInbox, handleZohoMessage } from "./zoho-mail-reader-api.js";
 import { handleZohoTokenDiagnostic } from "./zoho-token-diagnostic.js";
 import { handleWhite5AiChat } from "./white5-ai-chat-api-v3.js";
-import { handleServiceRequest } from "./service-request-api.js";
+import { handleServiceRequest, handleServiceRequestConfig } from "./service-request-api.js";
 
 const GOOGLE_ADS_TAG_ID = "AW-18208326566";
 const GOOGLE_ADS_TAG_SCRIPT = `
@@ -406,6 +406,10 @@ export default {
       return handleServiceRequest(request, env);
     }
 
+    if (url.pathname === "/api/service-request-config") {
+      return handleServiceRequestConfig(request, env);
+    }
+
     if (url.pathname === "/api/meta/create-window-campaign") {
       return createPausedWindowCampaignWithProfileRetry(request, env);
     }
@@ -469,8 +473,13 @@ export default {
     let rewriter = new HTMLRewriter()
       .on("head", new HtmlAppender(CHAT_ASSETS))
       .on("nav.nav", new NavigationFaqInjector())
-      .on("footer .container", new PrivacyFooterInjector())
       .on("#consent", new ConsentInputInjector());
+
+    const serviceLandingPaths = ["/window-cleaning", "/gutter-cleaning", "/pressure-washing"];
+    const isServiceLandingPage = serviceLandingPaths.some(path => url.pathname === path || url.pathname === `${path}.html`);
+    if (!isServiceLandingPage) {
+      rewriter = rewriter.on("footer .container", new PrivacyFooterInjector());
+    }
 
     if (!GOOGLE_TAG_ALREADY_EMBEDDED_PATHS.has(url.pathname)) {
       rewriter = rewriter.on("head", new HtmlAppender(GOOGLE_ADS_TAG_SCRIPT));

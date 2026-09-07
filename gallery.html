@@ -38,9 +38,32 @@
     function white5_report_conversion_event(){gtag('event','estimate_interest',{'event_category':'engagement'});}
     function gtag_report_conversion(url){var eventName=(typeof url==='string'&&url.indexOf('tel:')===0)?'phone_click':'contact_click';gtag('event',eventName,{'event_category':'engagement'});if(url)window.location=url;return false;}
   </script>
+  <link rel="stylesheet" href="/white5-navigation.css?v=1">
+  <script defer src="/white5-navigation.js?v=1"></script>
 </head>
 <body>
-<header class="topbar"><div class="container topbar-inner"><a href="index.html"><img src="logo.png" alt="White5 Exterior Cleaning logo" class="logo-img"></a><nav class="nav"><a href="index.html">Home</a><a href="#window-cleaning">Windows</a><a href="#gutter-cleaning">Gutters</a><a href="#power-washing">Power Washing</a><a href="#deck-fence-restoration">Deck & Fence</a><a class="nav-cta" onclick="return gtag_report_conversion('tel:14034793905');" href="tel:14034793905">Call Now</a></nav></div></header>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="site-header__brand" href="/" aria-label="White5 home"><img src="/logo.png" alt="White5 Exterior Cleaning" width="1536" height="1024"></a>
+      <button class="site-header__toggle" type="button" aria-controls="site-navigation" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg> Menu</button>
+      <nav class="site-navigation" id="site-navigation" aria-label="Main navigation">
+        <a href="/">Home</a>
+        <details>
+          <summary>Services</summary>
+          <div class="site-navigation__services">
+            <a href="/window-cleaning">Window Cleaning</a>
+            <a href="/gutter-cleaning">Gutter Cleaning</a>
+            <a href="/pressure-washing">Pressure Washing</a>
+            <a href="/deck-fence-quote.html">Deck Cleaning &amp; Staining</a>
+          </div>
+        </details>
+        <a href="/gallery.html">Gallery</a>
+        <a href="/window-cleaning#about">About</a>
+        <a href="/index.html#contact">Contact</a>
+      </nav>
+      <a class="site-header__quote" href="/services.html#estimate">Get Free Estimate</a>
+    </div>
+  </header>
 <main>
 <section class="page-hero"><div class="container page-hero-inner"><p class="eyebrow">White5 Exterior Cleaning | Calgary</p><h1>Gallery</h1><p>White5 exterior cleaning, window cleaning, gutter cleaning, power washing, and deck and fence restoration projects around Calgary.</p><div class="hero-actions"><a class="water-btn" onclick="white5_report_conversion_event();" href="index.html#quote">Get a Free Quote</a><a class="ghost-btn" href="tel:14034793905">Call 403-479-3905</a></div></div></section>
 
