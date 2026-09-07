@@ -38,6 +38,69 @@ const CHAT_ASSETS = `
   <script defer src="/white5-ai-chat.js?v=optional-contact-1"></script>
 `;
 
+const WHATSAPP_FLOATING_BUTTON_STYLES = `
+  <style id="white5-whatsapp-float-styles">
+    .white5-whatsapp-float {
+      position: fixed;
+      left: 18px;
+      bottom: 18px;
+      z-index: 2147481900;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 58px;
+      padding: 10px 18px 10px 11px;
+      border: 2px solid rgba(255,255,255,.94);
+      border-radius: 999px;
+      background: linear-gradient(135deg, #128c46, #25d366);
+      color: #fff;
+      box-shadow: 0 15px 36px rgba(0,0,0,.34), 0 0 0 5px rgba(37,211,102,.18);
+      font: 800 16px/1 Arial, sans-serif;
+      letter-spacing: .01em;
+      text-decoration: none;
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .white5-whatsapp-float:hover {
+      transform: translateY(-2px) scale(1.02);
+      color: #fff;
+      box-shadow: 0 19px 42px rgba(0,0,0,.4), 0 0 0 7px rgba(37,211,102,.22);
+    }
+    .white5-whatsapp-float:focus-visible {
+      outline: 3px solid #ffd65c;
+      outline-offset: 3px;
+      color: #fff;
+    }
+    .white5-whatsapp-float__icon {
+      width: 34px;
+      height: 34px;
+      display: block;
+      border-radius: 50%;
+      background: #fff;
+      object-fit: cover;
+    }
+    .white5-whatsapp-float__label { white-space: nowrap; }
+    @media (max-width: 640px) {
+      .white5-whatsapp-float {
+        left: 12px;
+        bottom: calc(92px + env(safe-area-inset-bottom));
+        min-height: 56px;
+        padding-right: 16px;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .white5-whatsapp-float { transition: none; }
+      .white5-whatsapp-float:hover { transform: none; }
+    }
+  </style>
+`;
+
+const WHATSAPP_FLOATING_BUTTON = `
+  <a class="white5-whatsapp-float" href="https://wa.me/14034793905?text=Hi%20White5%2C%20I%20would%20like%20a%20free%20estimate." target="_blank" rel="noopener" aria-label="Message White5 on WhatsApp">
+    <img class="white5-whatsapp-float__icon" src="/images/whatsapp-icon.jpg" alt="" width="34" height="34">
+    <span class="white5-whatsapp-float__label">WhatsApp us</span>
+  </a>
+`;
+
 const SERVICES_BACKGROUND_STYLES = `
   <style id="white5-service-backgrounds">
     #estimate > .container > .service-row {
@@ -476,7 +539,8 @@ export default {
     }
 
     let rewriter = new HTMLRewriter()
-      .on("head", new HtmlAppender(CHAT_ASSETS))
+      .on("head", new HtmlAppender(CHAT_ASSETS + WHATSAPP_FLOATING_BUTTON_STYLES))
+      .on("body", new HtmlAppender(WHATSAPP_FLOATING_BUTTON))
       .on("nav.nav", new NavigationFaqInjector())
       .on("#consent", new ConsentInputInjector());
 
