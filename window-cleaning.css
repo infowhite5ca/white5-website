@@ -18,7 +18,7 @@ a { color: inherit; }
 button, input, textarea { font: inherit; }
 button, a, summary { -webkit-tap-highlight-color: transparent; }
 button { cursor: pointer; }
-img { display: block; max-width: 100%; }
+img { display: block; max-width: 100%; height: auto; }
 h1, h2, h3, p, figure, blockquote { margin: 0; }
 h1, h2, h3, .button { font-family: 'White5', Arial, sans-serif; font-weight: 400; }
 h1, h2, h3 { color: #fff; text-shadow: 0 2px 4px rgba(0, 0, 0, .4), 0 0 12px rgba(94, 203, 255, .14); }
