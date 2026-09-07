@@ -1,5 +1,5 @@
 (() => {
-  const form = document.getElementById('window-quote-form');
+  const form = document.querySelector('[data-service-request]') || document.getElementById('window-quote-form');
   if (!form) return;
   const status = document.getElementById('quote-status');
   const submit = document.getElementById('quote-submit');
@@ -157,7 +157,8 @@
       const response = await fetch(form.action, { method: 'POST', body: data });
       const result = await response.json();
       if (!response.ok || !result.ok) throw new Error(result.error || 'We could not send your request. Please call 403-479-3905.');
-      setStatus('Thank you! Your request has been sent. We’ll contact you about your window cleaning estimate.', 'success');
+      const serviceName = form.dataset.serviceName || 'window cleaning';
+      setStatus(`Thank you! Your request has been sent. We’ll contact you about your ${serviceName} estimate.`, 'success');
       trackAcceptedRequest();
       form.reset();
       refreshPhotos();

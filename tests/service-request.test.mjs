@@ -1,5 +1,6 @@
 import { test, beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { handleServiceRequest, handleServiceRequestConfig } from '../service-request-api.js';
 
 const nativeFetch = globalThis.fetch;
@@ -81,6 +82,22 @@ test('new personal estimates do not invent a zero-dollar price', async () => {
   assert.doesNotMatch(mail.content, /Estimated starting price|\$0/);
   assert.match(mail.content, /customer@example.test/);
 });
+
+for (const [slug, service] of [
+  ['pressure-washing', 'Pressure Washing'],
+  ['gutter-cleaning', 'Gutter and Eavestrough Cleaning'],
+]) {
+  test(`${slug} page submits its own service and source in the delivered enquiry`, async () => {
+    const page = readFileSync(new URL(`../${slug}.html`, import.meta.url), 'utf8');
+    const services = page.match(/<input\b[^>]*name="services"[^>]*value="([^"]+)"/)[1];
+    const details = page.match(/<input\b[^>]*name="details"[^>]*value="([^"]+)"/)[1];
+    const response = await handleServiceRequest(multipartRequest({ services: [services], details, notes: '' }), env);
+    assert.equal(response.status, 200);
+    assert.ok(mail.content.includes(`Services: ${service}`));
+    assert.ok(mail.content.includes(details));
+    assert.doesNotMatch(mail.content, /Window Cleaning|Estimated starting price|\$0/);
+  });
+}
 
 test('phone-only requests work without requiring email', async () => {
   const response = await handleServiceRequest(multipartRequest({ email: '', phone: '403-555-0123' }), env);

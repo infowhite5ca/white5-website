@@ -12,9 +12,9 @@
   <meta property="og:url" content="https://www.white5.ca/window-cleaning">
   <link rel="preload" href="/White5-Regular%20Font.ttf?v=001002" as="font" type="font/ttf" crossorigin>
   <link rel="stylesheet" href="/white5-navigation.css?v=1">
-  <link rel="stylesheet" href="/window-cleaning.css?v=1">
+  <link rel="stylesheet" href="/window-cleaning.css?v=2">
   <script defer src="/white5-navigation.js?v=1"></script>
-  <script defer src="/window-cleaning.js?v=1"></script>
+  <script defer src="/window-cleaning.js?v=2"></script>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -76,8 +76,8 @@
           <summary>Services</summary>
           <div class="site-navigation__services">
             <a href="/window-cleaning" aria-current="page">Window Cleaning</a>
-            <a href="/services.html#gutter-cleaning">Gutter Cleaning</a>
-            <a href="/services.html#pressure-washing">Pressure Washing</a>
+            <a href="/gutter-cleaning">Gutter Cleaning</a>
+            <a href="/pressure-washing">Pressure Washing</a>
             <a href="/deck-fence-quote.html">Deck Cleaning &amp; Staining</a>
           </div>
         </details>
@@ -170,7 +170,7 @@
           <div class="estimate-logo" aria-hidden="true"><img src="/logo.png" width="1536" height="1024" alt="" loading="lazy"></div>
           <div><h2 id="estimate-title">Get Free Estimate</h2><p>Tell us about your windows.</p><p class="service-area">Calgary · Airdrie · Chestermere · Okotoks</p><p class="direct-contact">Prefer to talk?<br><a href="tel:14034793905">403-479-3905</a><br><a href="mailto:info@white5.ca">info@white5.ca</a></p></div>
         </div>
-        <form class="quote-form" id="window-quote-form" action="/api/service-request" method="post" enctype="multipart/form-data">
+        <form class="quote-form" id="window-quote-form" data-service-request data-service-name="window cleaning" action="/api/service-request" method="post" enctype="multipart/form-data">
           <div class="form-grid">
             <div class="field"><label for="quote-name">Name</label><input id="quote-name" name="name" autocomplete="name" maxlength="120" placeholder="Your name" required></div>
             <div class="field"><label for="quote-contact">Email or Phone</label><input id="quote-contact" name="contact" type="text" maxlength="160" placeholder="Email or phone number" required></div>

@@ -475,8 +475,9 @@ export default {
       .on("nav.nav", new NavigationFaqInjector())
       .on("#consent", new ConsentInputInjector());
 
-    const isWindowCleaningPage = url.pathname === "/window-cleaning" || url.pathname === "/window-cleaning.html";
-    if (!isWindowCleaningPage) {
+    const serviceLandingPaths = ["/window-cleaning", "/gutter-cleaning", "/pressure-washing"];
+    const isServiceLandingPage = serviceLandingPaths.some(path => url.pathname === path || url.pathname === `${path}.html`);
+    if (!isServiceLandingPage) {
       rewriter = rewriter.on("footer .container", new PrivacyFooterInjector());
     }
 
