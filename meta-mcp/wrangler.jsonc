@@ -1,0 +1,24 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "white5-meta-ads-mcp",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-08-25",
+  "compatibility_flags": ["nodejs_compat"],
+  "vars": {
+    "META_API_VERSION": "v26.0",
+    "META_AD_ACCOUNT_ID": "act_1242143730059500",
+    "META_BUSINESS_ID": "435078803026689",
+    "META_PAGE_ID": "435075943026975",
+    "META_PIXEL_ID": "1587609516129238"
+  },
+  "observability": {
+    "enabled": true,
+    "logs": {
+      "head_sampling_rate": 1
+    },
+    "traces": {
+      "enabled": true,
+      "head_sampling_rate": 0.05
+    }
+  }
+}
