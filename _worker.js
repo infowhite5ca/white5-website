@@ -34,7 +34,7 @@ const GOOGLE_TAG_ALREADY_EMBEDDED_PATHS = new Set([
 ]);
 
 const CHAT_ASSETS = `
-  <link rel="stylesheet" href="/white5-ai-chat.css?v=optional-contact-1">
+  <link rel="stylesheet" href="/white5-ai-chat.css?v=mobile-compact-1">
   <script defer src="/white5-ai-chat.js?v=optional-contact-1"></script>
 `;
 
@@ -81,10 +81,21 @@ const WHATSAPP_FLOATING_BUTTON_STYLES = `
     .white5-whatsapp-float__label { white-space: nowrap; }
     @media (max-width: 640px) {
       .white5-whatsapp-float {
-        left: 12px;
-        bottom: calc(92px + env(safe-area-inset-bottom));
-        min-height: 56px;
-        padding-right: 16px;
+        left: 14px;
+        bottom: calc(96px + env(safe-area-inset-bottom));
+        width: 50px;
+        height: 50px;
+        min-height: 50px;
+        padding: 6px;
+        justify-content: center;
+        gap: 0;
+      }
+      .white5-whatsapp-float__icon {
+        width: 34px;
+        height: 34px;
+      }
+      .white5-whatsapp-float__label {
+        display: none;
       }
     }
     @media (prefers-reduced-motion: reduce) {
