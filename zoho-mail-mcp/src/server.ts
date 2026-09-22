@@ -87,6 +87,121 @@ function emailPayload(args: {
   };
 }
 
+const attachmentSchema = z.object({
+  filename: z.string().min(1).max(255),
+  content_text: z.string().max(5_000_000).optional(),
+  content_base64: z.string().max(8_000_000).optional(),
+  content_type: z.string().max(255).optional(),
+}).refine((value) => Boolean(value.content_text) !== Boolean(value.content_base64), {
+  message: "Supply exactly one of content_text or content_base64.",
+});
+
+type AttachmentInput = z.infer<typeof attachmentSchema>;
+
+function attachmentBytes(attachment: AttachmentInput): Uint8Array {
+  if (attachment.content_text !== undefined) {
+    return new TextEncoder().encode(attachment.content_text);
+  }
+  const binary = atob(attachment.content_base64 || "");
+  const bytes = new Uint8Array(binary.length);
+  for (let index = 0; index < binary.length; index += 1) bytes[index] = binary.charCodeAt(index);
+  return bytes;
+}
+
+async function uploadAttachments(
+  token: string,
+  accountId: string,
+  attachments: AttachmentInput[] = [],
+) {
+  const uploaded: Array<{ storeName: string; attachmentName: string; attachmentPath: string }> = [];
+  for (const attachment of attachments) {
+    const payload = await zohoRequest(
+      token,
+      `/accounts/${encodeURIComponent(accountId)}/messages/attachments`,
+      {
+        method: "POST",
+        headers: { "content-type": attachment.content_type || "application/octet-stream" },
+        body: attachmentBytes(attachment).buffer as ArrayBuffer,
+      },
+      { fileName: attachment.filename, isInline: false },
+    );
+    const data = resultData(payload);
+    const item = {
+      storeName: String(data.storeName || ""),
+      attachmentName: String(data.attachmentName || attachment.filename),
+      attachmentPath: String(data.attachmentPath || ""),
+    };
+    if (!item.storeName || !item.attachmentPath) throw new Error(`Zoho did not store attachment ${attachment.filename}.`);
+    uploaded.push(item);
+  }
+  return uploaded;
+}
+
+function icsEscape(value: string): string {
+  return value.replace(/\\/g, "\\\\").replace(/\r?\n/g, "\\n").replace(/,/g, "\\,").replace(/;/g, "\\;");
+}
+
+function icsDateTime(value: string): string {
+  const match = value.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2}))?$/);
+  if (!match) throw new Error("Use local datetime format YYYY-MM-DDTHH:mm:ss.");
+  return `${match[1]}${match[2]}${match[3]}T${match[4]}${match[5]}${match[6] || "00"}`;
+}
+
+function addMinutes(localDateTime: string, minutes: number): string {
+  const date = new Date(`${localDateTime}Z`);
+  if (Number.isNaN(date.getTime())) throw new Error("Invalid local datetime.");
+  date.setUTCMinutes(date.getUTCMinutes() + minutes);
+  return date.toISOString().slice(0, 19).replace(/[-:]/g, "");
+}
+
+function buildCalendar(args: {
+  method: "REQUEST" | "CANCEL";
+  uid: string;
+  sequence: number;
+  recipient_email: string;
+  attendee_name?: string;
+  title: string;
+  description?: string;
+  location?: string;
+  start_datetime: string;
+  end_datetime?: string;
+  duration_minutes?: number;
+  timezone: string;
+  reminder_offsets_minutes: number[];
+}) {
+  const start = icsDateTime(args.start_datetime);
+  const end = args.end_datetime
+    ? icsDateTime(args.end_datetime)
+    : addMinutes(args.start_datetime, args.duration_minutes || 60);
+  const stamp = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}Z$/, "Z");
+  const lines = [
+    "BEGIN:VCALENDAR",
+    "PRODID:-//White5//Zoho Mail MCP//EN",
+    "VERSION:2.0",
+    "CALSCALE:GREGORIAN",
+    `METHOD:${args.method}`,
+    "BEGIN:VEVENT",
+    `UID:${args.uid}`,
+    `DTSTAMP:${stamp}`,
+    `SEQUENCE:${args.sequence}`,
+    `DTSTART;TZID=${args.timezone}:${start}`,
+    `DTEND;TZID=${args.timezone}:${end}`,
+    `SUMMARY:${icsEscape(args.title)}`,
+    `DESCRIPTION:${icsEscape(args.description || "")}`,
+    `LOCATION:${icsEscape(args.location || "")}`,
+    "ORGANIZER;CN=White5:mailto:info@white5.ca",
+    `ATTENDEE;CN=${icsEscape(args.attendee_name || args.recipient_email)};RSVP=TRUE:mailto:${args.recipient_email}`,
+    `STATUS:${args.method === "CANCEL" ? "CANCELLED" : "CONFIRMED"}`,
+  ];
+  if (args.method !== "CANCEL") {
+    for (const offset of args.reminder_offsets_minutes) {
+      lines.push("BEGIN:VALARM", `TRIGGER:-PT${offset}M`, "ACTION:DISPLAY", `DESCRIPTION:${icsEscape(args.title)}`, "END:VALARM");
+    }
+  }
+  lines.push("END:VEVENT", "END:VCALENDAR", "");
+  return lines.join("\r\n");
+}
+
 function createServer(env: ConnectorEnv) {
   const server = new McpServer(
     { name: "White5 Zoho Mail", version: "0.1.0" },
@@ -382,6 +497,8 @@ function createServer(env: ConnectorEnv) {
     subject: z.string().min(1).max(998),
     body: z.string().min(1).max(100_000),
     format: z.enum(["html", "plaintext"]).default("html"),
+    attachments: z.array(attachmentSchema).max(10).optional(),
+    confirmed: z.boolean().default(false),
   });
 
   server.registerTool(
@@ -396,6 +513,7 @@ function createServer(env: ConnectorEnv) {
       try {
         const props = authProps(WRITE_SCOPE);
         const token = await refreshAccessToken(env, props.refreshToken);
+        const attachments = await uploadAttachments(token, props.accountId, args.attachments);
         const payload = await zohoRequest(
           token,
           `/accounts/${encodeURIComponent(props.accountId)}/messages`,
@@ -404,6 +522,7 @@ function createServer(env: ConnectorEnv) {
             body: JSON.stringify({
               fromAddress: props.fromAddress,
               ...emailPayload(args),
+              attachments: attachments.length ? attachments : undefined,
               mode: "draft",
             }),
           },
@@ -430,20 +549,170 @@ function createServer(env: ConnectorEnv) {
     },
     async (args) => {
       try {
+        if (args.attachments?.length && !args.confirmed) {
+          return ok({ sent: false, preview: true, to: args.to, subject: args.subject, attachments: args.attachments.map((item) => item.filename) });
+        }
         const props = authProps(WRITE_SCOPE);
         const token = await refreshAccessToken(env, props.refreshToken);
+        const attachments = await uploadAttachments(token, props.accountId, args.attachments);
         const payload = await zohoRequest(
           token,
           `/accounts/${encodeURIComponent(props.accountId)}/messages`,
           {
             method: "POST",
-            body: JSON.stringify({ fromAddress: props.fromAddress, ...emailPayload(args) }),
+            body: JSON.stringify({
+              fromAddress: props.fromAddress,
+              ...emailPayload(args),
+              attachments: attachments.length ? attachments : undefined,
+            }),
           },
         );
         return ok({ sent: true, mailbox: props.email, result: resultData(payload) });
       } catch (error) {
         return failed(error);
       }
+    },
+  );
+
+  server.registerTool(
+    "send_email_with_attachments",
+    {
+      title: "Send Zoho email with attachments",
+      description: "Uploads and sends actual file attachments, including RFC 5545 calendar files. Returns a preview unless confirmed is true.",
+      inputSchema: composeSchema.extend({ attachments: z.array(attachmentSchema).min(1).max(10) }),
+      annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: true },
+    },
+    async (args) => {
+      try {
+        if (!args.confirmed) {
+          return ok({ sent: false, preview: true, to: args.to, subject: args.subject, attachments: args.attachments.map((item) => item.filename) });
+        }
+        const props = authProps(WRITE_SCOPE);
+        const token = await refreshAccessToken(env, props.refreshToken);
+        const attachments = await uploadAttachments(token, props.accountId, args.attachments);
+        const payload = await zohoRequest(
+          token,
+          `/accounts/${encodeURIComponent(props.accountId)}/messages`,
+          {
+            method: "POST",
+            body: JSON.stringify({ fromAddress: props.fromAddress, ...emailPayload(args), attachments }),
+          },
+        );
+        return ok({ sent: true, mailbox: props.email, attachments: attachments.map((item) => item.attachmentName), result: resultData(payload) });
+      } catch (error) {
+        return failed(error);
+      }
+    },
+  );
+
+  const calendarSchema = z.object({
+    recipient_email: z.email(),
+    attendee_name: z.string().max(300).optional(),
+    title: z.string().min(1).max(998),
+    description: z.string().max(10_000).optional(),
+    location: z.string().max(1_000).optional(),
+    start_datetime: z.string(),
+    end_datetime: z.string().optional(),
+    duration_minutes: z.number().int().min(1).max(10_080).optional(),
+    timezone: z.string().min(1).max(100).default("America/Edmonton"),
+    reminder_offsets_minutes: z.array(z.number().int().min(1).max(40_320)).max(10).default([]),
+    uid: z.string().min(3).max(500).optional(),
+    sequence: z.number().int().min(0).default(0),
+    confirmed: z.boolean().default(false),
+  }).refine((value) => Boolean(value.end_datetime) !== Boolean(value.duration_minutes), {
+    message: "Provide exactly one of end_datetime or duration_minutes.",
+  });
+
+  async function sendCalendar(
+    args: z.infer<typeof calendarSchema>,
+    method: "REQUEST" | "CANCEL",
+    requireUid: boolean,
+  ) {
+    const uid = args.uid || `${crypto.randomUUID()}@white5.ca`;
+    if (requireUid && !args.uid) throw new Error("The original stable UID is required.");
+    const calendar = buildCalendar({
+      method,
+      uid,
+      sequence: args.sequence,
+      recipient_email: args.recipient_email,
+      attendee_name: args.attendee_name,
+      title: args.title,
+      description: args.description,
+      location: args.location,
+      start_datetime: args.start_datetime,
+      end_datetime: args.end_datetime,
+      duration_minutes: args.duration_minutes,
+      timezone: args.timezone,
+      reminder_offsets_minutes: args.reminder_offsets_minutes,
+    });
+    const subjectPrefix = method === "CANCEL" ? "Cancelled: " : "";
+    if (!args.confirmed) {
+      return ok({ sent: false, preview: true, uid, recipient: args.recipient_email, subject: `${subjectPrefix}${args.title}`, calendar });
+    }
+    const props = authProps(WRITE_SCOPE);
+    const token = await refreshAccessToken(env, props.refreshToken);
+    const attachments = await uploadAttachments(token, props.accountId, [{
+      filename: "white5-appointment.ics",
+      content_text: calendar,
+      content_type: `text/calendar; charset=utf-8; method=${method}`,
+    }]);
+    const payload = await zohoRequest(
+      token,
+      `/accounts/${encodeURIComponent(props.accountId)}/messages`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          fromAddress: props.fromAddress,
+          toAddress: args.recipient_email,
+          subject: `${subjectPrefix}${args.title}`,
+          content: method === "CANCEL"
+            ? `The White5 appointment has been cancelled.\n\n${args.title}\n${args.start_datetime}\n${args.location || ""}`
+            : `Your White5 appointment is scheduled.\n\n${args.title}\n${args.start_datetime}\n${args.location || ""}\n\nPlease use the attached calendar invitation.`,
+          mailFormat: "plaintext",
+          encoding: "UTF-8",
+          attachments,
+        }),
+      },
+    );
+    return ok({ sent: true, mailbox: props.email, recipient: args.recipient_email, uid, sequence: args.sequence, result: resultData(payload) });
+  }
+
+  server.registerTool(
+    "send_calendar_invite",
+    {
+      title: "Send calendar invitation",
+      description: "Builds and optionally sends a new RFC 5545 calendar invitation from info@white5.ca. Returns a preview unless confirmed is true.",
+      inputSchema: calendarSchema,
+      annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: true },
+    },
+    async (args) => {
+      try { return await sendCalendar(args, "REQUEST", false); } catch (error) { return failed(error); }
+    },
+  );
+
+  server.registerTool(
+    "update_calendar_invite",
+    {
+      title: "Update calendar invitation",
+      description: "Sends an RFC 5545 calendar update using the original stable UID.",
+      inputSchema: calendarSchema.extend({ uid: z.string().min(3).max(500) }),
+      annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: true },
+    },
+    async (args) => {
+      try { return await sendCalendar(args, "REQUEST", true); } catch (error) { return failed(error); }
+    },
+  );
+
+  server.registerTool(
+    "cancel_calendar_invite",
+    {
+      title: "Cancel calendar invitation",
+      description: "Sends an RFC 5545 calendar cancellation using the original stable UID.",
+      inputSchema: calendarSchema.extend({ uid: z.string().min(3).max(500) }),
+      annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: true },
+    },
+    async (args) => {
+      try { return await sendCalendar(args, "CANCEL", true); } catch (error) { return failed(error); }
     },
   );
 
