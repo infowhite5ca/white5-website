@@ -695,7 +695,7 @@ function createServer(env: ConnectorEnv) {
     {
       title: "Update calendar invitation",
       description: "Sends an RFC 5545 calendar update using the original stable UID.",
-      inputSchema: calendarSchema.extend({ uid: z.string().min(3).max(500) }),
+      inputSchema: calendarSchema.safeExtend({ uid: z.string().min(3).max(500) }),
       annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: true },
     },
     async (args) => {
@@ -708,7 +708,7 @@ function createServer(env: ConnectorEnv) {
     {
       title: "Cancel calendar invitation",
       description: "Sends an RFC 5545 calendar cancellation using the original stable UID.",
-      inputSchema: calendarSchema.extend({ uid: z.string().min(3).max(500) }),
+      inputSchema: calendarSchema.safeExtend({ uid: z.string().min(3).max(500) }),
       annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: true },
     },
     async (args) => {
