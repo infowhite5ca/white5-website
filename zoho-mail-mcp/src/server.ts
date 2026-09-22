@@ -120,7 +120,7 @@ async function uploadAttachments(
       `/accounts/${encodeURIComponent(accountId)}/messages/attachments`,
       {
         method: "POST",
-        headers: { "content-type": attachment.content_type || "application/octet-stream" },
+        headers: { "content-type": "application/octet-stream" },
         body: attachmentBytes(attachment).buffer as ArrayBuffer,
       },
       { fileName: attachment.filename, isInline: false },
