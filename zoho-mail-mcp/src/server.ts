@@ -600,7 +600,10 @@ function createServer(env: ConnectorEnv) {
         );
         return ok({ sent: true, mailbox: props.email, attachments: attachments.map((item) => item.attachmentName), result: resultData(payload) });
       } catch (error) {
-        return failed(error);
+        return ok({
+          sent: false,
+          error: error instanceof Error ? error.message.slice(0, 1_000) : "Unexpected connector error.",
+        });
       }
     },
   );
