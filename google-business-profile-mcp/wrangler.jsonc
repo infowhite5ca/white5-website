@@ -3,7 +3,12 @@
   "name": "white5-google-business-mcp",
   "main": "src/server.ts",
   "compatibility_date": "2026-09-24",
-  "compatibility_flags": ["nodejs_compat"],
-  "kv_namespaces": [{ "binding": "OAUTH_KV" }],
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "kv_namespaces": [
+    {
+      "binding": "OAUTH_KV",
+      "id": "177ff5b5335d4b6d960040cfefb69cf6"
+    }
+  ],
   "observability": { "enabled": true, "head_sampling_rate": 1 }
 }

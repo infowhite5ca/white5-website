@@ -22,6 +22,11 @@ Scopes:
 
 The Worker also needs an `OAUTH_KV` KV namespace binding.
 
+`list_reviews`, `list_posts`, and `reply_to_review` use the Google My Business
+API v4 service (`mybusiness.googleapis.com`). That API must be enabled in the
+Google Cloud project in addition to Account Management and Business Information,
+and the project must have Google Business Profile API access (non-zero quota).
+
 ## Initial tools
 
 - `connection_status`
