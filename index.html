@@ -189,9 +189,72 @@
       backdrop-filter: blur(8px);
     }
 
-    .contact-card { padding: 24px; background: url("wc-white5.jpg") center / cover no-repeat; }
-    .contact-list { list-style: none; padding: 0; margin: 16px 0 0; display: grid; gap: 10px; }
-    .contact-list strong { display: block; color: #fff; }
+    .contact-card {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      padding: 28px;
+      background:
+        linear-gradient(90deg, rgba(3,19,31,.95) 0%, rgba(3,19,31,.86) 56%, rgba(3,19,31,.44) 100%),
+        url("wc-white5.jpg") center / cover no-repeat;
+    }
+    .contact-card h3 {
+      margin: 0;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      font-size: clamp(1.75rem, 3vw, 2.2rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      text-shadow: none;
+    }
+    .contact-card > p {
+      max-width: 34ch;
+      margin: 12px 0 0;
+      color: #eaf7ff;
+      font-family: Arial, sans-serif;
+      font-size: 1.0625rem;
+      font-weight: 500;
+      line-height: 1.55;
+      text-shadow: none;
+    }
+    .contact-list {
+      list-style: none;
+      max-width: 30rem;
+      padding: 0;
+      margin: 18px 0 0;
+      display: grid;
+      gap: 9px;
+    }
+    .contact-list li {
+      padding: 10px 12px;
+      border: 1px solid rgba(184,231,255,.22);
+      border-radius: 12px;
+      background: rgba(2,14,25,.54);
+      color: #edf8ff;
+      font-family: Arial, sans-serif;
+      font-size: 1.02rem;
+      font-weight: 500;
+      line-height: 1.35;
+      text-shadow: none;
+    }
+    .contact-list strong {
+      display: block;
+      margin-bottom: 3px;
+      color: #8af0ff;
+      font-family: Arial, sans-serif;
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
+    .contact-list a {
+      color: #fff;
+      font-weight: 800;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
     .social-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; align-items: center; }
     .social-link,
     .social-icon {
@@ -343,7 +406,16 @@
       .water-btn, .ghost-btn, .quote-calculator button { width: 100%; min-height: 52px; font-size: 22px; padding: 12px 16px; }
       section { padding: 26px 0; }
       .contact-card, .quote-card, .service-card, .review-card, .faq-card { border-radius: 20px; padding: 18px; }
-      .contact-card { min-height: 360px; background-position: center top; }
+      .contact-card {
+        min-height: 0;
+        padding: 20px;
+        background:
+          linear-gradient(180deg, rgba(3,19,31,.95) 0%, rgba(3,19,31,.86) 65%, rgba(3,19,31,.5) 100%),
+          url("wc-white5.jpg") center / cover no-repeat;
+      }
+      .contact-card h3 { font-size: 1.75rem; }
+      .contact-card > p { font-size: 1rem; }
+      .contact-list li { padding: 10px 11px; }
       .services-grid, .reviews-grid { gap: 16px; }
       .quote-result strong { font-size: 26px; }
       footer { padding: 24px 0 30px; text-align: center; line-height: 1.7; }
