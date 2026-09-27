@@ -2,13 +2,22 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "white5-zoho-mail-mcp",
   "main": "src/server.ts",
-  "compatibility_date": "2026-08-27",
+  "compatibility_date": "2026-09-04",
   "compatibility_flags": ["nodejs_compat"],
   "kv_namespaces": [
     {
-      "binding": "OAUTH_KV"
+      "binding": "OAUTH_KV",
+      "id": "5dae403d1c8b4b65a83ad685c8af0c76"
+    },
+    {
+      "binding": "GATEWAY_OAUTH_KV",
+      "id": "8bb9b6c595e6489392096b49f23ac399"
     }
   ],
+  "vars": {
+    "ALLOWED_ZOHO_EMAIL": "info@white5.ca",
+    "SERVICE_ORIGIN": "https://white5-zoho-mail-mcp.volodymyronufriichuk68.workers.dev"
+  },
   "observability": {
     "enabled": true,
     "head_sampling_rate": 1

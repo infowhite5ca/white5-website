@@ -1,8 +1,9 @@
 import { McpServer } from "@modelcontextprotocol/server";
-import OAuthProvider from "@cloudflare/workers-oauth-provider";
+import OAuthProvider, { getOAuthApi } from "@cloudflare/workers-oauth-provider";
 import { createMcpHandler, getMcpAuthContext } from "agents/mcp/server";
 import { z } from "zod";
 import { authHandler, recordProtocolDiagnostic } from "./zoho-auth-handler";
+import { handleGatewayCallback } from "./gateway-auth";
 import {
   type ConnectorEnv,
   type MailAuthProps,
@@ -30,8 +31,8 @@ const mailFolderSchema = z.enum([
   "newsletter",
 ]);
 
-function authProps(requiredScope: string): MailAuthProps {
-  const raw = getMcpAuthContext()?.props;
+function requireAuthProps(requiredScope: string, explicitProps?: MailAuthProps): MailAuthProps {
+  const raw = explicitProps ?? getMcpAuthContext()?.props;
   if (!raw) throw new Error("Authenticated Zoho mailbox context is missing.");
   const props = raw as Partial<MailAuthProps>;
   if (
@@ -202,9 +203,10 @@ function buildCalendar(args: {
   return lines.join("\r\n");
 }
 
-function createServer(env: ConnectorEnv) {
+export function createServer(env: ConnectorEnv, explicitProps?: MailAuthProps) {
+  const authProps = (requiredScope: string) => requireAuthProps(requiredScope, explicitProps);
   const server = new McpServer(
-    { name: "White5 Zoho Mail", version: "0.1.0" },
+    { name: "White5 Zoho Mail", version: "0.5.1" },
     {
       instructions: [
         "This connector accesses only the authorized White5 Zoho mailbox.",
@@ -776,7 +778,7 @@ const mcpHandler = {
   },
 } satisfies ExportedHandler<ConnectorEnv>;
 
-const oauthProvider = new OAuthProvider<ConnectorEnv>({
+export const oauthOptions = {
   apiRoute: "/mcp",
   apiHandler: mcpHandler,
   defaultHandler: authHandler,
@@ -794,10 +796,15 @@ const oauthProvider = new OAuthProvider<ConnectorEnv>({
   accessTokenTTL: 60 * 60,
   refreshTokenTTL: 60 * 60 * 24 * 90,
   clientRegistrationTTL: 60 * 60 * 24 * 90,
-});
+} satisfies import("@cloudflare/workers-oauth-provider").OAuthProviderOptions<ConnectorEnv>;
+
+const oauthProvider = new OAuthProvider<ConnectorEnv>(oauthOptions);
 
 export default {
   async fetch(request, env, ctx) {
+    const gatewayCallback = await handleGatewayCallback(request, env);
+    if (gatewayCallback) return gatewayCallback;
+    env.OAUTH_PROVIDER = getOAuthApi(oauthOptions, env);
     const response = await oauthProvider.fetch(request, env, ctx);
     const pathname = new URL(request.url).pathname;
     if (pathname === "/oauth/token") {
@@ -814,3 +821,5 @@ export default {
     return response;
   },
 } satisfies ExportedHandler<ConnectorEnv>;
+
+export { White5Service } from "./service";

@@ -12,10 +12,14 @@ export const ZOHO_MAIL_SCOPES = [
 
 export interface ConnectorEnv {
   OAUTH_KV: KVNamespace;
+  GATEWAY_OAUTH_KV?: KVNamespace;
   OAUTH_PROVIDER: import("@cloudflare/workers-oauth-provider").OAuthHelpers;
   ZOHO_CLIENT_ID: string;
   ZOHO_CLIENT_SECRET: string;
   ALLOWED_ZOHO_EMAIL?: string;
+  AUTH_SCOPES?: string[];
+  AUTH_CALLBACK_ORIGIN?: string;
+  SERVICE_ORIGIN?: string;
 }
 
 export interface MailAuthProps {
