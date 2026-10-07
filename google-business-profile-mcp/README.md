@@ -22,6 +22,13 @@ Scopes:
 
 The Worker also needs an `OAUTH_KV` KV namespace binding.
 
+## Live verification
+
+Run `npm run live-oauth-probe`, open the one-time `AUTH_URL`, and complete
+Google consent. The probe keeps tokens in memory only, checks MCP
+initialization plus every connector tool, and always calls `reply_to_review`
+with `confirmed:false`.
+
 `list_reviews`, `list_posts`, and `reply_to_review` use the Google My Business
 API v4 service (`mybusiness.googleapis.com`). That API must be enabled in the
 Google Cloud project in addition to Account Management and Business Information,
