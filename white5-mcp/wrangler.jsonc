@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "white5-mcp",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-09-06",
+  "compatibility_flags": ["nodejs_compat"],
+  "services": [
+    { "binding": "GOOGLE_ADS", "service": "white5-google-ads-mcp", "entrypoint": "White5Service" },
+    { "binding": "META_ADS", "service": "white5-meta-ads-mcp", "entrypoint": "White5Service" },
+    { "binding": "SQUARE", "service": "white5-square-mcp", "entrypoint": "White5Service" },
+    { "binding": "ZOHO", "service": "white5-zoho-mail-mcp", "entrypoint": "White5Service" },
+    { "binding": "GOOGLE_BUSINESS", "service": "white5-google-business-mcp", "entrypoint": "White5Service" }
+  ],
+  "observability": { "enabled": true, "head_sampling_rate": 1 }
+}

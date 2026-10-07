@@ -19,8 +19,21 @@ Scopes:
 - `GOOGLE_CLIENT_ID`
 - `GOOGLE_CLIENT_SECRET`
 - optional `ALLOWED_GOOGLE_EMAIL`
+- optional `GOOGLE_REFRESH_TOKEN` for the private White5 gateway binding
 
 The Worker also needs an `OAUTH_KV` KV namespace binding.
+
+The private `White5Service` entry point can instead load an AES-GCM encrypted
+refresh token from `OAUTH_KV`. The one-time `/oauth/google/install` flow writes
+that encrypted value only when a temporary `GOOGLE_INSTALL_TOKEN` secret is
+present. Remove the installation secret after consent completes.
+
+## White5 gateway
+
+The unified `white5-mcp` Worker binds this Worker as
+`GOOGLE_BUSINESS -> white5-google-business-mcp#White5Service`. The gateway
+publishes the Google Business tools under `gbp_*` aliases and retains the
+existing White5 OAuth flow.
 
 ## Live verification
 

@@ -7,6 +7,7 @@
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
     "dry-run": "wrangler deploy --dry-run --outdir dist",
+    "install-gateway-auth": "node scripts/live-oauth-probe.mjs --install-worker-refresh-token",
     "live-oauth-probe": "node scripts/live-oauth-probe.mjs",
     "typecheck": "tsc --noEmit"
   },
