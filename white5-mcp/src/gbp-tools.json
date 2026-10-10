@@ -1,0 +1,1040 @@
+[
+  {
+    "name": "connection_status",
+    "description": "Refreshes Google authorization and checks accounts. With account/location (or saved primary), checks location, posts, reviews and performance separately; reports actual API restrictions.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "account": {
+          "type": "string",
+          "pattern": "^(?:accounts\\/)?[0-9]+$"
+        },
+        "location": {
+          "type": "string",
+          "pattern": "^(?:locations\\/)?[0-9]+$"
+        }
+      }
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "list_accounts",
+    "description": "List accessible Google Business Profile accounts, with pagination.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "pageSize": {
+          "default": 20,
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 20
+        },
+        "pageToken": {
+          "type": "string",
+          "maxLength": 4096
+        }
+      }
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "list_locations",
+    "description": "List Business Profile locations including business details, service area and Voice of Merchant status. Follow nextPageToken to find duplicates.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "account": {
+          "type": "string",
+          "pattern": "^(?:accounts\\/)?[0-9]+$"
+        },
+        "pageSize": {
+          "default": 100,
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "pageToken": {
+          "type": "string",
+          "maxLength": 4096
+        },
+        "readMask": {
+          "default": "name,title,storeCode,storefrontAddress,websiteUri,phoneNumbers,categories,regularHours,specialHours,serviceArea,metadata,profile,openInfo",
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "account"
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "get_location",
+    "description": "Read business name, address/service area, phones, website, hours, metadata and profile status.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "location": {
+          "type": "string",
+          "pattern": "^(?:locations\\/)?[0-9]+$"
+        },
+        "readMask": {
+          "default": "name,title,storeCode,storefrontAddress,websiteUri,phoneNumbers,categories,regularHours,specialHours,serviceArea,metadata,profile,openInfo",
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "location"
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "list_reviews",
+    "description": "Read location reviews, ratings and total review count. Requires Google My Business API access.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "account": {
+          "type": "string",
+          "pattern": "^(?:accounts\\/)?[0-9]+$"
+        },
+        "location": {
+          "type": "string",
+          "pattern": "^(?:locations\\/)?[0-9]+$"
+        },
+        "pageSize": {
+          "default": 50,
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50
+        },
+        "pageToken": {
+          "type": "string",
+          "maxLength": 4096
+        },
+        "orderBy": {
+          "type": "string",
+          "enum": [
+            "rating",
+            "rating desc",
+            "updateTime desc"
+          ]
+        }
+      },
+      "required": [
+        "account",
+        "location"
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "get_review",
+    "description": "Read an individual Google Business Profile review.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "reviewName": {
+          "type": "string",
+          "pattern": "^accounts\\/\\d+\\/locations\\/\\d+\\/reviews\\/[A-Za-z0-9_-]+$"
+        }
+      },
+      "required": [
+        "reviewName"
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "list_posts",
+    "description": "Read local posts. Requires Google My Business API access.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "account": {
+          "type": "string",
+          "pattern": "^(?:accounts\\/)?[0-9]+$"
+        },
+        "location": {
+          "type": "string",
+          "pattern": "^(?:locations\\/)?[0-9]+$"
+        },
+        "pageSize": {
+          "default": 20,
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "pageToken": {
+          "type": "string",
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "account",
+        "location"
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "prepare_post",
+    "description": "Validate and prepare a local STANDARD post draft with text, photo URLs and call-to-action/website links. No network calls or Google draft is created.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "account": {
+          "type": "string",
+          "pattern": "^(?:accounts\\/)?[0-9]+$"
+        },
+        "location": {
+          "type": "string",
+          "pattern": "^(?:locations\\/)?[0-9]+$"
+        },
+        "post": {
+          "type": "object",
+          "properties": {
+            "languageCode": {
+              "type": "string",
+              "pattern": "^[a-z]{2,3}(?:-[A-Za-z0-9]{2,8})*$"
+            },
+            "summary": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1500
+            },
+            "callToAction": {
+              "type": "object",
+              "properties": {
+                "actionType": {
+                  "type": "string",
+                  "enum": [
+                    "BOOK",
+                    "ORDER",
+                    "SHOP",
+                    "LEARN_MORE",
+                    "SIGN_UP",
+                    "CALL"
+                  ]
+                },
+                "url": {
+                  "type": "string",
+                  "maxLength": 2048,
+                  "format": "uri"
+                }
+              },
+              "required": [
+                "actionType"
+              ],
+              "additionalProperties": false
+            },
+            "media": {
+              "maxItems": 10,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "mediaFormat": {
+                    "type": "string",
+                    "const": "PHOTO"
+                  },
+                  "sourceUrl": {
+                    "type": "string",
+                    "maxLength": 2048,
+                    "format": "uri"
+                  }
+                },
+                "required": [
+                  "sourceUrl"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "topicType": {
+              "default": "STANDARD",
+              "type": "string",
+              "const": "STANDARD"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "account",
+        "location",
+        "post"
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "create_post",
+    "description": "Preview a STANDARD post by default; confirmed:true publishes after explicit user approval. No server-side draft or validateOnly API exists for posts.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "account": {
+          "type": "string",
+          "pattern": "^(?:accounts\\/)?[0-9]+$"
+        },
+        "location": {
+          "type": "string",
+          "pattern": "^(?:locations\\/)?[0-9]+$"
+        },
+        "post": {
+          "type": "object",
+          "properties": {
+            "languageCode": {
+              "type": "string",
+              "pattern": "^[a-z]{2,3}(?:-[A-Za-z0-9]{2,8})*$"
+            },
+            "summary": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1500
+            },
+            "callToAction": {
+              "type": "object",
+              "properties": {
+                "actionType": {
+                  "type": "string",
+                  "enum": [
+                    "BOOK",
+                    "ORDER",
+                    "SHOP",
+                    "LEARN_MORE",
+                    "SIGN_UP",
+                    "CALL"
+                  ]
+                },
+                "url": {
+                  "type": "string",
+                  "maxLength": 2048,
+                  "format": "uri"
+                }
+              },
+              "required": [
+                "actionType"
+              ],
+              "additionalProperties": false
+            },
+            "media": {
+              "maxItems": 10,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "mediaFormat": {
+                    "type": "string",
+                    "const": "PHOTO"
+                  },
+                  "sourceUrl": {
+                    "type": "string",
+                    "maxLength": 2048,
+                    "format": "uri"
+                  }
+                },
+                "required": [
+                  "sourceUrl"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "topicType": {
+              "default": "STANDARD",
+              "type": "string",
+              "const": "STANDARD"
+            }
+          },
+          "additionalProperties": false
+        },
+        "confirmed": {
+          "default": false,
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "account",
+        "location",
+        "post"
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "update_post",
+    "description": "Preview post changes by default; confirmed:true applies only supplied fields after explicit user approval.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "postName": {
+          "type": "string",
+          "pattern": "^accounts\\/\\d+\\/locations\\/\\d+\\/localPosts\\/[A-Za-z0-9_-]+$"
+        },
+        "post": {
+          "type": "object",
+          "properties": {
+            "languageCode": {
+              "type": "string",
+              "pattern": "^[a-z]{2,3}(?:-[A-Za-z0-9]{2,8})*$"
+            },
+            "summary": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1500
+            },
+            "callToAction": {
+              "type": "object",
+              "properties": {
+                "actionType": {
+                  "type": "string",
+                  "enum": [
+                    "BOOK",
+                    "ORDER",
+                    "SHOP",
+                    "LEARN_MORE",
+                    "SIGN_UP",
+                    "CALL"
+                  ]
+                },
+                "url": {
+                  "type": "string",
+                  "maxLength": 2048,
+                  "format": "uri"
+                }
+              },
+              "required": [
+                "actionType"
+              ],
+              "additionalProperties": false
+            },
+            "media": {
+              "maxItems": 10,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "mediaFormat": {
+                    "type": "string",
+                    "const": "PHOTO"
+                  },
+                  "sourceUrl": {
+                    "type": "string",
+                    "maxLength": 2048,
+                    "format": "uri"
+                  }
+                },
+                "required": [
+                  "sourceUrl"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "confirmed": {
+          "default": false,
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "postName",
+        "post"
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "delete_post",
+    "description": "Preview deletion of one local post; confirmed:true deletes only after explicit user approval. Never deletes business profiles.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "postName": {
+          "type": "string",
+          "pattern": "^accounts\\/\\d+\\/locations\\/\\d+\\/localPosts\\/[A-Za-z0-9_-]+$"
+        },
+        "confirmed": {
+          "default": false,
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "postName"
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": true,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "reply_to_review",
+    "description": "Validate and preview a review reply; confirmed:true sends only after explicit user approval of the exact text.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "reviewName": {
+          "type": "string",
+          "pattern": "^accounts\\/\\d+\\/locations\\/\\d+\\/reviews\\/[A-Za-z0-9_-]+$"
+        },
+        "comment": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "confirmed": {
+          "default": false,
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "reviewName",
+        "comment"
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "update_location",
+    "description": "Preview validated business information changes. confirmed:true with validateOnly:true validates at Google without mutation; validateOnly:false applies after explicit approval.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "location": {
+          "type": "string",
+          "pattern": "^(?:locations\\/)?[0-9]+$"
+        },
+        "changes": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            },
+            "websiteUri": {
+              "type": "string",
+              "maxLength": 2048,
+              "format": "uri"
+            },
+            "phoneNumbers": {
+              "type": "object",
+              "properties": {
+                "primaryPhone": {
+                  "type": "string",
+                  "minLength": 5,
+                  "maxLength": 40
+                },
+                "additionalPhones": {
+                  "maxItems": 2,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 5,
+                    "maxLength": 40
+                  }
+                }
+              },
+              "required": [
+                "primaryPhone"
+              ],
+              "additionalProperties": false
+            },
+            "storefrontAddress": {
+              "type": "object",
+              "properties": {
+                "regionCode": {
+                  "type": "string",
+                  "pattern": "^[A-Z]{2}$"
+                },
+                "postalCode": {
+                  "type": "string",
+                  "maxLength": 30
+                },
+                "administrativeArea": {
+                  "type": "string",
+                  "maxLength": 100
+                },
+                "locality": {
+                  "type": "string",
+                  "maxLength": 100
+                },
+                "addressLines": {
+                  "minItems": 1,
+                  "maxItems": 5,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  }
+                }
+              },
+              "required": [
+                "regionCode",
+                "addressLines"
+              ],
+              "additionalProperties": false
+            },
+            "serviceArea": {
+              "type": "object",
+              "properties": {
+                "businessType": {
+                  "type": "string",
+                  "enum": [
+                    "CUSTOMER_LOCATION_ONLY",
+                    "CUSTOMER_AND_BUSINESS_LOCATION"
+                  ]
+                },
+                "places": {
+                  "type": "object",
+                  "properties": {
+                    "placeInfos": {
+                      "minItems": 1,
+                      "maxItems": 20,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "placeName": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "placeId": {
+                            "type": "string",
+                            "pattern": "^[A-Za-z0-9_-]+$"
+                          }
+                        },
+                        "required": [
+                          "placeName",
+                          "placeId"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "placeInfos"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "businessType",
+                "places"
+              ],
+              "additionalProperties": false
+            },
+            "regularHours": {
+              "type": "object",
+              "properties": {
+                "periods": {
+                  "maxItems": 100,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "openDay": {
+                        "type": "string",
+                        "enum": [
+                          "MONDAY",
+                          "TUESDAY",
+                          "WEDNESDAY",
+                          "THURSDAY",
+                          "FRIDAY",
+                          "SATURDAY",
+                          "SUNDAY"
+                        ]
+                      },
+                      "openTime": {
+                        "type": "object",
+                        "properties": {
+                          "hours": {
+                            "default": 0,
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 23
+                          },
+                          "minutes": {
+                            "default": 0,
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 59
+                          }
+                        },
+                        "additionalProperties": false
+                      },
+                      "closeDay": {
+                        "type": "string",
+                        "enum": [
+                          "MONDAY",
+                          "TUESDAY",
+                          "WEDNESDAY",
+                          "THURSDAY",
+                          "FRIDAY",
+                          "SATURDAY",
+                          "SUNDAY"
+                        ]
+                      },
+                      "closeTime": {
+                        "type": "object",
+                        "properties": {
+                          "hours": {
+                            "default": 0,
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 23
+                          },
+                          "minutes": {
+                            "default": 0,
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 59
+                          }
+                        },
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "openDay",
+                      "openTime",
+                      "closeDay",
+                      "closeTime"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "periods"
+              ],
+              "additionalProperties": false
+            },
+            "specialHours": {
+              "type": "object",
+              "properties": {
+                "specialHourPeriods": {
+                  "maxItems": 100,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "startDate": {
+                        "type": "object",
+                        "properties": {
+                          "year": {
+                            "type": "integer",
+                            "minimum": 2000,
+                            "maximum": 2100
+                          },
+                          "month": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 12
+                          },
+                          "day": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 31
+                          }
+                        },
+                        "required": [
+                          "year",
+                          "month",
+                          "day"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "endDate": {
+                        "type": "object",
+                        "properties": {
+                          "year": {
+                            "type": "integer",
+                            "minimum": 2000,
+                            "maximum": 2100
+                          },
+                          "month": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 12
+                          },
+                          "day": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 31
+                          }
+                        },
+                        "required": [
+                          "year",
+                          "month",
+                          "day"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "openTime": {
+                        "type": "object",
+                        "properties": {
+                          "hours": {
+                            "default": 0,
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 23
+                          },
+                          "minutes": {
+                            "default": 0,
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 59
+                          }
+                        },
+                        "additionalProperties": false
+                      },
+                      "closeTime": {
+                        "type": "object",
+                        "properties": {
+                          "hours": {
+                            "default": 0,
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 23
+                          },
+                          "minutes": {
+                            "default": 0,
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 59
+                          }
+                        },
+                        "additionalProperties": false
+                      },
+                      "closed": {
+                        "default": false,
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "startDate"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "specialHourPeriods"
+              ],
+              "additionalProperties": false
+            },
+            "profile": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string",
+                  "maxLength": 750
+                }
+              },
+              "required": [
+                "description"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "validateOnly": {
+          "default": true,
+          "type": "boolean"
+        },
+        "confirmed": {
+          "default": false,
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "location",
+        "changes"
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "get_performance",
+    "description": "Read daily Search/Maps impressions, website clicks, call clicks (not completed calls), directions and other supported metrics. Unavailable access returns an explicit capability error.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "location": {
+          "type": "string",
+          "pattern": "^(?:locations\\/)?[0-9]+$"
+        },
+        "startDate": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "endDate": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "metrics": {
+          "default": [
+            "BUSINESS_IMPRESSIONS_DESKTOP_MAPS",
+            "BUSINESS_IMPRESSIONS_DESKTOP_SEARCH",
+            "BUSINESS_IMPRESSIONS_MOBILE_MAPS",
+            "BUSINESS_IMPRESSIONS_MOBILE_SEARCH",
+            "BUSINESS_DIRECTION_REQUESTS",
+            "CALL_CLICKS",
+            "WEBSITE_CLICKS"
+          ],
+          "minItems": 1,
+          "maxItems": 10,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "BUSINESS_IMPRESSIONS_DESKTOP_MAPS",
+              "BUSINESS_IMPRESSIONS_DESKTOP_SEARCH",
+              "BUSINESS_IMPRESSIONS_MOBILE_MAPS",
+              "BUSINESS_IMPRESSIONS_MOBILE_SEARCH",
+              "BUSINESS_DIRECTION_REQUESTS",
+              "CALL_CLICKS",
+              "WEBSITE_CLICKS",
+              "BUSINESS_BOOKINGS",
+              "BUSINESS_FOOD_ORDERS",
+              "BUSINESS_FOOD_MENU_CLICKS"
+            ]
+          }
+        }
+      },
+      "required": [
+        "location",
+        "startDate",
+        "endDate"
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "get_location_permissions",
+    "description": "Read location administrators and Voice of Merchant verification state. Each capability reports its own availability.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "location": {
+          "type": "string",
+          "pattern": "^(?:locations\\/)?[0-9]+$"
+        }
+      },
+      "required": [
+        "location"
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "set_primary_location",
+    "description": "Validate an accessible White5 location with Voice of Merchant and save its account/location in private Worker KV only after explicit confirmation. Does not change the Google listing.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "account": {
+          "type": "string",
+          "pattern": "^(?:accounts\\/)?[0-9]+$"
+        },
+        "location": {
+          "type": "string",
+          "pattern": "^(?:locations\\/)?[0-9]+$"
+        },
+        "confirmed": {
+          "default": false,
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "account",
+        "location"
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  }
+]

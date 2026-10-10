@@ -1,4 +1,4 @@
-export const VERSION = "1.1.0";
+export const VERSION = "1.2.0";
 export const ORIGIN = "https://white5-mcp.volodymyronufriichuk68.workers.dev";
 
 export interface InternalMcpRequest {
@@ -8,7 +8,7 @@ export interface InternalMcpRequest {
 }
 
 export interface White5ServiceBinding {
-  status(): Promise<{ configured: boolean }>;
+  status(): Promise<{ configured: boolean; connected?: boolean; capabilities?: Record<string, unknown>; category?: string }>;
   authorize(request: Request): Promise<Response>;
   rpc(request: InternalMcpRequest, gatewayAccessToken?: string): Promise<{
     isError?: boolean;

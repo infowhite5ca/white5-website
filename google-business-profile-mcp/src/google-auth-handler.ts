@@ -4,8 +4,13 @@ import { saveInternalGoogleRefreshToken } from "./stored-google-token";
 
 const STATE_TTL = 10 * 60;
 const CONNECTOR_SCOPES = ["business:read", "business:write"];
-interface StoredAuthorization { request: AuthRequest; createdAt: number }
-interface StoredInstallation { createdAt: number; mode: "internal-install" }
+interface StoredAuthorization { request: AuthRequest; createdAt: number; browserNonce: string }
+interface StoredInstallation { createdAt: number; mode: "internal-install"; browserNonce: string }
+const STATE_COOKIE = "__Host-white5-gbp-state";
+function stateCookie(request: Request) { return request.headers.get("cookie")?.split(";").map(v => v.trim()).find(v => v.startsWith(`${STATE_COOKIE}=`))?.slice(STATE_COOKIE.length + 1); }
+function consentRedirect(url: URL, nonce: string) {
+  return new Response(null, { status: 302, headers: { location: url.toString(), "cache-control": "no-store", "referrer-policy": "no-referrer", "set-cookie": `${STATE_COOKIE}=${nonce}; Path=/; Secure; HttpOnly; SameSite=Lax; Max-Age=${STATE_TTL}` } });
+}
 
 function callbackUri(request: Request): string {
   return `${new URL(request.url).origin}/oauth/google/callback`;
@@ -35,8 +40,8 @@ async function begin(request: Request, env: ConnectorEnv): Promise<Response> {
   catch (error) { if (error instanceof AuthorizationError) return oauthError(error); throw error; }
   const client = await env.OAUTH_PROVIDER.lookupClient(authRequest.clientId);
   if (!client) return new Response("Unknown OAuth client.", { status: 400 });
-  const state = crypto.randomUUID();
-  await env.OAUTH_KV.put(`google-state:${state}`, JSON.stringify({ request: authRequest, createdAt: Date.now() } satisfies StoredAuthorization), { expirationTtl: STATE_TTL });
+  const state = crypto.randomUUID(); const browserNonce = crypto.randomUUID();
+  await env.OAUTH_KV.put(`google-state:${state}`, JSON.stringify({ request: authRequest, createdAt: Date.now(), browserNonce } satisfies StoredAuthorization), { expirationTtl: STATE_TTL });
   const url = new URL("https://accounts.google.com/o/oauth2/v2/auth");
   url.searchParams.set("client_id", env.GOOGLE_CLIENT_ID);
   url.searchParams.set("redirect_uri", callbackUri(request));
@@ -46,15 +51,15 @@ async function begin(request: Request, env: ConnectorEnv): Promise<Response> {
   url.searchParams.set("prompt", "consent");
   url.searchParams.set("include_granted_scopes", "true");
   url.searchParams.set("state", state);
-  return Response.redirect(url, 302);
+  return consentRedirect(url, browserNonce);
 }
 
 async function beginInstall(request: Request, env: ConnectorEnv): Promise<Response> {
   const supplied = new URL(request.url).searchParams.get("token") || "";
   if (!env.GOOGLE_INSTALL_TOKEN || supplied !== env.GOOGLE_INSTALL_TOKEN) return new Response("Invalid or expired installation link.", { status: 403 });
   if (await env.OAUTH_KV.get("google-install-complete")) return new Response("Google Business Profile gateway authorization is already installed.", { status: 409 });
-  const state = crypto.randomUUID();
-  await env.OAUTH_KV.put(`google-install-state:${state}`, JSON.stringify({ createdAt: Date.now(), mode: "internal-install" } satisfies StoredInstallation), { expirationTtl: STATE_TTL });
+  const state = crypto.randomUUID(); const browserNonce = crypto.randomUUID();
+  await env.OAUTH_KV.put(`google-install-state:${state}`, JSON.stringify({ createdAt: Date.now(), mode: "internal-install", browserNonce } satisfies StoredInstallation), { expirationTtl: STATE_TTL });
   const url = new URL("https://accounts.google.com/o/oauth2/v2/auth");
   url.searchParams.set("client_id", env.GOOGLE_CLIENT_ID);
   url.searchParams.set("redirect_uri", callbackUri(request));
@@ -64,7 +69,7 @@ async function beginInstall(request: Request, env: ConnectorEnv): Promise<Respon
   url.searchParams.set("prompt", "consent");
   url.searchParams.set("include_granted_scopes", "true");
   url.searchParams.set("state", state);
-  return Response.redirect(url, 302);
+  return consentRedirect(url, browserNonce);
 }
 
 async function finish(request: Request, env: ConnectorEnv): Promise<Response> {
@@ -74,6 +79,7 @@ async function finish(request: Request, env: ConnectorEnv): Promise<Response> {
   if (installRaw) {
     await env.OAUTH_KV.delete(`google-install-state:${state}`);
     const stored = JSON.parse(installRaw) as StoredInstallation;
+    if (!stored.browserNonce || stateCookie(request) !== stored.browserNonce) return new Response("Authorization browser state did not match.", { status: 400 });
     if (Date.now() - stored.createdAt > STATE_TTL * 1000) return new Response("Authorization request expired. Ask Codex for a new link.", { status: 400 });
     if (url.searchParams.get("error")) return new Response("Google access was not granted.", { status: 400 });
     try {
@@ -90,8 +96,9 @@ async function finish(request: Request, env: ConnectorEnv): Promise<Response> {
   if (state) await env.OAUTH_KV.delete(`google-state:${state}`);
   if (!raw) return new Response("Authorization request expired or was already used.", { status: 400 });
   const stored = JSON.parse(raw) as StoredAuthorization;
+  if (!stored.browserNonce || stateCookie(request) !== stored.browserNonce) return new Response("Authorization browser state did not match.", { status: 400 });
   if (Date.now() - stored.createdAt > STATE_TTL * 1000) return redirectError(stored.request, "Authorization request expired.");
-  if (url.searchParams.get("error")) return redirectError(stored.request, url.searchParams.get("error_description") || "Google access was not granted.");
+  if (url.searchParams.get("error")) return redirectError(stored.request, "Google access was not granted.");
   try {
     const tokens = await exchangeAuthorizationCode(env, url.searchParams.get("code") || "", callbackUri(request));
     const user = await identifyGoogleUser(env, tokens.accessToken);

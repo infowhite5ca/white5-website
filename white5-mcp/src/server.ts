@@ -57,7 +57,7 @@ export function createServer(env: Env, identity: { scopes: string[]; accessToken
     }, async (args: Record<string, unknown>) => {
       if (explicitGate && args.confirmed !== true) {
         if (alias.provider === "zoho" && /^(send_|reply_|update_calendar|cancel_calendar)/.test(alias.upstream)) return delegate(alias.provider, alias.upstream, { ...args, confirmed: false });
-        if (alias.provider === "google_business" && alias.upstream === "reply_to_review") return delegate(alias.provider, alias.upstream, { ...args, confirmed: false });
+        if (alias.provider === "google_business") return delegate(alias.provider, alias.upstream, { ...args, confirmed: false });
         return confirmationPreview(alias.provider, alias.upstream, args);
       }
       return delegate(alias.provider, alias.upstream, args);
@@ -99,7 +99,7 @@ export function createServer(env: Env, identity: { scopes: string[]; accessToken
   }, async ({ provider, tool_name, arguments: args, confirmed }) => {
     try {
       if (findTool(provider, tool_name).annotations?.readOnlyHint === true) throw new Error("Use run_provider_read_tool for this operation.");
-      if (!confirmed) return confirmationPreview(provider, tool_name, args);
+      if (!confirmed) return provider === "google_business" ? delegate(provider, tool_name, { ...args, confirmed: false }) : confirmationPreview(provider, tool_name, args);
       if (["zoho", "square", "google_business"].includes(provider) && args.confirmed !== true) return confirmationPreview(provider, tool_name, args);
       return delegate(provider, tool_name, args);
     } catch (error) { return errorResult(provider, error); }

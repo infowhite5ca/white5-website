@@ -1,26 +1,13 @@
 import { createMcpHandler } from "agents/mcp/server";
 import { ORIGIN, VERSION, type Env } from "./env";
 import { createServer } from "./server";
-
-const services = (env: Env) => ({
-  zoho: env.ZOHO,
-  square: env.SQUARE,
-  google_ads: env.GOOGLE_ADS,
-  meta_ads: env.META_ADS,
-  google_business: env.GOOGLE_BUSINESS,
-});
+import { health } from "./health";
 
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
     if (request.method === "GET" && url.pathname === "/health") {
-      const status: Record<string, boolean> = {};
-      for (const [name, service] of Object.entries(services(env))) {
-        try { status[name] = Boolean((await service.status()).configured); }
-        catch { status[name] = false; }
-      }
-      const ok = Object.values(status).every(Boolean);
-      return Response.json({ ok, service: "white5-mcp", version: VERSION, services: status }, { status: ok ? 200 : 503, headers: { "cache-control": "no-store" } });
+      return health(env, request.headers.get("authorization")?.match(/^Bearer ([^\s]+)$/i)?.[1]);
     }
     if (url.pathname !== "/mcp") {
       if (![/^\/\.well-known\//, /^\/authorize$/, /^\/oauth\/(token|register)$/].some((pattern) => pattern.test(url.pathname))) return new Response("Not found", { status: 404 });

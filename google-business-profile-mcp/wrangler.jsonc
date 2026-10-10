@@ -10,5 +10,5 @@
       "id": "177ff5b5335d4b6d960040cfefb69cf6"
     }
   ],
-  "observability": { "enabled": true, "head_sampling_rate": 1 }
+  "observability": { "enabled": true, "head_sampling_rate": 1, "logs": { "enabled": true, "invocation_logs": false } }
 }

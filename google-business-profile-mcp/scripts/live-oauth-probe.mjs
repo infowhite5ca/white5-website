@@ -1,5 +1,5 @@
 import { createHash, randomBytes } from "node:crypto";
-import { spawnSync } from "node:child_process";
+
 import { createServer } from "node:http";
 
 const ORIGIN = "https://white5-google-business-mcp.volodymyronufriichuk68.workers.dev";
@@ -132,16 +132,6 @@ const tokens = await requestJson(`${ORIGIN}/oauth/token`, {
 });
 const accessToken = tokens.access_token;
 if (!accessToken) throw new Error("Connector token exchange did not return an access token.");
-if (process.argv.includes("--install-worker-refresh-token")) {
-  if (!tokens.refresh_token) throw new Error("Connector token exchange did not return a refresh token.");
-  const command = process.platform === "win32" ? "npx.cmd" : "npx";
-  const installed = spawnSync(command, ["wrangler", "secret", "put", "GOOGLE_REFRESH_TOKEN", "--name", "white5-google-business-mcp"], {
-    input: `${tokens.refresh_token}\n`,
-    stdio: ["pipe", "inherit", "inherit"],
-  });
-  if (installed.status !== 0) throw new Error("Could not store the Google refresh token as a Worker secret.");
-}
-
 const initialize = await mcpCall(accessToken, 1, "initialize", {
   protocolVersion: "2025-06-18",
   capabilities: {},

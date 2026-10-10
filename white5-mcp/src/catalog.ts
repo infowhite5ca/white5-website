@@ -1,3 +1,4 @@
+import googleBusinessTools from "./gbp-tools.json";
 import currentTools from "./upstream-tools.json";
 import type { Provider } from "./env";
 
@@ -13,102 +14,9 @@ export interface ToolDefinition {
   };
 }
 
-const googleBusinessTools: ToolDefinition[] = [
-  {
-    name: "connection_status",
-    title: "Check GBP connection",
-    description: "Checks the connected Google identity and access to Business Profile accounts.",
-    inputSchema: { type: "object", properties: {} },
-    annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
-  },
-  {
-    name: "list_accounts",
-    title: "List GBP accounts",
-    description: "Lists Business Profile accounts owned or managed by the connected Google user.",
-    inputSchema: {
-      type: "object",
-      properties: { pageSize: { type: "integer", minimum: 1, maximum: 20, default: 20 }, pageToken: { type: "string" } },
-    },
-    annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
-  },
-  {
-    name: "list_locations",
-    title: "List GBP locations",
-    description: "Lists locations for one Business Profile account.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        account: { type: "string" },
-        pageSize: { type: "integer", minimum: 1, maximum: 100, default: 100 },
-        pageToken: { type: "string" },
-        readMask: { type: "string", minLength: 1, default: "name,title,storeCode,websiteUri,phoneNumbers,categories,regularHours,specialHours,serviceArea,metadata,profile" },
-      },
-      required: ["account"],
-    },
-    annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
-  },
-  {
-    name: "get_location",
-    title: "Get GBP location",
-    description: "Gets Business Profile location details using Business Information API.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        location: { type: "string" },
-        readMask: { type: "string", minLength: 1, default: "name,title,storeCode,websiteUri,phoneNumbers,categories,regularHours,specialHours,serviceArea,metadata,profile" },
-      },
-      required: ["location"],
-    },
-    annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
-  },
-  {
-    name: "list_reviews",
-    title: "List GBP reviews",
-    description: "Lists reviews for one Business Profile location.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        account: { type: "string" }, location: { type: "string" },
-        pageSize: { type: "integer", minimum: 1, maximum: 50, default: 50 },
-        pageToken: { type: "string" }, orderBy: { type: "string", enum: ["rating", "rating desc", "updateTime desc"] },
-      },
-      required: ["account", "location"],
-    },
-    annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
-  },
-  {
-    name: "list_posts",
-    title: "List GBP posts",
-    description: "Lists local posts for one Business Profile location.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        account: { type: "string" }, location: { type: "string" },
-        pageSize: { type: "integer", minimum: 1, maximum: 100, default: 20 }, pageToken: { type: "string" },
-      },
-      required: ["account", "location"],
-    },
-    annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: true },
-  },
-  {
-    name: "reply_to_review",
-    title: "Reply to GBP review",
-    description: "Replies to a review only after explicit confirmation.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        reviewName: { type: "string", pattern: "^accounts/[^/]+/locations/[^/]+/reviews/[^/]+$" },
-        comment: { type: "string", minLength: 1, maxLength: 4096 }, confirmed: { type: "boolean", default: false },
-      },
-      required: ["reviewName", "comment"],
-    },
-    annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: true },
-  },
-];
-
 export const upstream = {
   ...(currentTools as Record<string, ToolDefinition[]>),
-  google_business: googleBusinessTools,
+  google_business: googleBusinessTools as ToolDefinition[],
 } as Record<Provider, ToolDefinition[]>;
 
 export const aliases: Array<{ name: string; provider: Provider; upstream: string; description?: string }> = [
@@ -130,6 +38,14 @@ export const aliases: Array<{ name: string; provider: Provider; upstream: string
   { name: "get_meta_campaigns", provider: "meta_ads", upstream: "list_campaigns" },
   { name: "get_meta_ad_sets", provider: "meta_ads", upstream: "list_ad_sets" },
   { name: "get_meta_ads", provider: "meta_ads", upstream: "list_ads" },
+  ...[
+    ["get_gbp_status", "connection_status"], ["create_gbp_post", "create_post"],
+    ["update_gbp_post", "update_post"], ["delete_gbp_post", "delete_post"],
+    ["prepare_gbp_post", "prepare_post"], ["get_gbp_review", "get_review"],
+    ["reply_gbp_review", "reply_to_review"], ["update_gbp_location", "update_location"],
+    ["get_gbp_performance", "get_performance"], ["get_gbp_location_permissions", "get_location_permissions"],
+    ["set_gbp_primary_location", "set_primary_location"],
+  ].map(([name, upstream]) => ({ name, upstream, provider: "google_business" as const })),
   { name: "gbp_connection_status", provider: "google_business", upstream: "connection_status" },
   { name: "list_gbp_accounts", provider: "google_business", upstream: "list_accounts" },
   { name: "list_gbp_locations", provider: "google_business", upstream: "list_locations" },
