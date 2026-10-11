@@ -3,10 +3,10 @@
 Cloudflare Worker MCP connector for the existing White5 Google Business Profile.
 
 Two existing Workers use different Google projects. The current gateway still
-uses `white5-google-business-mcp`. The intended `My First Project` adapter is
-deployed separately to the pre-existing `white5-google-business-profile-mcp`,
-but its Google quotas are zero. See [migration status](APPROVED-PROJECT.md) before
-changing the gateway binding or choosing a deployment config.
+uses `white5-google-business-mcp`, whose project 230933935136 is explicitly
+approved in Google's October 7 email. The alternate `My First Project` adapter
+has zero quotas and must not replace it. See [verified approval and account
+access status](APPROVED-PROJECT.md) before choosing a deployment config.
 
 ## Google OAuth
 

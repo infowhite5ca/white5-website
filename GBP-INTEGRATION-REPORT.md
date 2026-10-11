@@ -1,4 +1,31 @@
-# White5 GBP integration — 2026-10-10
+# White5 GBP integration — corrected approval evidence, 2026-10-11
+
+## Current conclusion — supersedes the migration plan below
+
+The Google approval email dated 2026-10-07 explicitly approves project
+**230933935136**, White5 Google Ads API / concrete-zephyr-505300-g2, with 300 QPM.
+This is the project already used by the gateway's current provider. The previous
+recommendation to move to My First Project was incorrect and must not be followed.
+My First Project's zero quota is not a blocker for the approved production project.
+
+The remaining problem is API activation and split Google account permissions:
+the approval recipient can see the private Google My Business API but has no IAM
+membership in the approved project. The project's only IAM principal is the
+existing Owner, whose account cannot load that private API's library page.
+Google's setup documentation confirms private API visibility is tied to the
+approved requesting Google account.
+
+A Service Usage Admin grant to the approval recipient has been prepared in the
+approved project's IAM form, but NOT saved. Explicit user confirmation is needed
+for the new project access. After that grant, activate the required APIs in
+230933935136 and rerun production read-only checks. Retain the current Worker
+binding and OAuth client. No support message has been sent.
+
+## Historical 2026-10-10 implementation and test record
+
+The migration and support recommendations in this historical record are
+superseded by the verified approval evidence above. Deployment IDs and test
+results remain valid records of what was deployed and checked that day.
 
 ## Result
 

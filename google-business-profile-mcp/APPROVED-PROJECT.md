@@ -1,4 +1,21 @@
-# Intended Google project — migration blocked by Google quota
+# Approval correction — do not migrate to My First Project
+
+**2026-10-11:** The October 7 Google approval email explicitly names project
+230933935136 (White5 Google Ads API), with 300 QPM. That is the current gateway
+provider's project. My First Project was incorrectly assumed to be the approved
+target. The migration steps below are historical and MUST NOT be executed.
+
+The default wrangler.jsonc and npm deploy target the correct provider.
+The historical filenames wrangler.approved-project.jsonc and
+src/approved-project-server.ts, and --approved-project probe flag, refer to the
+alternate My First Project adapter; their names are not evidence of approval.
+
+The approval recipient sees the private API but lacks IAM membership in the
+approved project. A scoped Service Usage Admin grant is prepared, awaiting user
+confirmation. Resolve that account-access mismatch and activate APIs in
+230933935136. Do not copy secrets, rotate clients, or change the gateway binding.
+
+## Historical alternate-project investigation, 2026-10-10
 
 The original discovery was incomplete: two existing GBP Workers use different
 Google projects. This was confirmed against their live Google authorization
