@@ -10,26 +10,42 @@ export interface ConnectorEnv {
 }
 export interface GoogleAuthProps { userId: string; email?: string; refreshToken: string; scopes: string[] }
 type JsonObject = Record<string, any>;
+type GoogleDiagnostics = { status?: string; metadata: Record<string, string> };
 export class GoogleApiError extends Error {
-  constructor(message: string, readonly status = 502, readonly category = "upstream_error", readonly reason?: string, readonly retryAfter?: number) { super(message); this.name = "GoogleApiError"; }
+  constructor(message: string, readonly status = 502, readonly category = "upstream_error", readonly reason?: string, readonly retryAfter?: number, readonly google?: GoogleDiagnostics) { super(message); this.name = "GoogleApiError"; }
 }
 export function classifyGoogleError(status: number, payload: JsonObject, retryAfter?: number): GoogleApiError {
   const error = payload.error;
   const detail = error?.details?.find((d: JsonObject) => d["@type"]?.endsWith("ErrorInfo"));
   const rawReason = detail?.reason || (typeof error === "string" ? error : "");
   const reason = /^[A-Za-z0-9_]{1,100}$/.test(rawReason) ? rawReason : undefined;
+  // Only expose documented quota/project identifiers, never arbitrary upstream data.
+  const metadata: Record<string, string> = {};
+  const allowed: Record<string, RegExp> = {
+    service: /^[a-z0-9]+\.googleapis\.com$/,
+    consumer: /^projects\/\d+$/,
+    quota_limit_value: /^\d+$/,
+    quota_limit: /^[A-Za-z0-9_/-]{1,150}$/,
+    quota_metric: /^[a-z0-9]+\.googleapis\.com\/[A-Za-z0-9_/-]{1,150}$/,
+    quota_location: /^(global|[a-z]+(?:-[a-z0-9]+)+)$/,
+  };
+  for (const [key, pattern] of Object.entries(allowed)) {
+    const value = detail?.metadata?.[key];
+    if (typeof value === "string" && pattern.test(value)) metadata[key] = value;
+  }
+  const google = { status: typeof error?.status === "string" && /^[A-Z_]{1,50}$/.test(error.status) ? error.status : undefined, metadata };
   // Interpret upstream messages but never echo credential or request content.
   const message = typeof error?.message === "string" ? error.message : "";
   let category = "upstream_error", safe = "Google API request failed.";
   if (status === 401 || ["invalid_grant", "invalid_client", "unauthorized_client"].includes(rawReason)) { category = "authentication_failed"; safe = "Google authorization is invalid or expired; check the existing OAuth credentials and grant."; }
   else if (rawReason === "SERVICE_DISABLED" || /has not been used.*disabled|API.*disabled/i.test(message)) { category = "api_disabled"; safe = "The required Google API is disabled in the OAuth application project. Enable that API in the existing project."; }
   else if (rawReason === "ACCESS_TOKEN_SCOPE_INSUFFICIENT" || /insufficient.*scope/i.test(message)) { category = "insufficient_scope"; safe = "The Google grant lacks the required business.manage scope."; }
-  else if (status === 429) { category = /limit[^0-9]*0(?:\D|$)|quota[^0-9]*0(?:\D|$)/i.test(message) ? "project_quota_zero" : "rate_limited"; safe = category === "project_quota_zero" ? "Project quota is zero; Business Profile API project access must be approved." : "Google rate or quota limit reached. Retry after the indicated delay."; }
+  else if (status === 429) { category = metadata.quota_limit_value === "0" || /limit[^0-9]*0(?:\D|$)|quota[^0-9]*0(?:\D|$)/i.test(message) ? "project_quota_zero" : "rate_limited"; safe = category === "project_quota_zero" ? "Project quota is zero; Business Profile API project access must be approved." : "Google rate or quota limit reached. Retry after the indicated delay."; }
   else if (status === 403) { category = /project.*(not.*approved|not.*allowed|access.*denied)|accessNotConfigured/i.test(message) ? "project_access_restricted" : "permission_denied"; safe = category === "project_access_restricted" ? "Google restricts API access for this project." : "Google denied this operation. Check location ownership/manager permissions and project API access; this response alone does not identify which permission is missing."; }
   else if (status === 404) { category = "not_found_or_unavailable"; safe = "The resource was not found or is unavailable to this Google account."; }
   else if (status === 400) { category = "invalid_request"; safe = "Google rejected the request fields or resource. Check the tool schema and location capability."; }
   else if (status >= 500) { category = "transient_failure"; safe = "Google is temporarily unavailable."; }
-  return new GoogleApiError(safe, status, category, reason, retryAfter);
+  return new GoogleApiError(safe, status, category, reason, retryAfter, google);
 }
 async function readJson(response: Response): Promise<JsonObject> { return response.status === 204 ? {} : await response.json<JsonObject>().catch(() => ({})); }
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));

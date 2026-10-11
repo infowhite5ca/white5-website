@@ -8,12 +8,33 @@ import { saveInternalGoogleRefreshToken, loadInternalGoogleRefreshToken } from '
 import { health } from '../.local/test/health.mjs';
 import { aliases, upstream } from '../.local/test/catalog.mjs';
 import { createServer } from '../.local/test/gateway.mjs';
+import approvedWorker from '../.local/test/approved.mjs';
 const originalFetch = globalThis.fetch;
 afterEach(() => { globalThis.fetch = originalFetch; });
 const storage = new Map();
 const env = { GOOGLE_CLIENT_ID: 'test-client', GOOGLE_CLIENT_SECRET: 'test-secret', ALLOWED_GOOGLE_EMAIL: 'test@example.com', OAUTH_KV: { get: async (k, type) => type === 'json' ? JSON.parse(storage.get(k) || 'null') : storage.get(k) || null, put: async (k,v) => storage.set(k,v), delete: async k => storage.delete(k) } };
 const props = { userId: 'test', refreshToken: 'refresh-secret', scopes: ['business:read','business:write'] };
 const parse = result => JSON.parse(result.content[0].text);
+
+test('approved-project adapter preserves legacy public discovery and rejects unauthorized installation',async()=>{
+  const context={waitUntil:()=>{}};
+  const approvedEnv={...env,MCP_PUBLIC_ORIGIN:'https://example.test'};
+  const root=await approvedWorker.fetch(new Request('https://example.test/'),approvedEnv,context);
+  assert.deepEqual((await root.json()).tools,['list_business_accounts','list_locations','get_location']);
+  const metadata=await approvedWorker.fetch(new Request('https://example.test/.well-known/oauth-authorization-server'),approvedEnv,context);
+  assert.deepEqual((await metadata.json()).scopes_supported,['business-profile:read']);
+  assert.equal((await approvedWorker.fetch(new Request('https://example.test/mcp'),approvedEnv,context)).status,401);
+  assert.equal((await approvedWorker.fetch(new Request('https://example.test/oauth/google/install?token=bad'),approvedEnv,context)).status,403);
+  const start=await approvedWorker.fetch(new Request('https://example.test/oauth/google/install?token=temporary-test'),{...approvedEnv,GOOGLE_INSTALL_TOKEN:'temporary-test'},context);
+  assert.equal(start.status,302);
+  const google=new URL(start.headers.get('location'));
+  assert.equal(google.searchParams.get('client_id'),'test-client');
+  assert.equal(google.searchParams.get('redirect_uri'),'https://example.test/oauth/google/callback');
+  assert.match(start.headers.get('set-cookie'),/Secure; HttpOnly/);
+  const rejected=await approvedWorker.fetch(new Request(`https://example.test/oauth/google/callback?state=${google.searchParams.get('state')}&code=bad`),approvedEnv,context);
+  assert.equal(rejected.status,400);assert.match(await rejected.text(),/browser state did not match/);
+  assert.equal((await approvedWorker.fetch(new Request('https://example.test/oauth/google/callback?state=old&code=bad'),approvedEnv,context)).status,400);
+});
 const example = {
   prepare_post: {account:'1',location:'2',post:{summary:'Example',callToAction:{actionType:'LEARN_MORE',url:'https://white5.ca'},media:[{sourceUrl:'https://white5.ca/photo.jpg'}]}},
   create_post: {account:'1',location:'2',post:{summary:'Example'}},
@@ -61,6 +82,20 @@ test('401, disabled API, insufficient scope, ambiguous permission, 404 and 429 a
   assert.equal(classifyGoogleError(429,{error:{message:'Quota limit 0'}}).category,'project_quota_zero');
   assert.equal(JSON.stringify(classifyGoogleError(403,disabled)).includes('access-secret'),false);
 });
+
+test('structured zero-quota errors preserve safe Google evidence and do not retry',async()=>{
+  const payload={error:{status:'RESOURCE_EXHAUSTED',message:'credential access-secret',details:[{'@type':'type.googleapis.com/google.rpc.ErrorInfo',reason:'RATE_LIMIT_EXCEEDED',metadata:{consumer:'projects/686968841791',service:'mybusinessaccountmanagement.googleapis.com',quota_limit_value:'0',quota_limit:'DefaultRequestsPerMinutePerProject',quota_metric:'mybusinessaccountmanagement.googleapis.com/default_requests',quota_location:'global',access_token:'access-secret',arbitrary:'refresh-secret'}}]}};
+  let count=0;globalThis.fetch=async()=>{count++;return Response.json(payload,{status:429})};
+  await assert.rejects(googleRequest('x','https://mybusinessaccountmanagement.googleapis.com/v1/accounts'),error=>{
+    assert.equal(error.category,'project_quota_zero');
+    assert.equal(error.google.status,'RESOURCE_EXHAUSTED');
+    assert.equal(error.google.metadata.consumer,'projects/686968841791');
+    assert.equal(error.google.metadata.quota_limit_value,'0');
+    assert.equal(JSON.stringify(error).includes('secret'),false);
+    return true;
+  });
+  assert.equal(count,1);
+});
 test('GET retries transient failures; POST never retries; Retry-After is respected', async () => {
   let count=0;
   globalThis.fetch=async()=> ++count<3 ? Response.json({}, {status:503,headers:{'retry-after':'0'}}) : Response.json({ok:true});
@@ -76,6 +111,14 @@ test('token refresh validates scope and never returns raw OAuth error details', 
   globalThis.fetch=async()=>Response.json({error:'invalid_grant',error_description:'refresh-secret'}, {status:400});
   await assert.rejects(refreshAccessToken(env,'test'),e=>e.category==='authentication_failed'&&!e.message.includes('refresh-secret'));
 });
+test('status distinguishes successful OAuth refresh from zero-quota account access',async()=>{
+  globalThis.fetch=async url=>String(url).includes('oauth2')?Response.json({access_token:'secret'}):Response.json({error:{status:'RESOURCE_EXHAUSTED',details:[{'@type':'x/ErrorInfo',reason:'RATE_LIMIT_EXCEEDED',metadata:{quota_limit_value:'0'}}]}},{status:429});
+  const result=parse(await invoke(env,props,'connection_status',{}));
+  assert.equal(result.tokenRefresh,true);assert.equal(result.connected,false);
+  assert.equal(result.capabilities.accounts.category,'project_quota_zero');
+  assert.equal(result.capabilities.reviews.available,null);
+});
+
 test('permissions and performance use documented endpoints and query fields',async()=>{
   const urls=[];
   globalThis.fetch=async(url,init)=>{urls.push(String(url));assert.equal(init.redirect,'manual');return Response.json(String(url).includes('oauth2')?{access_token:'secret'}:{})};

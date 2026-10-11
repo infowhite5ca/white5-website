@@ -8,7 +8,7 @@ export class White5Service extends WorkerEntrypoint<ConnectorEnv> {
   async status() {
     const response = await this.rpc({ method: "tools/call", name: "connection_status" });
     const result = JSON.parse(response.content![0].text);
-    return { configured: !response.isError && result.connected === true, connected: !response.isError && result.connected === true, capabilities: result.capabilities, category: result.category };
+    return { configured: !response.isError && result.tokenRefresh === true, connected: !response.isError && result.connected === true, tokenRefresh: result.tokenRefresh === true, capabilities: result.capabilities, category: result.category ?? result.capabilities?.accounts?.category };
   }
   async rpc(request: InternalMcpRequest): Promise<any> {
     try {

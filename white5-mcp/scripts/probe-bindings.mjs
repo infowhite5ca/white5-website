@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 const folder = new URL('../.local/', import.meta.url);
 await mkdir(folder, { recursive: true });
 const config = JSON.parse(await readFile(new URL('../wrangler.jsonc', import.meta.url), 'utf8'));
+if(process.argv.includes('--approved-project')) config.services=config.services.map(service=>service.binding==='GOOGLE_BUSINESS'?{...service,service:'white5-google-business-profile-mcp'}:service);
 config.services = config.services.map(service => ({ ...service, remote: true }));
 delete config.main;
 await writeFile(new URL('probe.json', folder), JSON.stringify(config));
@@ -16,6 +17,19 @@ try {
     if (result.isError) throw new Error(JSON.stringify(data));
     return data;
   }
+  if(process.argv.includes('--capabilities-only')){
+    for(const [name,args] of [
+      ['list_accounts',{}],
+      ['list_locations',{account:'115421274606058010150'}],
+      ['get_location',{location:'8623115222428082795'}],
+      ['list_posts',{account:'115421274606058010150',location:'8623115222428082795'}],
+      ['list_reviews',{account:'115421274606058010150',location:'8623115222428082795'}],
+      ['get_performance',{location:'8623115222428082795',startDate:'2026-09-01',endDate:'2026-09-30',metrics:['WEBSITE_CLICKS','CALL_CLICKS']}],
+    ]){
+      try{const data=await call(name,args);console.log(JSON.stringify({name,ok:true,count:data.accounts?.length??data.locations?.length??data.localPosts?.length??data.reviews?.length,totalReviewCount:data.totalReviewCount,averageRating:data.averageRating,hasPerformance:Boolean(data.multiDailyMetricTimeSeries)}))}
+      catch(error){console.log(JSON.stringify({name,ok:false,error:error.message}))}
+    }
+  }else{
   console.log(JSON.stringify({ name: 'connection_status', result: await call('connection_status') }));
   let accountPage;
   do {
@@ -46,5 +60,6 @@ try {
   }
   for (const key of ['ZOHO','SQUARE','GOOGLE_ADS','META_ADS']) {
     console.log(JSON.stringify({ binding: key, status: await proxy.env[key].status() }));
+  }
   }
 } finally { await proxy.dispose(); }

@@ -9,7 +9,7 @@ export const PRIMARY_KEY = "gbp-primary-location:v1";
 const resource = (value: string, prefix: string) => value.startsWith(`${prefix}/`) ? value : `${prefix}/${value}`;
 export function ok(data: unknown) { return { content: [{ type: "text" as const, text: JSON.stringify(data) }] }; }
 export function safeError(error: unknown) {
-  if (error instanceof GoogleApiError) return { available: false, status: error.status, category: error.category, message: error.message, reason: error.reason, retryAfter: error.retryAfter };
+  if (error instanceof GoogleApiError) return { available: false, status: error.status, category: error.category, message: error.message, reason: error.reason, retryAfter: error.retryAfter, google: error.google };
   if (error instanceof z.ZodError) return { available: false, status: 400, category: "invalid_request", issues: error.issues.map(issue => ({ path: issue.path, code: issue.code, message: issue.message })) };
   return { available: false, status: 500, category: "internal_error", message: "The GBP operation could not be completed." };
 }
@@ -49,10 +49,11 @@ export async function invoke(env: ConnectorEnv, props: GoogleAuthProps | undefin
   };
   const capability = async (target: string) => { try { return { available: true, data: await request(target) }; } catch (e) { return safeError(e); } };
   if (name === "connection_status") {
-    const accounts = await request(`${ACCOUNTS}/accounts?pageSize=20`);
+    const accountCheck = await capability(`${ACCOUNTS}/accounts?pageSize=20`);
+    const accounts = "data" in accountCheck ? accountCheck.data : undefined;
     const saved = await env.OAUTH_KV.get<{ account: string; location: string }>(PRIMARY_KEY, "json");
     const primary = location ? { account, location } : saved;
-    const capabilities: Record<string, any> = { accounts: { available: true }, locations: { available: null, status: "not_checked" }, posts: { available: null, status: "not_checked" }, reviews: { available: null, status: "not_checked" }, performance: { available: null, status: "not_checked" } };
+    const capabilities: Record<string, any> = { accounts: accounts ? { available: true } : accountCheck, locations: { available: null, status: "not_checked" }, posts: { available: null, status: "not_checked" }, reviews: { available: null, status: "not_checked" }, performance: { available: null, status: "not_checked" } };
     if (primary) {
       const parent = `${primary.account}/${primary.location}`;
       const end = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
@@ -64,7 +65,7 @@ export async function invoke(env: ConnectorEnv, props: GoogleAuthProps | undefin
       ]);
       ["locations", "posts", "reviews", "performance"].forEach((key, index) => { const check = checks[index]; capabilities[key] = "data" in check ? { available: true } : check; });
     }
-    return ok({ connected: true, tokenRefresh: true, requiredScope: "https://www.googleapis.com/auth/business.manage", accounts: accounts.accounts || [], nextPageToken: accounts.nextPageToken, primary, capabilities, metrics: METRICS, writes: "explicit_confirmation_required", postDrafts: "local_only" });
+    return ok({ connected: Boolean(accounts), tokenRefresh: true, requiredScope: "https://www.googleapis.com/auth/business.manage", accounts: accounts?.accounts || [], nextPageToken: accounts?.nextPageToken, primary, capabilities, metrics: METRICS, writes: "explicit_confirmation_required", postDrafts: "local_only" });
   }
   if (name === "get_location_permissions") return ok({ administrators: await capability(`${ACCOUNTS}/${location}/admins`), verification: await capability(`https://mybusinessverifications.googleapis.com/v1/${location}/VoiceOfMerchantState`) });
   if (name === "set_primary_location") {

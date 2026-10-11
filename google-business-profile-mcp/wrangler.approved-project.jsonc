@@ -1,0 +1,13 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "white5-google-business-profile-mcp",
+  "main": "src/approved-project-server.ts",
+  "compatibility_date": "2026-09-24",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "vars": {
+    "MCP_PUBLIC_ORIGIN": "https://white5-google-business-profile-mcp.volodymyronufriichuk68.workers.dev",
+    "ALLOWED_GOOGLE_EMAIL": "vovkamtw@gmail.com"
+  },
+  "kv_namespaces": [{"binding":"OAUTH_KV","id":"969c10c47a9542ea8e7459a331c2ac78"}],
+  "observability": {"enabled":true,"head_sampling_rate":1,"logs":{"enabled":true,"invocation_logs":false}}
+}

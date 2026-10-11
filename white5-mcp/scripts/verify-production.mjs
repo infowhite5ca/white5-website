@@ -48,6 +48,7 @@ const report={};
 for(const [name,args] of [
   ['get_gbp_status',{}],['list_gbp_accounts',{}],['list_gbp_locations',{account:'accounts/115421274606058010150'}],
   ['get_gbp_location',{location:'locations/8623115222428082795'}],
+  ['get_gbp_performance',{location:'8623115222428082795',startDate:'2026-09-01',endDate:'2026-09-30',metrics:['BUSINESS_IMPRESSIONS_DESKTOP_SEARCH','BUSINESS_IMPRESSIONS_MOBILE_SEARCH','BUSINESS_IMPRESSIONS_DESKTOP_MAPS','BUSINESS_IMPRESSIONS_MOBILE_MAPS','WEBSITE_CLICKS','CALL_CLICKS']}],
   ['list_gbp_posts',{account:'115421274606058010150',location:'8623115222428082795'}],
   ['list_gbp_reviews',{account:'115421274606058010150',location:'8623115222428082795'}],
   ['prepare_gbp_post',{account:'115421274606058010150',location:'8623115222428082795',post:{summary:'Schema verification only; not published.'}}],
