@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { isFileDownloadUrl } from "./media";
 
 export const LOCATION_MASK = "name,title,storeCode,storefrontAddress,websiteUri,phoneNumbers,categories,regularHours,specialHours,serviceArea,metadata,profile,openInfo";
 const resource = (prefix: string) => z.string().regex(new RegExp(`^(?:${prefix}/)?[0-9]+$`));
@@ -10,6 +11,13 @@ const webUrl = z.string().url().max(2048).refine(value => {
   return ["https:", "http:"].includes(url.protocol) && !url.username && !url.password;
 }, "Use a public HTTP(S) URL without credentials.");
 const confirmed = z.boolean().default(false);
+const file = z.object({
+  download_url: z.string().max(16384).refine(isFileDownloadUrl, "Use the signed attachment download URL supplied by ChatGPT."),
+  file_id: z.string().min(1).max(512),
+  mime_type: z.string().max(100).optional(),
+  file_name: z.string().max(255).optional(),
+}).strict();
+const mediaCategory = z.enum(["COVER", "PROFILE", "EXTERIOR", "INTERIOR", "PRODUCT", "AT_WORK", "FOOD_AND_DRINK", "MENU", "COMMON_AREA", "ROOMS", "TEAMS", "ADDITIONAL"]);
 const callToAction = z.object({ actionType: z.enum(["BOOK", "ORDER", "SHOP", "LEARN_MORE", "SIGN_UP", "CALL"]), url: webUrl.optional() }).strict().refine(v => v.actionType === "CALL" ? !v.url : Boolean(v.url), "CALL must omit url; other actions require a website URL.");
 const postFields = {
   languageCode: z.string().regex(/^[a-z]{2,3}(?:-[A-Za-z0-9]{2,8})*$/).optional(),
@@ -36,6 +44,9 @@ export const METRICS = ["BUSINESS_IMPRESSIONS_DESKTOP_MAPS", "BUSINESS_IMPRESSIO
 const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/).refine(v => Number.isFinite(Date.parse(v)) && new Date(v).toISOString().slice(0, 10) === v, "Invalid date.");
 const pageToken = z.string().max(4096).optional();
 export const schemas = {
+  upload_media: z.object({ file, confirmed }).strict(),
+  create_media: z.object({ account, location, sourceUrl: webUrl, category: mediaCategory.default("ADDITIONAL"), description: z.string().trim().min(1).max(1500).optional(), confirmed }).strict().refine(v => v.category !== "COVER" || !v.description, "Cover photos cannot have a description."),
+  list_media: z.object({ account, location, pageSize: z.number().int().min(1).max(2500).default(100), pageToken }),
   connection_status: z.object({ account: account.optional(), location: location.optional() }).refine(v => !v.location || v.account, "Supply account with location."),
   list_accounts: z.object({ pageSize: z.number().int().min(1).max(20).default(20), pageToken }),
   list_locations: z.object({ account, pageSize: z.number().int().min(1).max(100).default(100), pageToken, readMask: z.string().min(1).default(LOCATION_MASK) }),
@@ -54,8 +65,11 @@ export const schemas = {
   set_primary_location: z.object({ account, location, confirmed }),
 };
 export type ToolName = keyof typeof schemas;
-export const WRITES = new Set<ToolName>(["create_post", "update_post", "delete_post", "reply_to_review", "update_location", "set_primary_location"]);
+export const WRITES = new Set<ToolName>(["upload_media", "create_media", "create_post", "update_post", "delete_post", "reply_to_review", "update_location", "set_primary_location"]);
 const descriptions: Record<ToolName, string> = {
+  upload_media: "Accept a user-attached JPEG/PNG through ChatGPT file input. With confirmed:true, download and stage it in White5 for 72 hours (10 KB–5 MiB, minimum 250x250). Returns sourceUrl for posts or profile gallery photos. Anyone with this temporary URL can read it. Never publishes to Google. Default is a local preview without downloading. Do not invent file IDs or URLs; ask for an attachment if missing.",
+  create_media: "Preview adding a photo to the Google Business Profile gallery from sourceUrl (including upload_media output). confirmed:true publishes after explicit approval of the exact photo, category and description. COVER/PROFILE changes the profile's cover/profile photo. Google may moderate publication. Does not create a local post.",
+  list_media: "List existing Google Business Profile gallery media with pagination. Read only; Google API availability and location permissions still apply.",
   connection_status: "Refreshes Google authorization and checks accounts. With account/location (or saved primary), checks location, posts, reviews and performance separately; reports actual API restrictions.",
   list_accounts: "List accessible Google Business Profile accounts, with pagination.",
   list_locations: "List Business Profile locations including business details, service area and Voice of Merchant status. Follow nextPageToken to find duplicates.",
@@ -75,5 +89,6 @@ const descriptions: Record<ToolName, string> = {
 };
 export const toolDefinitions = (Object.keys(schemas) as ToolName[]).map(name => ({
   name, description: descriptions[name], inputSchema: z.toJSONSchema(schemas[name], { io: "input" }),
+  ...(name === "upload_media" ? { _meta: { "openai/fileParams": ["file"] } } : {}),
   annotations: { readOnlyHint: !WRITES.has(name), destructiveHint: name === "delete_post", openWorldHint: name !== "prepare_post" },
 }));

@@ -41,12 +41,18 @@ async function tool(name,args={}){
 }
 await rpc('initialize',{protocolVersion:'2025-06-18',capabilities:{},clientInfo:{name:'production-verifier',version:'1'}});
 const catalog=await rpc('tools/list');
+const uploadTool=catalog.tools.find(t=>t.name==='upload_media');
+if(!uploadTool || JSON.stringify(uploadTool._meta?.['openai/fileParams'])!==JSON.stringify(['file'])) throw new Error('Production upload_media file metadata is missing');
+for(const key of ['download_url','file_id','mime_type','file_name']) if(!uploadTool.inputSchema.properties.file.properties[key]) throw new Error('Production file input schema is incomplete');
 await mkdir(new URL('../.local/',import.meta.url),{recursive:true});
 await writeFile(new URL('../.local/production-catalog.json',import.meta.url),JSON.stringify(catalog,null,2));
 console.log(JSON.stringify({productionTools:catalog.tools.map(t=>t.name)}));
 const report={};
 for(const [name,args] of [
   ['get_gbp_status',{}],['list_gbp_accounts',{}],['list_gbp_locations',{account:'accounts/115421274606058010150'}],
+  ['upload_media',{file:{download_url:'https://files.oaiusercontent.com/schema-test-only?sig=not-a-real-link',file_id:'schema-test',mime_type:'image/png',file_name:'schema-test.png'},confirmed:false}],
+  ['create_gbp_media',{account:'115421274606058010150',location:'8623115222428082795',sourceUrl:'https://white5.ca/schema-test-only.png',category:'AT_WORK',confirmed:false}],
+  ['list_gbp_media',{account:'115421274606058010150',location:'8623115222428082795',pageSize:1}],
   ['get_gbp_location',{location:'locations/8623115222428082795'}],
   ['get_gbp_performance',{location:'8623115222428082795',startDate:'2026-09-01',endDate:'2026-09-30',metrics:['BUSINESS_IMPRESSIONS_DESKTOP_SEARCH','BUSINESS_IMPRESSIONS_MOBILE_SEARCH','BUSINESS_IMPRESSIONS_DESKTOP_MAPS','BUSINESS_IMPRESSIONS_MOBILE_MAPS','WEBSITE_CLICKS','CALL_CLICKS']}],
   ['list_gbp_posts',{account:'115421274606058010150',location:'8623115222428082795'}],
@@ -57,7 +63,8 @@ for(const [name,args] of [
 ]){
   if(!catalog.tools.some(t=>t.name===name)){report[name]={advertised:false};continue}
   const result=await tool(name,args);
-  report[name]={ok:result.ok,...(result.ok?{count:result.data.accounts?.length??result.data.locations?.length??result.data.reviews?.length??result.data.localPosts?.length,preview:result.data.preview}: {error:result.data})};
+  report[name]={ok:result.ok,...(result.ok?{count:result.data.accounts?.length??result.data.locations?.length??result.data.reviews?.length??result.data.localPosts?.length??result.data.mediaItems?.length,preview:result.data.preview}: {error:result.data})};
+  if(['upload_media','create_gbp_media'].includes(name)&&(!result.ok||result.data.preview!==true||result.data.executed!==false)) throw new Error(`${name} preview safety check failed`);
 }
 const refreshed=await fetch(`${origin}/oauth/token`,{method:'POST',headers:{'content-type':'application/x-www-form-urlencoded'},body:new URLSearchParams({grant_type:'refresh_token',client_id,refresh_token:tokens.refresh_token,resource:`${origin}/mcp`})});
 report.connectorTokenRefresh={ok:refreshed.ok};

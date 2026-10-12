@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { stagePhoto } from "./media";
 import { schemas, toolDefinitions, WRITES, METRICS, type ToolName } from "./tools";
 import { GoogleApiError, googleRequest, refreshAccessToken, type ConnectorEnv, type GoogleAuthProps } from "./google-client";
 export { schemas, toolDefinitions, WRITES };
@@ -27,7 +28,12 @@ export async function invoke(env: ConnectorEnv, props: GoogleAuthProps | undefin
   if (!Object.hasOwn(schemas, name)) throw new GoogleApiError("Unknown GBP tool.", 400, "invalid_request");
   const args = schemas[name].parse(raw) as any;
   const account = args.account && resource(args.account, "accounts"), location = args.location && resource(args.location, "locations");
+  if (name === "upload_media" && !args.confirmed) return ok({ executed: false, sent: false, preview: true, published: false,
+    file: { file_id: args.file.file_id, file_name: args.file.file_name, mime_type: args.file.mime_type },
+    validation: "local_schema_only", retentionHours: 72, visibility: "Anyone with the resulting temporary URL can read this photo.",
+    requires: "confirmed:true after approval to stage this photo in White5. Google publication requires separate approval." });
   let url = "", method = "GET", body: any;
+  if (name === "create_media") { url = `${V4}/${account}/${location}/media`; method = "POST"; body = { mediaFormat: "PHOTO", sourceUrl: args.sourceUrl, locationAssociation: { category: args.category }, ...(args.description ? { description: args.description } : {}) }; }
   if (name === "create_post" || name === "prepare_post") { url = `${V4}/${account}/${location}/localPosts`; method = "POST"; body = args.post; }
   if (name === "update_post") { url = `${V4}/${args.postName}?updateMask=${Object.keys(args.post).join(",")}`; method = "PATCH"; body = args.post; }
   if (name === "delete_post") { url = `${V4}/${args.postName}`; method = "DELETE"; }
@@ -36,6 +42,7 @@ export async function invoke(env: ConnectorEnv, props: GoogleAuthProps | undefin
   if (name === "prepare_post" || (WRITES.has(name) && !args.confirmed)) return ok({ executed: false, sent: false, preview: true, validation: "local_schema_only", googleDraftCreated: false, method, url: url || undefined, body, ...(name === "set_primary_location" ? { account, location } : {}), requires: name === "prepare_post" ? "Call create_gbp_post only after explicit user approval." : "confirmed:true after explicit approval of the exact change" });
   if (!props?.refreshToken) throw new GoogleApiError("GBP authorization is not configured.", 503, "not_configured");
   if (!props.scopes.includes(WRITES.has(name) ? "business:write" : "business:read")) throw new GoogleApiError("Required connector scope is missing.", 403, "insufficient_scope");
+  if (name === "upload_media") return ok(await stagePhoto(env, args.file));
   let token = await refreshAccessToken(env, props.refreshToken);
   const request = async (target: string, init: RequestInit = {}): Promise<Record<string, any>> => {
     try { return await googleRequest(token, target, init); }
@@ -83,6 +90,7 @@ export async function invoke(env: ConnectorEnv, props: GoogleAuthProps | undefin
   if (name === "list_locations") url = `${INFO}/${account}/locations`;
   if (name === "get_location") url = `${INFO}/${location}`;
   if (name === "get_review") url = `${V4}/${args.reviewName}`;
+  if (name === "list_media") url = `${V4}/${account}/${location}/media`;
   if (name === "list_reviews" || name === "list_posts") url = `${V4}/${account}/${location}/${name === "list_reviews" ? "reviews" : "localPosts"}`;
   if (name === "get_performance") url = performanceUrl(location, args.startDate, args.endDate, args.metrics);
   const target = new URL(url);

@@ -1,5 +1,158 @@
 [
   {
+    "name": "upload_media",
+    "description": "Accept a user-attached JPEG/PNG through ChatGPT file input. With confirmed:true, download and stage it in White5 for 72 hours (10 KB–5 MiB, minimum 250x250). Returns sourceUrl for posts or profile gallery photos. Anyone with this temporary URL can read it. Never publishes to Google. Default is a local preview without downloading. Do not invent file IDs or URLs; ask for an attachment if missing.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "file": {
+          "type": "object",
+          "properties": {
+            "download_url": {
+              "type": "string",
+              "maxLength": 16384
+            },
+            "file_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            },
+            "mime_type": {
+              "type": "string",
+              "maxLength": 100
+            },
+            "file_name": {
+              "type": "string",
+              "maxLength": 255
+            }
+          },
+          "required": [
+            "download_url",
+            "file_id"
+          ],
+          "additionalProperties": false
+        },
+        "confirmed": {
+          "default": false,
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "file"
+      ],
+      "additionalProperties": false
+    },
+    "_meta": {
+      "openai/fileParams": [
+        "file"
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "create_media",
+    "description": "Preview adding a photo to the Google Business Profile gallery from sourceUrl (including upload_media output). confirmed:true publishes after explicit approval of the exact photo, category and description. COVER/PROFILE changes the profile's cover/profile photo. Google may moderate publication. Does not create a local post.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "account": {
+          "type": "string",
+          "pattern": "^(?:accounts\\/)?[0-9]+$"
+        },
+        "location": {
+          "type": "string",
+          "pattern": "^(?:locations\\/)?[0-9]+$"
+        },
+        "sourceUrl": {
+          "type": "string",
+          "maxLength": 2048,
+          "format": "uri"
+        },
+        "category": {
+          "default": "ADDITIONAL",
+          "type": "string",
+          "enum": [
+            "COVER",
+            "PROFILE",
+            "EXTERIOR",
+            "INTERIOR",
+            "PRODUCT",
+            "AT_WORK",
+            "FOOD_AND_DRINK",
+            "MENU",
+            "COMMON_AREA",
+            "ROOMS",
+            "TEAMS",
+            "ADDITIONAL"
+          ]
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1500
+        },
+        "confirmed": {
+          "default": false,
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "account",
+        "location",
+        "sourceUrl"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "list_media",
+    "description": "List existing Google Business Profile gallery media with pagination. Read only; Google API availability and location permissions still apply.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "account": {
+          "type": "string",
+          "pattern": "^(?:accounts\\/)?[0-9]+$"
+        },
+        "location": {
+          "type": "string",
+          "pattern": "^(?:locations\\/)?[0-9]+$"
+        },
+        "pageSize": {
+          "default": 100,
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2500
+        },
+        "pageToken": {
+          "type": "string",
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "account",
+        "location"
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
     "name": "connection_status",
     "description": "Refreshes Google authorization and checks accounts. With account/location (or saved primary), checks location, posts, reviews and performance separately; reports actual API restrictions.",
     "inputSchema": {

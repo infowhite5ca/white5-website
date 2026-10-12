@@ -1,6 +1,7 @@
 import { AuthorizationError, type AuthRequest } from "@cloudflare/workers-oauth-provider";
 import { type ConnectorEnv, exchangeAuthorizationCode, GOOGLE_SCOPES, identifyGoogleUser } from "./google-client";
 import { saveInternalGoogleRefreshToken } from "./stored-google-token";
+import { servePhoto } from "./media";
 
 const STATE_TTL = 10 * 60;
 const CONNECTOR_SCOPES = ["business:read", "business:write"];
@@ -124,6 +125,7 @@ async function finish(request: Request, env: ConnectorEnv): Promise<Response> {
 export const authHandler: ExportedHandler<ConnectorEnv> = {
   async fetch(request, env) {
     const url = new URL(request.url);
+    if (url.pathname.startsWith("/media/photo/")) return servePhoto(request, env);
     if (request.method === "GET" && url.pathname === "/oauth/google/install") return beginInstall(request, env);
     if (request.method === "GET" && url.pathname === "/authorize") return begin(request, env);
     if (request.method === "GET" && url.pathname === "/oauth/google/callback") return finish(request, env);

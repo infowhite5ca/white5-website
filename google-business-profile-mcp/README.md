@@ -84,3 +84,39 @@ authorization codes and installation tokens out of request URL logs.
 
 Run `node scripts/test-gbp.mjs` from `../white5-mcp` for automated provider and
 gateway tests, then typecheck and dry-run both Workers before deployment.
+
+## Direct photo uploads (2026-10-12)
+
+The gateway exposes `upload_media` with OpenAI `openai/fileParams: ["file"]`.
+Attach a photo to ChatGPT; the host supplies the file object (`download_url`,
+`file_id`, optional `mime_type` and `file_name`). Do not invent file references or
+paste base64 into tool arguments. Download URLs are fetched only from allowed
+OpenAI attachment hosts, with no credentials forwarded and no redirects.
+
+`confirmed:false` is a local metadata preview, with no file download. With explicit
+approval and `confirmed:true`, the tool stages JPEG/PNG bytes in the existing
+OAUTH_KV namespace under an isolated gbp-photo:v1 prefix. It accepts 10 KB–5 MiB,
+minimum 250x250 pixels, maximum 100 megapixels. File signatures, header dimensions,
+MIME agreement and stream size are checked; Google remains the final decoder and
+content/moderation validator. HEIC, WebP, SVG and videos are not supported.
+
+The returned sourceUrl is unguessable but readable by anyone holding it. It
+expires after 72 hours, enforced by both KV TTL and the serving route. No directory
+listing is exposed; signed input URLs are not stored or echoed. No public R2
+bucket, new Worker, secret, OAuth scope or Google project is required. The URL
+route disables caching and content sniffing. Photo bytes are not transformed;
+only upload photos/metadata you intend to share.
+
+Staging never publishes a Google post or gallery item. After separate approval:
+- Use sourceUrl with existing create_gbp_post/update_gbp_post photo fields.
+- Use create_gbp_media for the profile gallery, choosing a category. COVER and
+  PROFILE can replace the profile's corresponding photo; approval must cover it.
+- Use list_gbp_media to read existing gallery items and check the result.
+
+Use the staged URL before expiry. Re-upload if it expires; Google fetches the
+photo during publication and hosts its own copy thereafter. Approval or staging
+success does not guarantee acceptance or immediate visibility by Google.
+
+References: https://developers.openai.com/plugins/reference#file-apis and
+https://developers.google.com/my-business/content/upload-photos (local post media
+supports sourceUrl, not binary dataRef).

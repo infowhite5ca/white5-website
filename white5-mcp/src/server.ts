@@ -11,6 +11,10 @@ const providerSchema = z.enum(["zoho", "square", "google_ads", "meta_ads", "goog
 
 function text(data: unknown) { return { content: [{ type: "text" as const, text: JSON.stringify(data) }] }; }
 function confirmationPreview(provider: Provider, tool: string, args: Record<string, unknown>) {
+  if (provider === "google_business" && tool === "upload_media") {
+    const file = args.file as Record<string, unknown> | undefined;
+    args = { confirmed: false, file: { file_id: file?.file_id, file_name: file?.file_name, mime_type: file?.mime_type } };
+  }
   return sanitizeResult(text({ executed: false, sent: false, created: false, provider, tool, preview: args, requires: "confirmed:true after explicit user approval" }), {});
 }
 
@@ -54,6 +58,7 @@ export function createServer(env: Env, identity: { scopes: string[]; accessToken
       description: alias.description || `${tool.description || alias.upstream}${explicitGate ? " Gateway requires confirmed:true for any real write; otherwise preview only." : ""}`,
       inputSchema: fromJsonSchema<Record<string, unknown>>(inputSchema) as any,
       annotations: tool.annotations,
+      _meta: tool._meta,
     }, async (args: Record<string, unknown>) => {
       if (explicitGate && args.confirmed !== true) {
         if (alias.provider === "zoho" && /^(send_|reply_|update_calendar|cancel_calendar)/.test(alias.upstream)) return delegate(alias.provider, alias.upstream, { ...args, confirmed: false });

@@ -7,6 +7,7 @@ export interface ToolDefinition {
   title?: string;
   description?: string;
   inputSchema: Record<string, unknown>;
+  _meta?: Record<string, unknown>;
   annotations?: {
     readOnlyHint?: boolean;
     destructiveHint?: boolean;
@@ -39,6 +40,7 @@ export const aliases: Array<{ name: string; provider: Provider; upstream: string
   { name: "get_meta_ad_sets", provider: "meta_ads", upstream: "list_ad_sets" },
   { name: "get_meta_ads", provider: "meta_ads", upstream: "list_ads" },
   ...[
+    ["upload_media", "upload_media"], ["create_gbp_media", "create_media"], ["list_gbp_media", "list_media"],
     ["get_gbp_status", "connection_status"], ["create_gbp_post", "create_post"],
     ["update_gbp_post", "update_post"], ["delete_gbp_post", "delete_post"],
     ["prepare_gbp_post", "prepare_post"], ["get_gbp_review", "get_review"],

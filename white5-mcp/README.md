@@ -61,3 +61,12 @@ After changing the advertised catalog, use **Refresh tools** in the existing
 ChatGPT White5 app settings. Existing conversations can retain older tool metadata;
 start a new conversation to use the refreshed catalog. Reconnecting OAuth is not
 a substitute for updating the catalog.
+
+### Attached photos
+
+`upload_media` accepts a ChatGPT file input and returns a temporary photo URL
+without publishing. `create_gbp_media` publishes a photo to the GBP gallery only
+after confirmation; `list_gbp_media` reads gallery photos. The same uploaded URL
+works with existing post photo inputs. JPEG/PNG: 10 KB–5 MiB, minimum 250x250.
+Staged URLs are readable by their holder for 72 hours. Refresh the existing
+connector tool catalog after deployment so ChatGPT sees openai/fileParams.
