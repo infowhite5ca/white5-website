@@ -1,198 +1,153 @@
-# White5 GBP integration — corrected approval evidence, 2026-10-11
-
-## Current conclusion — supersedes the migration plan below
-
-The Google approval email dated 2026-10-07 explicitly approves project
-**230933935136**, White5 Google Ads API / concrete-zephyr-505300-g2, with 300 QPM.
-This is the project already used by the gateway's current provider. The previous
-recommendation to move to My First Project was incorrect and must not be followed.
-My First Project's zero quota is not a blocker for the approved production project.
-
-The remaining problem is API activation and split Google account permissions:
-the approval recipient can see the private Google My Business API but has no IAM
-membership in the approved project. The project's only IAM principal is the
-existing Owner, whose account cannot load that private API's library page.
-Google's setup documentation confirms private API visibility is tied to the
-approved requesting Google account.
-
-A Service Usage Admin grant to the approval recipient has been prepared in the
-approved project's IAM form, but NOT saved. Explicit user confirmation is needed
-for the new project access. After that grant, activate the required APIs in
-230933935136 and rerun production read-only checks. Retain the current Worker
-binding and OAuth client. No support message has been sent.
-
-## Historical 2026-10-10 implementation and test record
-
-The migration and support recommendations in this historical record are
-superseded by the verified approval evidence above. Deployment IDs and test
-results remain valid records of what was deployed and checked that day.
+# White5 GBP integration — completed 2026-10-11
 
 ## Result
 
-Deployed the existing `white5-mcp` gateway (runtime version 1.2.0) and existing
-`white5-google-business-mcp` provider. No replacement server was created.
-Production MCP advertises 57 tools, including 18 GBP names/compatibility aliases
-for 16 provider operations. ChatGPT's White5 app was refreshed and its UI now
-shows the GBP tools (38 read tools, 19 write tools total).
+The existing production `white5-mcp` gateway and `white5-google-business-mcp`
+provider are deployed and working. Production MCP lists 57 tools, including
+18 GBP names/compatibility aliases for 16 operations. The connected White5 tools
+were invoked successfully in this conversation, confirming discovery and use.
+No replacement MCP server was created.
 
-Core account/location discovery and local draft validation work. Posts, reviews,
-and performance are implemented but remain blocked by project API access.
-The intended My First Project provider is also deployed and authorized, but live
-Google requests prove its modern GBP quotas are zero. The gateway has not been
-switched to it because that would break working discovery. Full API capability
-and completion of the entire task are not claimed.
+## Root cause and Google project
 
-## Root cause and authorization evidence
+The missing functionality combined an outdated ChatGPT tool catalog, incomplete
+GBP operations, and disabled Google APIs in the production OAuth project.
+The catalog was refreshed and the implementation completed. Reconnecting the
+connector alone could not fix the Google API restrictions.
 
-- Production initially advertised 46 tools including seven GBP aliases, while
-  the ChatGPT connection exposed an older 38-tool catalog with no GBP provider.
-  Repeated OAuth reconnection did not update that catalog. Used **Refresh tools**
-  in the existing app and verified GBP names in the resulting ChatGPT UI.
-- The provider was incomplete: posts/reviews had only basic read/reply coverage,
-  no requested post writes or performance, and health mostly checked configuration.
-- Existing Google refresh credentials work with `business.manage` scope.
-  Account Management and Business Information authenticated reads succeed.
-- The provider currently bound to the gateway uses `concrete-zephyr-505300-g2`,
-  number `230933935136`, display name **White5 Google Ads API**.
-- A second existing Worker, `white5-google-business-profile-mcp`, uses
-  **My First Project**, ID `project-64f4298a-2ff5-4652-854`, number `686968841791`.
-  The OAuth client prefixes and Cloud Console client list confirm the mismatch.
-  Its original three public tools and OAuth routes are preserved; a private
-  White5Service adapter has been deployed using its existing secrets and KV.
-- The user approved this second client's business.manage grant. Authorization,
-  encrypted token storage and live refresh succeeded; the temporary install
-  secret was removed. No credentials were copied into source or terminal output.
-- Authenticated requests in My First Project return 429 RESOURCE_EXHAUSTED,
-  RATE_LIMIT_EXCEEDED, consumer projects/686968841791, quota_limit_value 0 for
-  Account Management, Business Information and Performance. Console confirms
-  Account Management quota 0. Enabled API status and the v4 displayed general
-  quota of 3,000/min do not establish access to these other APIs.
-- My First Project posts/reviews requests return 404 NOT_FOUND. The response
-  alone cannot establish whether resource access or project access is responsible;
-  listing resources under that client is blocked by the zero quotas.
-- Posts/reviews return HTTP 403 `SERVICE_DISABLED` for `mybusiness.googleapis.com`.
-  The v4 Google My Business API was not visible in this project's API Library;
-  its direct page failed to load. The reported approval does not establish usable
-  v4 access. Verify GBP approval for this exact project with Google if unavailable.
-- Performance returns HTTP 403 `SERVICE_DISABLED` for
-  `businessprofileperformance.googleapis.com`.
-- Verification state API is separately disabled; Business Information reports
-  `metadata.hasVoiceOfMerchant=true`, and Account Management returns ownership.
+The active GOOGLE_CLIENT_ID belongs to **White5 Google Ads API**, project ID
+`concrete-zephyr-505300-g2`, number **230933935136**. It does not belong to
+My First Project (686968841791). Google's October 7 approval email explicitly
+approves 230933935136 with 300 QPM. The earlier proposed migration to My First
+Project was incorrect and has been abandoned.
+
+Before the fix, authenticated Google requests returned HTTP 403,
+`PERMISSION_DENIED`, ErrorInfo reason `SERVICE_DISABLED`, with consumer
+`projects/230933935136` and service `mybusiness.googleapis.com` for posts/reviews
+or `businessprofileperformance.googleapis.com` for performance. These were API
+activation failures, not expired OAuth credentials or missing profile ownership.
+
+The approval recipient could see the private Google My Business API but lacked
+IAM access to the approved project. The project owner could access the project
+but could not see that private API. With explicit user approval, temporary
+Service Usage Admin and Browser roles allowed activation of Google My Business
+and Business Profile Performance in the correct project. Both temporary roles
+were then removed; the original project Owner remains. GBP status and every core
+capability were checked successfully after cleanup.
+
+Account Management, Business Information, Google My Business v4 and Performance
+now accept authenticated production requests. Google OAuth business.manage scope
+and refresh work. The active OAuth client, secrets and gateway binding remain in
+place. No further Worker configuration change is required for this API fix.
 
 ## Primary profile
 
-Paginated through all accessible accounts and locations. One account and one
-White5 location were accessible: White5, white5.ca, service area including Calgary,
-Airdrie and Okotoks. It has Voice of Merchant, no duplicate marker, and the connected
-account has PRIMARY_OWNER permission. Saved its account/location in the existing
-private KV key `gbp-primary-location:v1`. No Google listing changed. Reviews could
-not contribute to selection because the v4 API is disabled; no other accessible
-candidate was found. This does not prove that no inaccessible duplicates exist.
+All accessible accounts/locations were paginated: one account and one White5
+location were available, with white5.ca and a Calgary/Airdrie/Okotoks service area.
+Business Information reports Voice of Merchant, no duplicate marker, and the
+connected user is PRIMARY_OWNER. Reviews now confirm 7 reviews averaging 5.0.
+The selected account/location is stored in existing private KV under
+`gbp-primary-location:v1`. No listing was merged, deleted or modified.
+This does not establish that no inaccessible duplicates exist.
 
-## Implemented tools
+## Tools
 
 `get_gbp_status`, `list_gbp_accounts`, `list_gbp_locations`, `get_gbp_location`,
 `list_gbp_posts`, `prepare_gbp_post`, `create_gbp_post`, `update_gbp_post`,
 `delete_gbp_post`, `list_gbp_reviews`, `get_gbp_review`, `reply_gbp_review`,
 `update_gbp_location`, `get_gbp_performance`, `get_gbp_location_permissions`,
-`set_gbp_primary_location`. Retained `gbp_connection_status` and
-`reply_to_gbp_review` compatibility aliases.
+`set_gbp_primary_location`. Compatibility aliases: `gbp_connection_status` and
+`reply_to_gbp_review`.
 
-STANDARD posts accept text, public photo URLs and CTA/website links. Preparation
-is a local draft, not a Google-side draft. Information updates use an allowlist
-and default to Google's validateOnly. Performance includes Search/Maps impression
-splits, website clicks and call clicks; call clicks do not mean completed calls.
-All mutations require `confirmed:true` after explicit user approval.
+STANDARD posts support text, public photo URLs and CTA/website links. Preparation
+creates a local draft only. Business information updates use validated field
+allowlists and default to Google's validateOnly. Performance includes Search and
+Maps impression splits, website clicks and call clicks (not completed calls).
+All mutations require confirmed:true following explicit user confirmation.
 
-OAuth state is bound to a secure browser cookie and short-lived single-use KV
-record. Existing encrypted refresh-token storage is retained. Requests validate
-resource IDs and URLs, use bounded read retries, respect rate limits, avoid write
-retries and sanitize errors. OAuth request URL invocation logging is disabled.
+OAuth uses secure cookies, short-lived single-use state and encrypted refresh
+storage. Resource validation, sanitized errors, bounded transient read retries,
+rate-limit handling and zero-quota diagnostics are implemented. Writes are not
+blindly retried. Credentials are excluded from source, logs and reports.
 
-## Tests and production verification
+## Tests and live results
 
-- 16 automated tests passed: preview/no-network guards, schemas, methods/masks,
-  write scopes, 401/403/404/429 handling, retry behavior, refresh-scope validation,
-  encrypted storage/tampering, OAuth state rejection, catalog compatibility,
-  health degradation and MCP protocol registration/routing. Additional tests cover
-  legacy public compatibility, structured zero-quota errors without retries,
-  secret redaction, and successful OAuth refresh with unavailable account access.
-- Both TypeScript projects pass `tsc --noEmit`; generated catalog matches source;
-  Wrangler builds and production deployments succeeded; `git diff --check` passes.
-- Production OAuth/PKCE exchange and connector token refresh succeeded.
-- Production initialize/tools/list succeeded (57 tools); GBP status, account list,
-  location list, location details and local post preview succeeded.
-- Fresh production checks after the diagnostic deployments confirm posts, reviews
-  and performance return accurate 403 `api_disabled` errors identifying project
-  230933935136. No live business write tests were performed.
-- Production Square connection, Google Ads account listing, Zoho folder listing
-  and Meta connection checks all passed. Their original provider schema catalog
-  is unchanged. No advertising budgets or campaign states changed.
-- Authorized health returned all five service connection flags true, with GBP
-  restrictions separately reported. Final public health returns HTTP 200,
-  `degraded:true`, GBP/account connectivity true and explicit unavailable
-  posts/reviews/performance. Public Zoho is `null` (not checked without a bearer),
-  rather than hardcoded true. Missing GBP does not fail healthy providers.
-- Unauthenticated production `/mcp` correctly returns HTTP 401.
+- 16 automated tests passed, covering schemas, local previews, confirmation guards,
+  OAuth state/storage/scope, 401/403/404/429 errors, retries, zero quotas, redaction,
+  legacy compatibility, catalog/routing and health degradation.
+- Both TypeScript projects passed typechecking; catalog generation, Wrangler
+  builds and deployments succeeded. Existing integration schemas are preserved.
+- Production OAuth/PKCE and connector token refresh passed.
+- Production initialize/tools/list passed: 57 tools.
+- Account/location discovery and location details passed.
+- Posts: 5 retrieved. Reviews: 7 retrieved; individual review GET also passed.
+- Performance: September 2026 daily data request for the four Search/Maps
+  impression metrics, website clicks and call clicks passed.
+- Text/photo/CTA draft validation passed locally, without sending a Google write.
+- Square connection, Google Ads accounts, Zoho folders and Meta connection passed.
+- Authorized /health: HTTP 200, ok:true, degraded:false; zoho, square, google_ads,
+  meta_ads and gbp all true. All five GBP capability checks are available.
+- Final public /health: HTTP 200 and GBP fully available. Public Zoho is null and
+  degraded:true because its live check requires a bearer token; it is not a
+  reported Zoho outage. Unauthenticated /mcp correctly returns HTTP 401.
+- Native connected White5 tools also passed after temporary IAM removal.
 
-Safe local evidence: `white5-mcp/.local/production-verification.json`,
-`production-catalog.json` and `chatgpt-gbp-tools.png`. Ignored snapshots can contain
-private operational data and are intentionally excluded from Git.
+No posts, replies, business edits, ad budgets or campaign states were changed.
+Live write operations were deliberately not executed. Automated schema/guard
+validation is not a claim that Google accepted a real publication.
 
 ## Deployment
 
-Gateway: `white5-mcp`, Cloudflare version
-`b3dc85ad-1966-4675-a274-9abda64853c3`.
+| Worker | Deployed Cloudflare version |
+| --- | --- |
+| white5-mcp (runtime 1.2.0) | b3dc85ad-1966-4675-a274-9abda64853c3 |
+| white5-google-business-mcp | de42f558-41e7-4455-8101-3010724ea9fa |
 
-GBP provider: `white5-google-business-mcp`, Cloudflare version
-`de42f558-41e7-4455-8101-3010724ea9fa`.
-
-Intended-project adapter: existing `white5-google-business-profile-mcp`, version
-`9d457b3d-8661-43a9-b483-854ff75125ac`. Its gateway migration is blocked by Google;
-the current gateway deployment and binding remain unchanged.
-
-Endpoints:
+Production endpoints:
 - https://white5-mcp.volodymyronufriichuk68.workers.dev/health
 - https://white5-mcp.volodymyronufriichuk68.workers.dev/mcp
 
-Bindings, routes, account, secrets and KV namespace retained. Source is in the
-existing `infowhite5ca/white5-website` repository. The available Zoho source did
-not match its live private entrypoint; it was not modified or redeployed.
+Existing binding: `GOOGLE_BUSINESS -> white5-google-business-mcp#White5Service`.
+Routes, Cloudflare account, secret storage and KV are retained. Existing Zoho,
+Square, Google Ads and Meta providers were not replaced.
 
-## Files changed
+Repository: `infowhite5ca/white5-website`, branch
+`codex/google-business-profile-mcp`. Implementation commits:
+`2c13e6f0973d161141ded8f297bf8db836903bab` and
+`721a696db1f14ff5efabb06ed99300ff15e6fb9e`.
 
-- Provider: `src/tools.ts`, `src/operations.ts`, `src/google-client.ts`,
-  `src/google-auth-handler.ts`, `src/server.ts`, `src/service.ts`,
-  `wrangler.jsonc`, `package.json`, `scripts/live-oauth-probe.mjs`, `README.md`.
-- Gateway: `src/gbp-tools.json`, `src/catalog.ts`, `src/env.ts`, `src/index.ts`,
-  `src/server.ts`, `src/health.ts`, `.gitignore`, `README.md`.
-- Gateway scripts: `generate-gbp-catalog.mjs`, `inspect-deployment.mjs`,
-  `probe-bindings.mjs`, `test-gbp.mjs`, `verify-production.mjs`.
-- Tests: `white5-mcp/tests/gbp.test.mjs`; this report.
-- Intended-project adapter: `src/approved-project-server.ts`, `src/legacy-public.js`,
-  `src/legacy-public.d.ts`, `wrangler.approved-project.jsonc`,
-  `scripts/recover-legacy-public.mjs`, `APPROVED-PROJECT.md`.
-- Installation helper: `white5-mcp/scripts/install-approved-gbp.mjs`.
-- Unsent support draft: `GBP-GOOGLE-SUPPORT-DRAFT.md`.
+## Files changed across the implementation
 
-## Remaining actions
+- `google-business-profile-mcp/src/`: tools.ts, operations.ts, google-client.ts,
+  google-auth-handler.ts, server.ts, service.ts.
+- Provider configuration/docs: wrangler.jsonc, package.json, README.md,
+  APPROVED-PROJECT.md, scripts/live-oauth-probe.mjs.
+- `white5-mcp/src/`: gbp-tools.json, catalog.ts, env.ts, index.ts, server.ts,
+  health.ts; gateway README.md and .gitignore.
+- Gateway scripts: generate-gbp-catalog.mjs, inspect-deployment.mjs,
+  probe-bindings.mjs, test-gbp.mjs, verify-production.mjs,
+  install-approved-gbp.mjs; tests/gbp.test.mjs.
+- Historical alternate adapter: src/approved-project-server.ts, src/legacy-public.js,
+  src/legacy-public.d.ts, wrangler.approved-project.jsonc,
+  scripts/recover-legacy-public.mjs. Despite those filenames, this adapter belongs
+  to My First Project and is NOT the approved production target. Its existing
+  Worker was retained, with gateway binding unchanged.
+- GBP-INTEGRATION-REPORT.md and GBP-GOOGLE-SUPPORT-DRAFT.md.
 
-1. Ask Google to confirm approval for My First Project (686968841791), resolve
-   its zero modern GBP quotas and clarify v4 NOT_FOUND. An unsent support draft
-   is ready in GBP-GOOGLE-SUPPORT-DRAFT.md. Reconnecting White5 cannot fix quotas.
-2. After Google resolves access, run the intended-project read-only probe and
-   save the primary location; then change GOOGLE_BUSINESS to the already-existing
-   white5-google-business-profile-mcp#White5Service and deploy/verify the gateway.
-   Secrets do not need to be moved or exposed.
-3. Google consent displayed Testing status. Review publishing status before
-   unattended production use: external Testing apps with business.manage normally
-   issue seven-day refresh tokens. No publishing or broader-access change was made.
-4. ChatGPT's catalog is refreshed; use a new conversation if an existing one
-   retains older metadata. This active Codex tool session still contains its
-   original static tool set; no claim of an end-to-end new-chat tool call is made.
+## Remaining actions and limits
 
-References: [Google setup](https://developers.google.com/my-business/content/basic-setup),
-[Local Posts](https://developers.google.com/my-business/reference/rest/v4/accounts.locations.localPosts),
-[Google zero-quota guidance](https://developers.google.com/my-business/content/limits),
-[OAuth token expiration](https://developers.google.com/identity/protocols/oauth2#expiration),
-[ChatGPT tool refresh](https://developers.openai.com/plugins/deploy/connect-chatgpt).
+No user action or reconnection is needed for the requested core integration.
+The optional My Business Verifications API is disabled and its dedicated
+verification-history call reports 403 SERVICE_DISABLED accurately. Profile
+status remains available through Business Information's Voice of Merchant.
+Enable that additional API only if verification-history workflows are needed.
+No Google support message was sent; a new access application is unnecessary.
+
+Private local evidence (excluded from Git):
+`white5-mcp/.local/production-verification.json`, `production-catalog.json`,
+`chatgpt-gbp-tools.png`, and `gbp-iam-cleaned.png`.
+
+Official references: [setup](https://developers.google.com/my-business/content/basic-setup),
+[accounts](https://developers.google.com/my-business/reference/accountmanagement/rest/v1/accounts/list),
+[locations](https://developers.google.com/my-business/reference/businessinformation/rest/v1/accounts.locations/list),
+[posts](https://developers.google.com/my-business/reference/rest/v4/accounts.locations.localPosts).
