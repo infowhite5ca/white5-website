@@ -25,6 +25,11 @@ src/approved-project-server.ts and the --approved-project probe option refer to
 that alternate adapter. Their names do not establish approval. The gateway does
 not use it. No credential copying or OAuth client change is required.
 
-Optional My Business Verifications API remains disabled; the separate verification
-history call reports that accurately. Business Information profile status works.
-See ../GBP-INTEGRATION-REPORT.md for final deployment IDs, tests and limitations.
+On October 13, with owner approval, My Business Verifications, Place Actions and
+Notifications APIs were enabled in this same project. All nine capability checks
+now pass authenticated reads. White5 has Voice of Merchant; no new verification
+is required. Account-level administrators for its PERSONAL account return Google's
+400 INVALID_ARGUMENT; location-level administrators work.
+See [the current management report](../GBP-MANAGEMENT-REPORT.md) for deployment IDs,
+the complete tool inventory, tests and limitations. The October 11 integration
+report is historical.

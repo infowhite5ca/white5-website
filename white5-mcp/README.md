@@ -1,5 +1,9 @@
 # White5 MCP Gateway
 
+Current GBP management release: gateway **1.4.0**, with 115 tools in production.
+See [the management report](../GBP-MANAGEMENT-REPORT.md) for the full GBP catalog,
+deployment evidence, Google API access, confirmation workflow and limitations.
+
 Unified MCP gateway for White5 provider Workers:
 
 - Zoho Mail

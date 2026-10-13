@@ -1,6 +1,7 @@
 export const GOOGLE_SCOPES = ["openid", "email", "https://www.googleapis.com/auth/business.manage"] as const;
 export interface ConnectorEnv {
   OAUTH_KV: KVNamespace;
+  GBP_CONTROL?: DurableObjectNamespace;
   OAUTH_PROVIDER: import("@cloudflare/workers-oauth-provider").OAuthHelpers;
   GOOGLE_CLIENT_ID: string;
   GOOGLE_CLIENT_SECRET: string;
@@ -51,7 +52,7 @@ async function readJson(response: Response): Promise<JsonObject> { return respon
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 export async function googleRequest(accessToken: string, url: string, init: RequestInit = {}): Promise<JsonObject> {
   const parsed = new URL(url);
-  if (parsed.protocol !== "https:" || !["mybusinessaccountmanagement.googleapis.com", "mybusinessbusinessinformation.googleapis.com", "mybusiness.googleapis.com", "businessprofileperformance.googleapis.com", "mybusinessverifications.googleapis.com", "openidconnect.googleapis.com"].includes(parsed.hostname)) throw new GoogleApiError("Unsupported Google endpoint.", 400, "invalid_request");
+  if (parsed.protocol !== "https:" || !["mybusinessaccountmanagement.googleapis.com", "mybusinessbusinessinformation.googleapis.com", "mybusiness.googleapis.com", "businessprofileperformance.googleapis.com", "mybusinessverifications.googleapis.com", "mybusinessplaceactions.googleapis.com", "mybusinessnotifications.googleapis.com", "openidconnect.googleapis.com"].includes(parsed.hostname)) throw new GoogleApiError("Unsupported Google endpoint.", 400, "invalid_request");
   const headers = new Headers(init.headers);
   headers.set("accept", "application/json"); headers.set("authorization", `Bearer ${accessToken}`); headers.set("X-GOOG-API-FORMAT-VERSION", "2");
   if (init.body) headers.set("content-type", "application/json");

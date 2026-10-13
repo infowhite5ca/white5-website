@@ -47,8 +47,10 @@ for(const key of ['download_url','file_id','mime_type','file_name']) if(!uploadT
 await mkdir(new URL('../.local/',import.meta.url),{recursive:true});
 await writeFile(new URL('../.local/production-catalog.json',import.meta.url),JSON.stringify(catalog,null,2));
 console.log(JSON.stringify({productionTools:catalog.tools.map(t=>t.name)}));
+for(const name of ['list_gbp_services','update_gbp_services','run_full_gbp_audit','upload_gbp_media_batch','create_gbp_media_batch','schedule_gbp_job'])if(!catalog.tools.some(t=>t.name===name))throw new Error('Missing production management tool: '+name);
 const report={};
 for(const [name,args] of [
+  ['list_gbp_services',{location:'locations/8623115222428082795'}],['prepare_gbp_white5_services',{location:'locations/8623115222428082795'}],['get_gbp_capabilities',{}],['list_gbp_jobs',{}],
   ['get_gbp_status',{}],['list_gbp_accounts',{}],['list_gbp_locations',{account:'accounts/115421274606058010150'}],
   ['upload_media',{file:{download_url:'https://files.oaiusercontent.com/schema-test-only?sig=not-a-real-link',file_id:'schema-test',mime_type:'image/png',file_name:'schema-test.png'},confirmed:false}],
   ['create_gbp_media',{account:'115421274606058010150',location:'8623115222428082795',sourceUrl:'https://white5.ca/schema-test-only.png',category:'AT_WORK',confirmed:false}],

@@ -1,3 +1,6 @@
+import { managementRead } from "./management/reads";
+import { confirmedMutation } from "./management/mutations";
+import { control } from "./management/control";
 import { z } from "zod";
 import { stagePhoto } from "./media";
 import { schemas, toolDefinitions, WRITES, METRICS, type ToolName } from "./tools";
@@ -18,7 +21,7 @@ export function failed(error: unknown) { return { isError: true, ...ok(safeError
 function performanceUrl(location: string, start: string, end: string, metrics: readonly string[]) {
   const url = new URL(`https://businessprofileperformance.googleapis.com/v1/${resource(location, "locations")}:fetchMultiDailyMetricsTimeSeries`);
   for (const metric of metrics) url.searchParams.append("dailyMetrics", metric);
-  for (const [key, date] of [["start_date", start], ["end_date", end]]) {
+  for (const [key, date] of [["startDate", start], ["endDate", end]]) {
     const parts = date.split("-");
     ["year", "month", "day"].forEach((field, index) => url.searchParams.set(`dailyRange.${key}.${field}`, String(Number(parts[index]))));
   }
@@ -28,21 +31,11 @@ export async function invoke(env: ConnectorEnv, props: GoogleAuthProps | undefin
   if (!Object.hasOwn(schemas, name)) throw new GoogleApiError("Unknown GBP tool.", 400, "invalid_request");
   const args = schemas[name].parse(raw) as any;
   const account = args.account && resource(args.account, "accounts"), location = args.location && resource(args.location, "locations");
-  if (name === "upload_media" && !args.confirmed) return ok({ executed: false, sent: false, preview: true, published: false,
-    file: { file_id: args.file.file_id, file_name: args.file.file_name, mime_type: args.file.mime_type },
-    validation: "local_schema_only", retentionHours: 72, visibility: "Anyone with the resulting temporary URL can read this photo.",
-    requires: "confirmed:true after approval to stage this photo in White5. Google publication requires separate approval." });
   let url = "", method = "GET", body: any;
-  if (name === "create_media") { url = `${V4}/${account}/${location}/media`; method = "POST"; body = { mediaFormat: "PHOTO", sourceUrl: args.sourceUrl, locationAssociation: { category: args.category }, ...(args.description ? { description: args.description } : {}) }; }
-  if (name === "create_post" || name === "prepare_post") { url = `${V4}/${account}/${location}/localPosts`; method = "POST"; body = args.post; }
-  if (name === "update_post") { url = `${V4}/${args.postName}?updateMask=${Object.keys(args.post).join(",")}`; method = "PATCH"; body = args.post; }
-  if (name === "delete_post") { url = `${V4}/${args.postName}`; method = "DELETE"; }
-  if (name === "reply_to_review") { url = `${V4}/${args.reviewName}/reply`; method = "PUT"; body = { comment: args.comment }; }
-  if (name === "update_location") { url = `${INFO}/${location}?updateMask=${Object.keys(args.changes).join(",")}&validateOnly=${args.validateOnly}`; method = "PATCH"; body = args.changes; }
-  if (name === "prepare_post" || (WRITES.has(name) && !args.confirmed)) return ok({ executed: false, sent: false, preview: true, validation: "local_schema_only", googleDraftCreated: false, method, url: url || undefined, body, ...(name === "set_primary_location" ? { account, location } : {}), requires: name === "prepare_post" ? "Call create_gbp_post only after explicit user approval." : "confirmed:true after explicit approval of the exact change" });
+  if (name === "prepare_post") return ok({preview:true,published:false,post:args.post,requires:"Use create_gbp_post to obtain a state-bound confirmation preview before publication."});
   if (!props?.refreshToken) throw new GoogleApiError("GBP authorization is not configured.", 503, "not_configured");
-  if (!props.scopes.includes(WRITES.has(name) ? "business:write" : "business:read")) throw new GoogleApiError("Required connector scope is missing.", 403, "insufficient_scope");
-  if (name === "upload_media") return ok(await stagePhoto(env, args.file));
+  if (!props.scopes.includes(WRITES.has(name) && args.confirmed ? "business:write" : "business:read")) throw new GoogleApiError("Required connector scope is missing.", 403, "insufficient_scope");
+
   let token = await refreshAccessToken(env, props.refreshToken);
   const request = async (target: string, init: RequestInit = {}): Promise<Record<string, any>> => {
     try { return await googleRequest(token, target, init); }
@@ -54,6 +47,11 @@ export async function invoke(env: ConnectorEnv, props: GoogleAuthProps | undefin
       throw error;
     }
   };
+  if (WRITES.has(name)) return ok(await confirmedMutation(env, props, request, name, args));
+  if (name === "get_post_draft") return ok(await control(env,"/get",{key:"draft:"+args.draftId}));
+  const privateLists:Record<string,string>={list_post_drafts:"draft:",list_jobs:"job:",list_reports:"report:",get_audit_log:"audit:"};
+  if (privateLists[name]) return ok(await control(env,"/list",{prefix:privateLists[name],limit:args.limit||100}));
+  const managed=await managementRead(request,name,args);if(managed!==undefined)return ok(managed);
   const capability = async (target: string) => { try { return { available: true, data: await request(target) }; } catch (e) { return safeError(e); } };
   if (name === "connection_status") {
     const accountCheck = await capability(`${ACCOUNTS}/accounts?pageSize=20`);
@@ -72,20 +70,9 @@ export async function invoke(env: ConnectorEnv, props: GoogleAuthProps | undefin
       ]);
       ["locations", "posts", "reviews", "performance"].forEach((key, index) => { const check = checks[index]; capabilities[key] = "data" in check ? { available: true } : check; });
     }
-    return ok({ connected: Boolean(accounts), tokenRefresh: true, requiredScope: "https://www.googleapis.com/auth/business.manage", accounts: accounts?.accounts || [], nextPageToken: accounts?.nextPageToken, primary, capabilities, metrics: METRICS, writes: "explicit_confirmation_required", postDrafts: "local_only" });
+    return ok({ connected: Boolean(accounts), tokenRefresh: true, requiredScope: "https://www.googleapis.com/auth/business.manage", accounts: accounts?.accounts || [], nextPageToken: accounts?.nextPageToken, primary, capabilities, metrics: METRICS, writes: "explicit_confirmation_required", postDrafts: "private_white5_storage", approval: "state_bound_previewId_required", scheduling: "owner_approved_jobs_only" });
   }
   if (name === "get_location_permissions") return ok({ administrators: await capability(`${ACCOUNTS}/${location}/admins`), verification: await capability(`https://mybusinessverifications.googleapis.com/v1/${location}/VoiceOfMerchantState`) });
-  if (name === "set_primary_location") {
-    let pageToken: string | undefined, found = false;
-    do {
-      const result = await request(`${INFO}/${account}/locations?readMask=name,title,metadata&pageSize=100${pageToken ? `&pageToken=${encodeURIComponent(pageToken)}` : ""}`);
-      found = (result.locations || []).some((entry: any) => entry.name === location && /^white\s*5$/i.test(entry.title) && entry.metadata?.hasVoiceOfMerchant === true && !entry.metadata?.duplicateLocation);
-      pageToken = result.nextPageToken;
-    } while (!found && pageToken);
-    if (!found) throw new GoogleApiError("Select an accessible White5 location with Voice of Merchant that is not marked as a duplicate.", 400, "invalid_primary_location");
-    await env.OAUTH_KV.put(PRIMARY_KEY, JSON.stringify({ account, location, selectedAt: new Date().toISOString() }));
-    return ok({ saved: true, account, location, googleProfileModified: false });
-  }
   if (name === "list_accounts") url = `${ACCOUNTS}/accounts`;
   if (name === "list_locations") url = `${INFO}/${account}/locations`;
   if (name === "get_location") url = `${INFO}/${location}`;

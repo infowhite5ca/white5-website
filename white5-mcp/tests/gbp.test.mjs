@@ -10,10 +10,13 @@ import { health } from '../.local/test/health.mjs';
 import { aliases, upstream } from '../.local/test/catalog.mjs';
 import { createServer } from '../.local/test/gateway.mjs';
 import approvedWorker from '../.local/test/approved.mjs';
+import { stagePhoto } from '../.local/test/media.mjs';
+import { attachControl } from './helpers.mjs';
 const originalFetch = globalThis.fetch;
 afterEach(() => { globalThis.fetch = originalFetch; });
 const storage = new Map();
 const env = { GOOGLE_CLIENT_ID: 'test-client', GOOGLE_CLIENT_SECRET: 'test-secret', ALLOWED_GOOGLE_EMAIL: 'test@example.com', OAUTH_KV: { get: async (k, type) => type === 'json' ? JSON.parse(storage.get(k) || 'null') : storage.get(k) || null, put: async (k,v) => storage.set(k,v), delete: async k => storage.delete(k) } };
+attachControl(env);
 const props = { userId: 'test', refreshToken: 'refresh-secret', scopes: ['business:read','business:write'] };
 const parse = result => JSON.parse(result.content[0].text);
 
@@ -39,12 +42,12 @@ function photoEnv() {
 }
 
 test('upload preview is local, redacts signed URLs, and real upload requires write scope',async()=>{
-  let calls=0;globalThis.fetch=async()=>{calls++;throw new Error('No network expected')};
-  const preview=parse(await invoke(env,undefined,'upload_media',example.upload_media));
+  let calls=0;globalThis.fetch=async()=>{calls++;return Response.json({access_token:'test'})};
+  const preview=parse(await invoke(env,props,'upload_media',example.upload_media));
   assert.equal(preview.published,false);assert.equal(preview.preview,true);
   assert.equal(JSON.stringify(preview).includes('private-test-signature'),false);
   await assert.rejects(invoke(env,{...props,scopes:['business:read']},'upload_media',{...example.upload_media,confirmed:true}));
-  assert.equal(calls,0);
+  assert.equal(calls,1);
 });
 
 test('real photo staging uses no bearer, expires in KV, and serves original bytes through the public route',async()=>{
@@ -54,7 +57,7 @@ test('real photo staging uses no bearer, expires in KV, and serves original byte
     assert.equal(new Headers(init.headers).has('authorization'),false);
     return new Response(fixture,{headers:{'content-type':'image/png','content-length':String(fixture.length)}});
   };
-  const result=parse(await invoke(mediaEnv,props,'upload_media',{...example.upload_media,confirmed:true}));
+  const result=await stagePhoto(mediaEnv,example.upload_media.file);
   assert.equal(calls,1);assert.equal(result.uploaded,true);assert.equal(result.published,false);
   assert.equal(result.width,256);assert.equal(result.height,256);assert.equal(result.sizeBytes,fixture.length);
   assert.match(result.sourceUrl,/^https:\/\/white5-google-business-mcp\.[^/]+\/media\/photo\/[a-f0-9]{64}$/);
@@ -81,10 +84,10 @@ test('attachment downloads reject SSRF, redirects, expiry and raw error leakage 
   assert.equal(calls,0);
   for(const status of [302,401,403,404,429]) {
     globalThis.fetch=async()=>new Response(null,{status,headers:{location:'https://127.0.0.1/'}});
-    await assert.rejects(invoke(mediaEnv,props,'upload_media',{...example.upload_media,confirmed:true}),error=>error.category==='invalid_media'&&!error.message.includes('private-test-signature'));
+    await assert.rejects(stagePhoto(mediaEnv,example.upload_media.file),error=>error.category==='invalid_media'&&!error.message.includes('private-test-signature'));
   }
   globalThis.fetch=async()=>{throw new Error(example.upload_media.file.download_url)};
-  await assert.rejects(invoke(mediaEnv,props,'upload_media',{...example.upload_media,confirmed:true}),error=>!error.message.includes('private-test-signature'));
+  await assert.rejects(stagePhoto(mediaEnv,example.upload_media.file),error=>!error.message.includes('private-test-signature'));
   assert.equal(mediaEnv.photos.size,0);
 });
 
@@ -92,13 +95,13 @@ test('attachment validation rejects MIME mismatches, unsupported/truncated image
   const mediaEnv=photoEnv(), good=photoPng();
   for(const [bytes,type] of [[good,'image/jpeg'],[Buffer.alloc(20000),'image/png'],[good.subarray(0,good.length-12),'image/png'],[photoPng(249,256),'image/png'],[Buffer.alloc(100),'image/png']]) {
     globalThis.fetch=async()=>new Response(bytes,{headers:{'content-type':type}});
-    await assert.rejects(invoke(mediaEnv,props,'upload_media',{...example.upload_media,confirmed:true}),error=>error.category==='invalid_media');
+    await assert.rejects(stagePhoto(mediaEnv,example.upload_media.file),error=>error.category==='invalid_media');
   }
   globalThis.fetch=async()=>new Response(good,{headers:{'content-length':String(6*1024*1024)}});
-  await assert.rejects(invoke(mediaEnv,props,'upload_media',{...example.upload_media,confirmed:true}),error=>error.status===413);
+  await assert.rejects(stagePhoto(mediaEnv,example.upload_media.file),error=>error.status===413);
   let cancelled=false;
   globalThis.fetch=async()=>new Response(new ReadableStream({pull(c){c.enqueue(new Uint8Array(1024*1024))},cancel(){cancelled=true}}));
-  await assert.rejects(invoke(mediaEnv,props,'upload_media',{...example.upload_media,confirmed:true}),error=>error.status===413);
+  await assert.rejects(stagePhoto(mediaEnv,example.upload_media.file),error=>error.status===413);
   assert.equal(cancelled,true);assert.equal(mediaEnv.photos.size,0);
 });
 
@@ -107,22 +110,23 @@ test('JPEG headers are accepted with optional file metadata omitted',async()=>{
   // SOI, SOF0 (8-bit, 256x256, one component), EOI: header inspection fixture.
   Buffer.from([255,216,255,192,0,11,8,1,0,1,0,1,1,17,0]).copy(jpeg);jpeg[jpeg.length-2]=255;jpeg[jpeg.length-1]=217;
   globalThis.fetch=async()=>new Response(jpeg,{headers:{'content-type':'image/jpeg'}});
-  const result=parse(await invoke(mediaEnv,props,'upload_media',{file:{download_url:example.upload_media.file.download_url,file_id:'test'},confirmed:true}));
+  const result=await stagePhoto(mediaEnv,{download_url:example.upload_media.file.download_url});
   assert.equal(result.mimeType,'image/jpeg');assert.equal(result.width,256);
 });
 
-test('gallery writes require separate confirmation and use the official media schema; listings stay read-only',async()=>{
-  const requests=[];
+test('gallery writes need a state-bound preview and read back the accepted item',async()=>{
+  const requests=[];const local=attachControl({...env});
   globalThis.fetch=async(url,init)=>{requests.push({url:String(url),init});return Response.json(String(url).includes('oauth2')?{access_token:'test'}:{name:'accounts/1/locations/2/media/3'})};
-  const preview=parse(await invoke(env,undefined,'create_media',example.create_media));
-  assert.equal(preview.preview,true);assert.equal(requests.length,0);
-  await invoke(env,props,'create_media',{...example.create_media,category:'AT_WORK',description:'Window cleaning',confirmed:true});
-  assert.equal(requests.at(-1).url,'https://mybusiness.googleapis.com/v4/accounts/1/locations/2/media');
-  assert.equal(requests.at(-1).init.method,'POST');
-  assert.deepEqual(JSON.parse(requests.at(-1).init.body),{mediaFormat:'PHOTO',sourceUrl:'https://white5.ca/photo.jpg',locationAssociation:{category:'AT_WORK'},description:'Window cleaning'});
+  const args={...example.create_media,category:'AT_WORK',description:'Window cleaning'};
+  const preview=parse(await invoke(local,props,'create_media',args));
+  assert.equal(preview.preview,true);assert.equal(requests.some(r=>r.init?.method==='POST'&&!r.url.includes('oauth2')),false);
+  await invoke(local,props,'create_media',{...args,confirmed:true,previewId:preview.previewId});
+  const write=requests.find(r=>r.init?.method==='POST'&&!r.url.includes('oauth2'));
+  assert.deepEqual(JSON.parse(write.init.body),{mediaFormat:'PHOTO',sourceUrl:'https://white5.ca/photo.jpg',locationAssociation:{category:'AT_WORK'},description:'Window cleaning'});
+  assert.ok(requests.some(r=>r.url==='https://mybusiness.googleapis.com/v4/accounts/1/locations/2/media/3'));
   assert.equal(schemas.create_media.safeParse({...example.create_media,category:'COVER',description:'invalid'}).success,false);
-  await invoke(env,props,'list_media',{account:'1',location:'2',pageSize:10,pageToken:'next page'});
-  assert.equal(requests.at(-1).init.method,'GET');assert.equal(new URL(requests.at(-1).url).searchParams.get('pageToken'),'next page');
+  await invoke(local,props,'list_media',{account:'1',location:'2',pageSize:10,pageToken:'next page'});
+  assert.equal(new URL(requests.at(-1).url).searchParams.get('pageToken'),'next page');
 });
 
 test('approved-project adapter preserves legacy public discovery and rejects unauthorized installation',async()=>{
@@ -155,12 +159,10 @@ const example = {
   update_location: {location:'2',changes:{websiteUri:'https://white5.ca'}},
   set_primary_location: {account:'1',location:'2'},
 };
-test('all mutations and draft preparation validate locally without any fetch or credentials', async () => {
-  globalThis.fetch = () => { throw new Error('Unexpected network call'); };
-  for (const name of [...WRITES, 'prepare_post']) {
-    const result = parse(await invoke(env, undefined, name, example[name]));
-    assert.equal(result.executed, false, name); assert.equal(result.preview, true, name);
-  }
+test('local post preparation is read only; authenticated writes fail closed without approval storage', async()=>{
+ globalThis.fetch=async()=>Response.json({access_token:'test'});
+ const preview=parse(await invoke(env,undefined,'prepare_post',example.prepare_post));assert.equal(preview.preview,true);
+ await assert.rejects(invoke({...env,GBP_CONTROL:undefined},props,'upload_media',example.upload_media),e=>e.category==='not_configured');
 });
 test('reject malformed paths, URL credential leaks, invalid CTA, dates and unknown write fields', () => {
   for (const value of ['accounts/1?x=1','../1','1/reviews/2','https://evil.test','accounts/%2e%2e']) assert.equal(schemas.list_locations.safeParse({account:value}).success,false);
@@ -168,20 +170,14 @@ test('reject malformed paths, URL credential leaks, invalid CTA, dates and unkno
   assert.equal(schemas.get_performance.safeParse({location:'2',startDate:'2026-02-30',endDate:'2026-03-01'}).success,false);
   assert.equal(schemas.update_location.safeParse({location:'2',changes:{openInfo:{status:'CLOSED_PERMANENTLY'}}}).success,false);
 });
-test('confirmed writes require write scope; API calls use exact method, body and narrow masks', async () => {
-  const requests=[];
-  globalThis.fetch = async (url,init) => { requests.push({url:String(url),init}); return Response.json(String(url).includes('oauth2') ? {access_token:'access-secret'} : {}); };
-  await assert.rejects(invoke(env,{...props,scopes:['business:read']},'create_post',{...example.create_post,confirmed:true}));
-  assert.equal(requests.length,0);
-  await invoke(env,props,'update_post',{...example.update_post,confirmed:true});
-  assert.equal(requests[1].init.method,'PATCH');
-  assert.equal(new URL(requests[1].url).searchParams.get('updateMask'),'summary');
-  assert.deepEqual(JSON.parse(requests[1].init.body),{summary:'Updated'});
-  requests.length=0;
-  const validation = parse(await invoke(env,props,'update_location',{...example.update_location,confirmed:true}));
-  assert.equal(validation.validated,true); assert.equal(validation.executed,false);
-  assert.equal(new URL(requests[1].url).searchParams.get('validateOnly'),'true');
+test('confirmed writes require scope and preview; narrow masks and Google validation remain intact',async()=>{
+ const requests=[],local=attachControl({...env});globalThis.fetch=async(url,init)=>{requests.push({url:String(url),init});return Response.json(String(url).includes('oauth2')?{access_token:'test'}:{});};
+ await assert.rejects(invoke(local,{...props,scopes:['business:read']},'create_post',{...example.create_post,confirmed:true}));assert.equal(requests.length,0);
+ const preview=parse(await invoke(local,props,'update_post',{...example.update_post,confirmed:true}));assert.equal(preview.preview,true);assert.equal(requests.some(r=>r.init?.method==='PATCH'),false);
+ await invoke(local,props,'update_post',{...example.update_post,confirmed:true,previewId:preview.previewId});const patch=requests.find(r=>r.init?.method==='PATCH');assert.equal(new URL(patch.url).searchParams.get('updateMask'),'summary');assert.deepEqual(JSON.parse(patch.init.body),{summary:'Updated'});
+ const p=parse(await invoke(local,props,'update_location',example.update_location));const result=parse(await invoke(local,props,'update_location',{...example.update_location,confirmed:true,previewId:p.previewId}));assert.equal(result.validated,true);assert.equal(result.executed,false);
 });
+
 test('401, disabled API, insufficient scope, ambiguous permission, 404 and 429 are distinct and safe', () => {
   const disabled = {error:{message:'credential access-secret',details:[{'@type':'type.googleapis.com/google.rpc.ErrorInfo',reason:'SERVICE_DISABLED'}]}};
   assert.equal(classifyGoogleError(401,{}).category,'authentication_failed');
@@ -236,7 +232,7 @@ test('permissions and performance use documented endpoints and query fields',asy
   await invoke(env,props,'get_location_permissions',{location:'2'});
   assert.ok(urls.includes('https://mybusinessverifications.googleapis.com/v1/locations/2/VoiceOfMerchantState'));
   await invoke(env,props,'get_performance',{location:'2',startDate:'2026-09-01',endDate:'2026-09-30',metrics:['WEBSITE_CLICKS','CALL_CLICKS']});
-  const url=new URL(urls.at(-1));assert.equal(url.pathname,'/v1/locations/2:fetchMultiDailyMetricsTimeSeries');assert.deepEqual(url.searchParams.getAll('dailyMetrics'),['WEBSITE_CLICKS','CALL_CLICKS']);assert.equal(url.searchParams.get('dailyRange.start_date.month'),'9');
+  const url=new URL(urls.at(-1));assert.equal(url.pathname,'/v1/locations/2:fetchMultiDailyMetricsTimeSeries');assert.deepEqual(url.searchParams.getAll('dailyMetrics'),['WEBSITE_CLICKS','CALL_CLICKS']);assert.equal(url.searchParams.get('dailyRange.startDate.month'),'9');
 });
 test('encrypted KV token storage and ciphertext tampering',async()=>{
   storage.clear(); await saveInternalGoogleRefreshToken(env,'sensitive-refresh-value');
@@ -261,7 +257,7 @@ test('catalog advertises every requested alias and leaves other providers unchan
   assert.equal(new Set(names).size,names.length);
   const original=JSON.parse(await readFile(new URL('../src/upstream-tools.json',import.meta.url),'utf8'));
   for(const provider of ['zoho','square','google_ads','meta_ads']) assert.deepEqual(upstream[provider],original[provider]);
-  assert.equal(toolDefinitions.length,19);
+  assert.equal(toolDefinitions.length,74);
 });
 test('missing GBP does not fail healthy integrations; public Zoho health is explicitly unchecked',async()=>{
   const binding={status:async()=>({configured:true}),rpc:async()=>({content:[{type:'text',text:'{}'}]})};

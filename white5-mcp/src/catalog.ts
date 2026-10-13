@@ -57,6 +57,14 @@ export const aliases: Array<{ name: string; provider: Provider; upstream: string
   { name: "reply_to_gbp_review", provider: "google_business", upstream: "reply_to_review", description: "Preview a Google Business Profile review reply by default. Sending requires confirmed:true after explicit user approval." },
 ];
 
+// Preserve established aliases and expose every added provider operation once.
+for (const tool of googleBusinessTools) {
+  if (!aliases.some(a => a.provider === "google_business" && a.upstream === tool.name)) {
+    const name = tool.name === "capabilities" ? "get_gbp_capabilities" : tool.name === "run_full_audit" ? "run_full_gbp_audit" : tool.name.replace(/^([^_]+)_/, "$1_gbp_");
+    aliases.push({name, provider:"google_business", upstream:tool.name});
+  }
+}
+
 export function findTool(provider: Provider, name: string): ToolDefinition {
   const tool = upstream[provider]?.find((entry) => entry.name === name);
   if (!tool) throw new Error(`Unknown ${provider} tool: ${name}`);

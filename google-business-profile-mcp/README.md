@@ -2,6 +2,13 @@
 
 Cloudflare Worker MCP connector for the existing White5 Google Business Profile.
 
+Current release: **1.0.0**, 74 provider operations. See the
+[management report and operating guide](../GBP-MANAGEMENT-REPORT.md) for all tools,
+confirmed deployment versions, approval workflow, API access and limitations.
+The existing gateway exposes these as 76 GBP names, including two compatibility
+aliases. Every mutation requires a current exact previewId plus confirmed:true;
+destructive/security operations additionally require a separate confirmation phrase.
+
 Two existing Workers use different Google projects. The current gateway still
 uses `white5-google-business-mcp`, whose project 230933935136 is explicitly
 approved in Google's October 7 email. The alternate `My First Project` adapter
@@ -27,7 +34,10 @@ Scopes:
 - `ALLOWED_GOOGLE_EMAIL` (required to restrict Google authorization to White5)
 - optional `GOOGLE_REFRESH_TOKEN` for the private White5 gateway binding
 
-The Worker also needs an `OAUTH_KV` KV namespace binding.
+The Worker needs the existing `OAUTH_KV` KV namespace binding and `GBP_CONTROL`
+Durable Object binding/migration in wrangler.jsonc. GBP_CONTROL stores approval
+claims, receipts, private drafts and optional jobs. No recurring jobs are enabled
+by deployment. Do not remove either binding when updating the Worker.
 
 The private `White5Service` entry point can instead load an AES-GCM encrypted
 refresh token from `OAUTH_KV`. The one-time `/oauth/google/install` flow writes

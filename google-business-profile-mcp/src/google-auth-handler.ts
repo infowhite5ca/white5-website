@@ -125,7 +125,7 @@ async function finish(request: Request, env: ConnectorEnv): Promise<Response> {
 export const authHandler: ExportedHandler<ConnectorEnv> = {
   async fetch(request, env) {
     const url = new URL(request.url);
-    if (url.pathname.startsWith("/media/photo/")) return servePhoto(request, env);
+    if (url.pathname.startsWith("/media/photo/") || url.pathname.startsWith("/media/video/")) return servePhoto(request, env);
     if (request.method === "GET" && url.pathname === "/oauth/google/install") return beginInstall(request, env);
     if (request.method === "GET" && url.pathname === "/authorize") return begin(request, env);
     if (request.method === "GET" && url.pathname === "/oauth/google/callback") return finish(request, env);

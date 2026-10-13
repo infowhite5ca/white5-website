@@ -1,3 +1,4 @@
+import { stageVideo, serveVideo } from "./video";
 import { GoogleApiError, type ConnectorEnv } from "./google-client";
 
 export const MEDIA_ORIGIN = "https://white5-google-business-mcp.volodymyronufriichuk68.workers.dev";
@@ -57,6 +58,7 @@ export async function stagePhoto(env: ConnectorEnv, file: { download_url: string
     await response.body?.cancel();
     throw fail("The attachment link is unavailable, expired, or redirects. Attach the photo again.", 400);
   }
+  if (file.mime_type === "video/mp4") return stageVideo(env, response, MEDIA_ORIGIN);
   const declaredSize = Number(response.headers.get("content-length"));
   if (declaredSize > MAX_PHOTO_BYTES) { await response.body?.cancel(); throw fail("Photo exceeds the 5 MiB limit.", 413); }
   const reader = response.body?.getReader();
@@ -76,23 +78,30 @@ export async function stagePhoto(env: ConnectorEnv, file: { download_url: string
   const bytes = new Uint8Array(size); let offset = 0;
   for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.length; }
   const info = inspectPhoto(bytes);
+  const sha256 = Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", bytes))).map(x=>x.toString(16).padStart(2,"0")).join("");
   for (const declared of [file.mime_type, response.headers.get("content-type")?.split(";")[0].trim()]) {
     if (declared && declared !== "application/octet-stream" && declared !== info.mime) throw fail("The photo contents do not match the declared MIME type.");
   }
   // The unguessable URL is readable by anyone holding it so Google can fetch it.
   // Only photo bytes/metadata are stored; never persist the signed input URL.
+  const previous=await env.OAUTH_KV.get<any>("gbp-media-sha256:"+sha256,"json");
+  if(previous && Date.parse(previous.expiresAt)>Date.now()+60000) return {...previous,duplicate:true};
   const id = crypto.randomUUID().replaceAll("-", "") + crypto.randomUUID().replaceAll("-", "");
   const expiresAt = Date.now() + MEDIA_TTL * 1000;
   await env.OAUTH_KV.put(`${PREFIX}${id}`, bytes.buffer, { expirationTtl: MEDIA_TTL, metadata: { ...info, expiresAt } });
-  return { uploaded: true, published: false, sourceUrl: `${MEDIA_ORIGIN}/media/photo/${id}`, expiresAt: new Date(expiresAt).toISOString(),
+  const result = { uploaded: true, published: false, sha256, sourceUrl: `${MEDIA_ORIGIN}/media/photo/${id}`, expiresAt: new Date(expiresAt).toISOString(),
     mimeType: info.mime, sizeBytes: info.size, width: info.width, height: info.height,
     visibility: "Anyone with the temporary URL can read this photo for 72 hours.",
     next: "Use sourceUrl in create_gbp_post or create_gbp_media only after explicit publication approval. Upload again if expired." };
+  await env.OAUTH_KV.put("gbp-media-sha256:"+sha256,JSON.stringify(result),{expirationTtl:MEDIA_TTL});
+  return result;
 }
 
 export async function servePhoto(request: Request, env: ConnectorEnv): Promise<Response> {
   const headers = { "cache-control": "private, no-store", "x-content-type-options": "nosniff", "referrer-policy": "no-referrer" };
   if (!["GET", "HEAD"].includes(request.method)) return new Response(null, { status: 405, headers: { ...headers, allow: "GET, HEAD" } });
+  const video=/^\/media\/video\/([a-f0-9]{64})$/.exec(new URL(request.url).pathname);
+  if(video)return serveVideo(request,env,video[1]);
   const match = /^\/media\/photo\/([a-f0-9]{64})$/.exec(new URL(request.url).pathname);
   if (!match) return new Response(null, { status: 404, headers });
   const { value, metadata } = await env.OAUTH_KV.getWithMetadata<{ mime: string; expiresAt: number }>(`${PREFIX}${match[1]}`, "arrayBuffer");

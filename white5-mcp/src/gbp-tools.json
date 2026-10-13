@@ -1,7 +1,2577 @@
 [
   {
+    "name": "create_media_batch",
+    "description": "Preview and confirm up to ten exact gallery uploads. Detect repeated source URLs, publish approved items independently, return per-item acceptance/errors and read back the gallery. Never automatically retry unknown outcomes. API acceptance does not imply public visibility. First prepare a preview; confirmed:true MUST include its previewId and identical arguments. Changed/expired previews are rejected. Destructive operations also require the exact separate confirmation phrase.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "account": {
+          "default": "accounts/115421274606058010150",
+          "type": "string",
+          "pattern": "^(?:accounts\\/)?\\d+$"
+        },
+        "location": {
+          "default": "locations/8623115222428082795",
+          "type": "string",
+          "pattern": "^(?:locations\\/)?\\d+$"
+        },
+        "items": {
+          "minItems": 1,
+          "maxItems": 10,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "sourceUrl": {
+                "type": "string",
+                "maxLength": 2048,
+                "format": "uri"
+              },
+              "mediaFormat": {
+                "default": "PHOTO",
+                "type": "string",
+                "enum": [
+                  "PHOTO",
+                  "VIDEO"
+                ]
+              },
+              "category": {
+                "default": "ADDITIONAL",
+                "type": "string",
+                "enum": [
+                  "COVER",
+                  "PROFILE",
+                  "EXTERIOR",
+                  "INTERIOR",
+                  "PRODUCT",
+                  "AT_WORK",
+                  "FOOD_AND_DRINK",
+                  "MENU",
+                  "COMMON_AREA",
+                  "ROOMS",
+                  "TEAMS",
+                  "ADDITIONAL"
+                ]
+              },
+              "description": {
+                "type": "string",
+                "maxLength": 1500
+              }
+            },
+            "required": [
+              "sourceUrl"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "confirmed": {
+          "default": false,
+          "type": "boolean"
+        },
+        "previewId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "idempotencyKey": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9_-]+$"
+        },
+        "destructiveConfirmation": {
+          "type": "string",
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "items"
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "capabilities",
+    "description": "Check actual GBP API access and report supported, restricted, discontinued and manual-only capabilities.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "account": {
+          "default": "accounts/115421274606058010150",
+          "type": "string",
+          "pattern": "^(?:accounts\\/)?\\d+$"
+        },
+        "location": {
+          "default": "locations/8623115222428082795",
+          "type": "string",
+          "pattern": "^(?:locations\\/)?\\d+$"
+        }
+      }
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "list_categories",
+    "description": "Search official Canadian business categories; never add categories merely for keywords.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "languageCode": {
+          "default": "en",
+          "type": "string",
+          "maxLength": 20
+        },
+        "pageSize": {
+          "default": 100,
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "pageToken": {
+          "type": "string",
+          "maxLength": 4096
+        }
+      }
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "get_category_types",
+    "description": "Get full category metadata including eligible structured service IDs and additional hours types.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "names": {
+          "minItems": 1,
+          "maxItems": 20,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^categories\\/gcid:[a-z0-9_]+$"
+          }
+        },
+        "languageCode": {
+          "default": "en",
+          "type": "string",
+          "maxLength": 20
+        }
+      },
+      "required": [
+        "names"
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "get_google_updates",
+    "description": "Compare owner-submitted profile with Google's current values, diffMask and pendingMask.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "location": {
+          "default": "locations/8623115222428082795",
+          "type": "string",
+          "pattern": "^(?:locations\\/)?\\d+$"
+        }
+      }
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "find_duplicates",
+    "description": "Find possible duplicates via accessible accounts and official Google location search. Never merge or delete.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "account": {
+          "default": "accounts/115421274606058010150",
+          "type": "string",
+          "pattern": "^(?:accounts\\/)?\\d+$"
+        },
+        "location": {
+          "default": "locations/8623115222428082795",
+          "type": "string",
+          "pattern": "^(?:locations\\/)?\\d+$"
+        }
+      }
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "list_services",
+    "description": "Read all structured/custom serviceItems with stable edit keys. Money is a fixed CAD price, never a starting price.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "location": {
+          "default": "locations/8623115222428082795",
+          "type": "string",
+          "pattern": "^(?:locations\\/)?\\d+$"
+        }
+      }
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "get_service_types",
+    "description": "Retrieve Google-provided service IDs eligible for this profile's current categories.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "location": {
+          "default": "locations/8623115222428082795",
+          "type": "string",
+          "pattern": "^(?:locations\\/)?\\d+$"
+        }
+      }
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "prepare_white5_services",
+    "description": "Prepare nine requested White5 services without publishing or inventing prices; preserve existing unrelated services.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "location": {
+          "default": "locations/8623115222428082795",
+          "type": "string",
+          "pattern": "^(?:locations\\/)?\\d+$"
+        }
+      }
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "update_services",
+    "description": "Merge explicitly identified service changes, preserving unrelated entries. Preview current/proposed serviceItems, detect duplicates and stale state, confirm exact preview, then validateOnly or publish and read back. Prices are fixed CAD Money; omit price for variable pricing. First prepare a preview; confirmed:true MUST include its previewId and identical arguments. Changed/expired previews are rejected. Destructive operations also require the exact separate confirmation phrase.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "location": {
+          "default": "locations/8623115222428082795",
+          "type": "string",
+          "pattern": "^(?:locations\\/)?\\d+$"
+        },
+        "upsert": {
+          "default": [],
+          "maxItems": 100,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "key": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 500
+              },
+              "item": {
+                "type": "object",
+                "properties": {
+                  "structuredServiceItem": {
+                    "type": "object",
+                    "properties": {
+                      "serviceTypeId": {
+                        "type": "string",
+                        "pattern": "^job_type_id:[a-z0-9_]+$"
+                      },
+                      "description": {
+                        "type": "string",
+                        "maxLength": 300
+                      }
+                    },
+                    "required": [
+                      "serviceTypeId"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "freeFormServiceItem": {
+                    "type": "object",
+                    "properties": {
+                      "category": {
+                        "type": "string",
+                        "pattern": "^categories\\/gcid:[a-z0-9_]+$"
+                      },
+                      "label": {
+                        "type": "object",
+                        "properties": {
+                          "displayName": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 140
+                          },
+                          "description": {
+                            "type": "string",
+                            "maxLength": 250
+                          },
+                          "languageCode": {
+                            "default": "en",
+                            "type": "string",
+                            "maxLength": 20
+                          }
+                        },
+                        "required": [
+                          "displayName"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "category",
+                      "label"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "price": {
+                    "type": "object",
+                    "properties": {
+                      "currencyCode": {
+                        "type": "string",
+                        "const": "CAD"
+                      },
+                      "units": {
+                        "type": "string",
+                        "pattern": "^(0|[1-9]\\d{0,8})$"
+                      },
+                      "nanos": {
+                        "default": 0,
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 999999999
+                      }
+                    },
+                    "required": [
+                      "currencyCode",
+                      "units"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "item"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "removeKeys": {
+          "default": [],
+          "maxItems": 100,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          }
+        },
+        "validateOnly": {
+          "default": true,
+          "type": "boolean"
+        },
+        "confirmed": {
+          "default": false,
+          "type": "boolean"
+        },
+        "previewId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "idempotencyKey": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9_-]+$"
+        },
+        "destructiveConfirmation": {
+          "type": "string",
+          "maxLength": 500
+        }
+      },
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "list_attributes",
+    "description": "List attributes currently eligible for this location.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "location": {
+          "default": "locations/8623115222428082795",
+          "type": "string",
+          "pattern": "^(?:locations\\/)?\\d+$"
+        },
+        "pageSize": {
+          "default": 100,
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "pageToken": {
+          "type": "string",
+          "maxLength": 4096
+        }
+      }
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "get_attributes",
+    "description": "Read current profile attributes.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "location": {
+          "default": "locations/8623115222428082795",
+          "type": "string",
+          "pattern": "^(?:locations\\/)?\\d+$"
+        }
+      }
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "update_attributes",
+    "description": "Preview eligible typed attribute changes with a narrow attributeMask. Confirm exact preview to publish and read back. First prepare a preview; confirmed:true MUST include its previewId and identical arguments. Changed/expired previews are rejected. Destructive operations also require the exact separate confirmation phrase.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "location": {
+          "default": "locations/8623115222428082795",
+          "type": "string",
+          "pattern": "^(?:locations\\/)?\\d+$"
+        },
+        "attributes": {
+          "minItems": 1,
+          "maxItems": 100,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "pattern": "^attributes\\/[a-zA-Z0-9_]+$"
+              },
+              "values": {
+                "maxItems": 50,
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "string",
+                      "maxLength": 500
+                    }
+                  ]
+                }
+              },
+              "uriValues": {
+                "maxItems": 10,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "uri": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "maxLength": 2048,
+                          "format": "uri"
+                        },
+                        {
+                          "type": "string",
+                          "pattern": "^sms:\\+[1-9]\\d{7,14}$"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "uri"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "repeatedEnumValue": {
+                "type": "object",
+                "properties": {
+                  "setValues": {
+                    "default": [],
+                    "maxItems": 50,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "maxLength": 100
+                    }
+                  },
+                  "unsetValues": {
+                    "default": [],
+                    "maxItems": 50,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "maxLength": 100
+                    }
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "name"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "confirmed": {
+          "default": false,
+          "type": "boolean"
+        },
+        "previewId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "idempotencyKey": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9_-]+$"
+        },
+        "destructiveConfirmation": {
+          "type": "string",
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "attributes"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "get_media",
+    "description": "Get business-owned media metadata. The API exposes no public visibility/moderation approval field.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "mediaName": {
+          "type": "string",
+          "pattern": "^accounts\\/\\d+\\/locations\\/\\d+\\/media\\/[A-Za-z0-9_-]+$"
+        }
+      },
+      "required": [
+        "mediaName"
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "list_customer_media",
+    "description": "List customer-contributed media with required attribution; no modification of customer media.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "account": {
+          "default": "accounts/115421274606058010150",
+          "type": "string",
+          "pattern": "^(?:accounts\\/)?\\d+$"
+        },
+        "location": {
+          "default": "locations/8623115222428082795",
+          "type": "string",
+          "pattern": "^(?:locations\\/)?\\d+$"
+        },
+        "pageSize": {
+          "default": 100,
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "pageToken": {
+          "type": "string",
+          "maxLength": 4096
+        }
+      }
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "get_customer_media",
+    "description": "Read one customer media item preserving attribution.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "mediaName": {
+          "type": "string",
+          "pattern": "^accounts\\/\\d+\\/locations\\/\\d+\\/media\\/customers\\/[A-Za-z0-9_-]+$"
+        }
+      },
+      "required": [
+        "mediaName"
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "update_media",
+    "description": "Preview only the supported media category/locationAssociation change; description/source/format edits are not supported. First prepare a preview; confirmed:true MUST include its previewId and identical arguments. Changed/expired previews are rejected. Destructive operations also require the exact separate confirmation phrase.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "mediaName": {
+          "type": "string",
+          "pattern": "^accounts\\/\\d+\\/locations\\/\\d+\\/media\\/[A-Za-z0-9_-]+$"
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "EXTERIOR",
+            "INTERIOR",
+            "PRODUCT",
+            "AT_WORK",
+            "FOOD_AND_DRINK",
+            "MENU",
+            "COMMON_AREA",
+            "ROOMS",
+            "TEAMS",
+            "ADDITIONAL"
+          ]
+        },
+        "confirmed": {
+          "default": false,
+          "type": "boolean"
+        },
+        "previewId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "idempotencyKey": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9_-]+$"
+        },
+        "destructiveConfirmation": {
+          "type": "string",
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "mediaName",
+        "category"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "delete_media",
+    "description": "Separately confirm deletion of one business-owned media item. Never deletes customer media or locations. First prepare a preview; confirmed:true MUST include its previewId and identical arguments. Changed/expired previews are rejected. Destructive operations also require the exact separate confirmation phrase.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "mediaName": {
+          "type": "string",
+          "pattern": "^accounts\\/\\d+\\/locations\\/\\d+\\/media\\/[A-Za-z0-9_-]+$"
+        },
+        "confirmed": {
+          "default": false,
+          "type": "boolean"
+        },
+        "previewId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "idempotencyKey": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9_-]+$"
+        },
+        "destructiveConfirmation": {
+          "type": "string",
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "mediaName"
+      ],
+      "additionalProperties": false
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": true,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "check_media_publication",
+    "description": "Read gallery acceptance evidence and recent uploads; API presence or Google-hosted URLs do not prove public visibility. Compare user-observed count without inventing moderation status.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "account": {
+          "default": "accounts/115421274606058010150",
+          "type": "string",
+          "pattern": "^(?:accounts\\/)?\\d+$"
+        },
+        "location": {
+          "default": "locations/8623115222428082795",
+          "type": "string",
+          "pattern": "^(?:locations\\/)?\\d+$"
+        },
+        "since": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "observedPublicCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      }
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "get_post",
+    "description": "Read an individual local post including the official post state.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "postName": {
+          "type": "string",
+          "pattern": "^accounts\\/\\d+\\/locations\\/\\d+\\/localPosts\\/[A-Za-z0-9_-]+$"
+        }
+      },
+      "required": [
+        "postName"
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "save_post_draft",
+    "description": "Save an exact STANDARD/EVENT/OFFER draft privately in White5 after preview confirmation; does not publish. First prepare a preview; confirmed:true MUST include its previewId and identical arguments. Changed/expired previews are rejected. Destructive operations also require the exact separate confirmation phrase.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "account": {
+          "default": "accounts/115421274606058010150",
+          "type": "string",
+          "pattern": "^(?:accounts\\/)?\\d+$"
+        },
+        "location": {
+          "default": "locations/8623115222428082795",
+          "type": "string",
+          "pattern": "^(?:locations\\/)?\\d+$"
+        },
+        "draftId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "post": {
+          "type": "object",
+          "properties": {
+            "topicType": {
+              "default": "STANDARD",
+              "type": "string",
+              "enum": [
+                "STANDARD",
+                "EVENT",
+                "OFFER"
+              ]
+            },
+            "languageCode": {
+              "type": "string",
+              "maxLength": 20
+            },
+            "summary": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1500
+            },
+            "media": {
+              "maxItems": 10,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "mediaFormat": {
+                    "type": "string",
+                    "const": "PHOTO"
+                  },
+                  "sourceUrl": {
+                    "type": "string",
+                    "maxLength": 2048,
+                    "format": "uri"
+                  }
+                },
+                "required": [
+                  "sourceUrl"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "callToAction": {
+              "type": "object",
+              "properties": {
+                "actionType": {
+                  "type": "string",
+                  "enum": [
+                    "BOOK",
+                    "ORDER",
+                    "SHOP",
+                    "LEARN_MORE",
+                    "SIGN_UP",
+                    "CALL"
+                  ]
+                },
+                "url": {
+                  "type": "string",
+                  "maxLength": 2048,
+                  "format": "uri"
+                }
+              },
+              "required": [
+                "actionType"
+              ],
+              "additionalProperties": false
+            },
+            "event": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 58
+                },
+                "schedule": {
+                  "type": "object",
+                  "properties": {
+                    "startDate": {
+                      "type": "object",
+                      "properties": {
+                        "year": {
+                          "type": "integer",
+                          "minimum": 2020,
+                          "maximum": 2100
+                        },
+                        "month": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 12
+                        },
+                        "day": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 31
+                        }
+                      },
+                      "required": [
+                        "year",
+                        "month",
+                        "day"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "endDate": {
+                      "type": "object",
+                      "properties": {
+                        "year": {
+                          "type": "integer",
+                          "minimum": 2020,
+                          "maximum": 2100
+                        },
+                        "month": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 12
+                        },
+                        "day": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 31
+                        }
+                      },
+                      "required": [
+                        "year",
+                        "month",
+                        "day"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "startTime": {
+                      "type": "object",
+                      "properties": {
+                        "hours": {
+                          "default": 0,
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 23
+                        },
+                        "minutes": {
+                          "default": 0,
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 59
+                        },
+                        "seconds": {
+                          "default": 0,
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 59
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    "endTime": {
+                      "type": "object",
+                      "properties": {
+                        "hours": {
+                          "default": 0,
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 23
+                        },
+                        "minutes": {
+                          "default": 0,
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 59
+                        },
+                        "seconds": {
+                          "default": 0,
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 59
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "startDate",
+                    "endDate"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "title",
+                "schedule"
+              ],
+              "additionalProperties": false
+            },
+            "offer": {
+              "type": "object",
+              "properties": {
+                "couponCode": {
+                  "type": "string",
+                  "maxLength": 100
+                },
+                "redeemOnlineUrl": {
+                  "type": "string",
+                  "maxLength": 2048,
+                  "format": "uri"
+                },
+                "termsConditions": {
+                  "type": "string",
+                  "maxLength": 5000
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "confirmed": {
+          "default": false,
+          "type": "boolean"
+        },
+        "previewId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "idempotencyKey": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9_-]+$"
+        },
+        "destructiveConfirmation": {
+          "type": "string",
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "post"
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "list_post_drafts",
+    "description": "List private White5 post drafts.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {}
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "get_post_draft",
+    "description": "Read one private White5 post draft.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "draftId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        }
+      },
+      "required": [
+        "draftId"
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "delete_post_draft",
+    "description": "Delete a private draft after separate confirmation. First prepare a preview; confirmed:true MUST include its previewId and identical arguments. Changed/expired previews are rejected. Destructive operations also require the exact separate confirmation phrase.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "draftId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "confirmed": {
+          "default": false,
+          "type": "boolean"
+        },
+        "previewId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "idempotencyKey": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9_-]+$"
+        },
+        "destructiveConfirmation": {
+          "type": "string",
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "draftId"
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": true,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "review_summary",
+    "description": "Paginate reviews; return ratings, counts, unanswered reviews and evidence-based recurring word themes. No fake reviews.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "account": {
+          "default": "accounts/115421274606058010150",
+          "type": "string",
+          "pattern": "^(?:accounts\\/)?\\d+$"
+        },
+        "location": {
+          "default": "locations/8623115222428082795",
+          "type": "string",
+          "pattern": "^(?:locations\\/)?\\d+$"
+        },
+        "unansweredOnly": {
+          "default": false,
+          "type": "boolean"
+        }
+      }
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "suggest_review_reply",
+    "description": "Prepare an editable reply suggestion grounded in the selected review. Never sends.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "reviewName": {
+          "type": "string",
+          "pattern": "^accounts\\/\\d+\\/locations\\/\\d+\\/reviews\\/[A-Za-z0-9_-]+$"
+        }
+      },
+      "required": [
+        "reviewName"
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "delete_review_reply",
+    "description": "Separately confirm deletion of the owner's reply, then read back the review. Cannot delete a customer review. First prepare a preview; confirmed:true MUST include its previewId and identical arguments. Changed/expired previews are rejected. Destructive operations also require the exact separate confirmation phrase.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "reviewName": {
+          "type": "string",
+          "pattern": "^accounts\\/\\d+\\/locations\\/\\d+\\/reviews\\/[A-Za-z0-9_-]+$"
+        },
+        "confirmed": {
+          "default": false,
+          "type": "boolean"
+        },
+        "previewId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "idempotencyKey": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9_-]+$"
+        },
+        "destructiveConfirmation": {
+          "type": "string",
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "reviewName"
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": true,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "search_keywords",
+    "description": "Get monthly search keyword impressions. Preserve threshold vs exact-count semantics; no invented low-volume counts.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "location": {
+          "default": "locations/8623115222428082795",
+          "type": "string",
+          "pattern": "^(?:locations\\/)?\\d+$"
+        },
+        "startMonth": {
+          "type": "string",
+          "pattern": "^\\d{4}-(0[1-9]|1[0-2])$"
+        },
+        "endMonth": {
+          "type": "string",
+          "pattern": "^\\d{4}-(0[1-9]|1[0-2])$"
+        },
+        "pageSize": {
+          "default": 100,
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "pageToken": {
+          "type": "string",
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "startMonth",
+        "endMonth"
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "compare_performance",
+    "description": "Compare daily totals and per-day averages across two ranges; call clicks are not completed calls and missing data is not zero.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "location": {
+          "default": "locations/8623115222428082795",
+          "type": "string",
+          "pattern": "^(?:locations\\/)?\\d+$"
+        },
+        "startDate": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "endDate": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "previousStartDate": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "previousEndDate": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        }
+      },
+      "required": [
+        "startDate",
+        "endDate",
+        "previousStartDate",
+        "previousEndDate"
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "performance_summary",
+    "description": "Weekly/monthly daily-metric summary, comparison and explicitly heuristic unusual-change flags.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "location": {
+          "default": "locations/8623115222428082795",
+          "type": "string",
+          "pattern": "^(?:locations\\/)?\\d+$"
+        },
+        "period": {
+          "default": "weekly",
+          "type": "string",
+          "enum": [
+            "weekly",
+            "monthly"
+          ]
+        },
+        "endDate": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        }
+      }
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "list_action_types",
+    "description": "Discover place action types actually eligible for this location. Do not assume quote/WhatsApp links exist.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "location": {
+          "default": "locations/8623115222428082795",
+          "type": "string",
+          "pattern": "^(?:locations\\/)?\\d+$"
+        },
+        "pageSize": {
+          "default": 100,
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "pageToken": {
+          "type": "string",
+          "maxLength": 4096
+        }
+      }
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "list_action_links",
+    "description": "Read current place action links.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "location": {
+          "default": "locations/8623115222428082795",
+          "type": "string",
+          "pattern": "^(?:locations\\/)?\\d+$"
+        },
+        "pageSize": {
+          "default": 100,
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "pageToken": {
+          "type": "string",
+          "maxLength": 4096
+        }
+      }
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "get_action_link",
+    "description": "Read one action link and its editable/provider status.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^locations\\/\\d+\\/placeActionLinks\\/[A-Za-z0-9_-]+$"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "create_action_link",
+    "description": "Preview a link only after verifying the action type is eligible for this location. Confirm exact preview, publish and read back. First prepare a preview; confirmed:true MUST include its previewId and identical arguments. Changed/expired previews are rejected. Destructive operations also require the exact separate confirmation phrase.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "location": {
+          "default": "locations/8623115222428082795",
+          "type": "string",
+          "pattern": "^(?:locations\\/)?\\d+$"
+        },
+        "uri": {
+          "type": "string",
+          "maxLength": 2048,
+          "format": "uri"
+        },
+        "placeActionType": {
+          "type": "string",
+          "enum": [
+            "APPOINTMENT",
+            "ONLINE_APPOINTMENT",
+            "DINING_RESERVATION",
+            "FOOD_ORDERING",
+            "FOOD_DELIVERY",
+            "FOOD_TAKEOUT",
+            "SHOP_ONLINE",
+            "SOLOPRENEUR_APPOINTMENT"
+          ]
+        },
+        "isPreferred": {
+          "default": false,
+          "type": "boolean"
+        },
+        "confirmed": {
+          "default": false,
+          "type": "boolean"
+        },
+        "previewId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "idempotencyKey": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9_-]+$"
+        },
+        "destructiveConfirmation": {
+          "type": "string",
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "uri",
+        "placeActionType"
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "update_action_link",
+    "description": "Preview URI/preferred changes to a merchant-editable action link. First prepare a preview; confirmed:true MUST include its previewId and identical arguments. Changed/expired previews are rejected. Destructive operations also require the exact separate confirmation phrase.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^locations\\/\\d+\\/placeActionLinks\\/[A-Za-z0-9_-]+$"
+        },
+        "uri": {
+          "type": "string",
+          "maxLength": 2048,
+          "format": "uri"
+        },
+        "isPreferred": {
+          "type": "boolean"
+        },
+        "confirmed": {
+          "default": false,
+          "type": "boolean"
+        },
+        "previewId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "idempotencyKey": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9_-]+$"
+        },
+        "destructiveConfirmation": {
+          "type": "string",
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "delete_action_link",
+    "description": "Separately confirm removal of one editable action link. First prepare a preview; confirmed:true MUST include its previewId and identical arguments. Changed/expired previews are rejected. Destructive operations also require the exact separate confirmation phrase.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^locations\\/\\d+\\/placeActionLinks\\/[A-Za-z0-9_-]+$"
+        },
+        "confirmed": {
+          "default": false,
+          "type": "boolean"
+        },
+        "previewId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "idempotencyKey": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9_-]+$"
+        },
+        "destructiveConfirmation": {
+          "type": "string",
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": true,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "get_voice_of_merchant",
+    "description": "Read official Voice of Merchant state, reporting API enablement failures accurately.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "location": {
+          "default": "locations/8623115222428082795",
+          "type": "string",
+          "pattern": "^(?:locations\\/)?\\d+$"
+        }
+      }
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "list_verifications",
+    "description": "Read paginated verification history.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "location": {
+          "default": "locations/8623115222428082795",
+          "type": "string",
+          "pattern": "^(?:locations\\/)?\\d+$"
+        },
+        "pageSize": {
+          "default": 100,
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "pageToken": {
+          "type": "string",
+          "maxLength": 4096
+        }
+      }
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "get_verification_options",
+    "description": "Discover eligible verification methods without starting verification; service-area businesses may need address context.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "location": {
+          "default": "locations/8623115222428082795",
+          "type": "string",
+          "pattern": "^(?:locations\\/)?\\d+$"
+        },
+        "context": {
+          "type": "object",
+          "properties": {
+            "address": {
+              "type": "object",
+              "properties": {
+                "regionCode": {
+                  "type": "string",
+                  "const": "CA"
+                },
+                "administrativeArea": {
+                  "type": "string",
+                  "maxLength": 100
+                },
+                "locality": {
+                  "type": "string",
+                  "maxLength": 100
+                },
+                "postalCode": {
+                  "type": "string",
+                  "maxLength": 20
+                },
+                "addressLines": {
+                  "minItems": 1,
+                  "maxItems": 5,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "maxLength": 200
+                  }
+                }
+              },
+              "required": [
+                "regionCode",
+                "administrativeArea",
+                "locality",
+                "postalCode",
+                "addressLines"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "address"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "start_verification",
+    "description": "Owner-approved verification step using only an eligible method/destination. Separate confirmation required; never transfers ownership. First prepare a preview; confirmed:true MUST include its previewId and identical arguments. Changed/expired previews are rejected. Destructive operations also require the exact separate confirmation phrase.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "location": {
+          "default": "locations/8623115222428082795",
+          "type": "string",
+          "pattern": "^(?:locations\\/)?\\d+$"
+        },
+        "method": {
+          "type": "string",
+          "enum": [
+            "ADDRESS",
+            "EMAIL",
+            "PHONE_CALL",
+            "SMS",
+            "AUTO"
+          ]
+        },
+        "phoneNumber": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "emailAddress": {
+          "type": "string",
+          "format": "email",
+          "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+        },
+        "mailerContact": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "context": {
+          "type": "object",
+          "properties": {
+            "address": {
+              "type": "object",
+              "properties": {
+                "regionCode": {
+                  "type": "string",
+                  "const": "CA"
+                },
+                "administrativeArea": {
+                  "type": "string",
+                  "maxLength": 100
+                },
+                "locality": {
+                  "type": "string",
+                  "maxLength": 100
+                },
+                "postalCode": {
+                  "type": "string",
+                  "maxLength": 20
+                },
+                "addressLines": {
+                  "minItems": 1,
+                  "maxItems": 5,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "maxLength": 200
+                  }
+                }
+              },
+              "required": [
+                "regionCode",
+                "administrativeArea",
+                "locality",
+                "postalCode",
+                "addressLines"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "address"
+          ],
+          "additionalProperties": false
+        },
+        "confirmed": {
+          "default": false,
+          "type": "boolean"
+        },
+        "previewId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "idempotencyKey": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9_-]+$"
+        },
+        "destructiveConfirmation": {
+          "type": "string",
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "method"
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "complete_verification",
+    "description": "Owner-approved completion of a pending verification using its PIN. PIN is never returned in previews/logs. First prepare a preview; confirmed:true MUST include its previewId and identical arguments. Changed/expired previews are rejected. Destructive operations also require the exact separate confirmation phrase.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^locations\\/\\d+\\/verifications\\/[A-Za-z0-9_-]+$"
+        },
+        "pin": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9-]{3,20}$"
+        },
+        "confirmed": {
+          "default": false,
+          "type": "boolean"
+        },
+        "previewId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "idempotencyKey": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9_-]+$"
+        },
+        "destructiveConfirmation": {
+          "type": "string",
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "name",
+        "pin"
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "list_admins",
+    "description": "Read account/location administrators and roles.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "account": {
+          "default": "accounts/115421274606058010150",
+          "type": "string",
+          "pattern": "^(?:accounts\\/)?\\d+$"
+        },
+        "location": {
+          "default": "locations/8623115222428082795",
+          "type": "string",
+          "pattern": "^(?:locations\\/)?\\d+$"
+        },
+        "scope": {
+          "default": "location",
+          "type": "string",
+          "enum": [
+            "location",
+            "account"
+          ]
+        }
+      }
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "list_invitations",
+    "description": "Read pending account invitations.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "account": {
+          "default": "accounts/115421274606058010150",
+          "type": "string",
+          "pattern": "^(?:accounts\\/)?\\d+$"
+        }
+      }
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "invite_manager",
+    "description": "Invite a MANAGER only, after exact email preview and separate security confirmation. Owner grants/transfers are not exposed. First prepare a preview; confirmed:true MUST include its previewId and identical arguments. Changed/expired previews are rejected. Destructive operations also require the exact separate confirmation phrase.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "location": {
+          "default": "locations/8623115222428082795",
+          "type": "string",
+          "pattern": "^(?:locations\\/)?\\d+$"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+        },
+        "confirmed": {
+          "default": false,
+          "type": "boolean"
+        },
+        "previewId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "idempotencyKey": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9_-]+$"
+        },
+        "destructiveConfirmation": {
+          "type": "string",
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "email"
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "remove_manager",
+    "description": "Remove only a non-owner MANAGER after separate security confirmation; never removes owners. First prepare a preview; confirmed:true MUST include its previewId and identical arguments. Changed/expired previews are rejected. Destructive operations also require the exact separate confirmation phrase.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^locations\\/\\d+\\/admins\\/[A-Za-z0-9_-]+$"
+        },
+        "confirmed": {
+          "default": false,
+          "type": "boolean"
+        },
+        "previewId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "idempotencyKey": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9_-]+$"
+        },
+        "destructiveConfirmation": {
+          "type": "string",
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": true,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "get_notifications",
+    "description": "Read Google Pub/Sub notification configuration; no Q&A notification types.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "account": {
+          "default": "accounts/115421274606058010150",
+          "type": "string",
+          "pattern": "^(?:accounts\\/)?\\d+$"
+        }
+      }
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "update_notifications",
+    "description": "Preview linking an already-provisioned Pub/Sub topic and supported event types. Does not provision IAM/topic/subscription; separate confirmation required. First prepare a preview; confirmed:true MUST include its previewId and identical arguments. Changed/expired previews are rejected. Destructive operations also require the exact separate confirmation phrase.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "account": {
+          "default": "accounts/115421274606058010150",
+          "type": "string",
+          "pattern": "^(?:accounts\\/)?\\d+$"
+        },
+        "pubsubTopic": {
+          "type": "string",
+          "pattern": "^(projects\\/[a-z][a-z0-9-]{4,62}\\/topics\\/[A-Za-z][A-Za-z0-9._~+%-]{2,254})?$"
+        },
+        "notificationTypes": {
+          "maxItems": 6,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "GOOGLE_UPDATE",
+              "NEW_REVIEW",
+              "UPDATED_REVIEW",
+              "NEW_CUSTOMER_MEDIA",
+              "DUPLICATE_LOCATION",
+              "VOICE_OF_MERCHANT_UPDATED"
+            ]
+          }
+        },
+        "confirmed": {
+          "default": false,
+          "type": "boolean"
+        },
+        "previewId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "idempotencyKey": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9_-]+$"
+        },
+        "destructiveConfirmation": {
+          "type": "string",
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "pubsubTopic",
+        "notificationTypes"
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "poll_changes",
+    "description": "On-demand polling snapshot of reviews, profile and media. Not real-time; compare with prior stored report when present.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "account": {
+          "default": "accounts/115421274606058010150",
+          "type": "string",
+          "pattern": "^(?:accounts\\/)?\\d+$"
+        },
+        "location": {
+          "default": "locations/8623115222428082795",
+          "type": "string",
+          "pattern": "^(?:locations\\/)?\\d+$"
+        }
+      }
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "run_full_audit",
+    "description": "Read-only comprehensive GBP audit: completeness, services, attributes, categories, media, reviews, Google changes, performance, keywords and consistency with white5.ca. Recommendations have evidence and no ranking guarantees.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "account": {
+          "default": "accounts/115421274606058010150",
+          "type": "string",
+          "pattern": "^(?:accounts\\/)?\\d+$"
+        },
+        "location": {
+          "default": "locations/8623115222428082795",
+          "type": "string",
+          "pattern": "^(?:locations\\/)?\\d+$"
+        }
+      }
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "schedule_job",
+    "description": "Preview exact America/Edmonton time and content of an optional job. Only confirmed approved jobs activate alarms. Posts publish once; reports/reminders poll weekly/monthly and are available through list_reports, not email/push. First prepare a preview; confirmed:true MUST include its previewId and identical arguments. Changed/expired previews are rejected. Destructive operations also require the exact separate confirmation phrase.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "account": {
+          "default": "accounts/115421274606058010150",
+          "type": "string",
+          "pattern": "^(?:accounts\\/)?\\d+$"
+        },
+        "location": {
+          "default": "locations/8623115222428082795",
+          "type": "string",
+          "pattern": "^(?:locations\\/)?\\d+$"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "post",
+            "weekly_report",
+            "monthly_report",
+            "unanswered_reviews",
+            "media_followup",
+            "profile_changes"
+          ]
+        },
+        "runAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+          "description": "Exact ISO timestamp including UTC offset. Display the corresponding America/Edmonton time before approval."
+        },
+        "post": {
+          "type": "object",
+          "properties": {
+            "topicType": {
+              "default": "STANDARD",
+              "type": "string",
+              "enum": [
+                "STANDARD",
+                "EVENT",
+                "OFFER"
+              ]
+            },
+            "languageCode": {
+              "type": "string",
+              "maxLength": 20
+            },
+            "summary": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1500
+            },
+            "media": {
+              "maxItems": 10,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "mediaFormat": {
+                    "type": "string",
+                    "const": "PHOTO"
+                  },
+                  "sourceUrl": {
+                    "type": "string",
+                    "maxLength": 2048,
+                    "format": "uri"
+                  }
+                },
+                "required": [
+                  "sourceUrl"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "callToAction": {
+              "type": "object",
+              "properties": {
+                "actionType": {
+                  "type": "string",
+                  "enum": [
+                    "BOOK",
+                    "ORDER",
+                    "SHOP",
+                    "LEARN_MORE",
+                    "SIGN_UP",
+                    "CALL"
+                  ]
+                },
+                "url": {
+                  "type": "string",
+                  "maxLength": 2048,
+                  "format": "uri"
+                }
+              },
+              "required": [
+                "actionType"
+              ],
+              "additionalProperties": false
+            },
+            "event": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 58
+                },
+                "schedule": {
+                  "type": "object",
+                  "properties": {
+                    "startDate": {
+                      "type": "object",
+                      "properties": {
+                        "year": {
+                          "type": "integer",
+                          "minimum": 2020,
+                          "maximum": 2100
+                        },
+                        "month": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 12
+                        },
+                        "day": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 31
+                        }
+                      },
+                      "required": [
+                        "year",
+                        "month",
+                        "day"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "endDate": {
+                      "type": "object",
+                      "properties": {
+                        "year": {
+                          "type": "integer",
+                          "minimum": 2020,
+                          "maximum": 2100
+                        },
+                        "month": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 12
+                        },
+                        "day": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 31
+                        }
+                      },
+                      "required": [
+                        "year",
+                        "month",
+                        "day"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "startTime": {
+                      "type": "object",
+                      "properties": {
+                        "hours": {
+                          "default": 0,
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 23
+                        },
+                        "minutes": {
+                          "default": 0,
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 59
+                        },
+                        "seconds": {
+                          "default": 0,
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 59
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    "endTime": {
+                      "type": "object",
+                      "properties": {
+                        "hours": {
+                          "default": 0,
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 23
+                        },
+                        "minutes": {
+                          "default": 0,
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 59
+                        },
+                        "seconds": {
+                          "default": 0,
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 59
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "startDate",
+                    "endDate"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "title",
+                "schedule"
+              ],
+              "additionalProperties": false
+            },
+            "offer": {
+              "type": "object",
+              "properties": {
+                "couponCode": {
+                  "type": "string",
+                  "maxLength": 100
+                },
+                "redeemOnlineUrl": {
+                  "type": "string",
+                  "maxLength": 2048,
+                  "format": "uri"
+                },
+                "termsConditions": {
+                  "type": "string",
+                  "maxLength": 5000
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "confirmed": {
+          "default": false,
+          "type": "boolean"
+        },
+        "previewId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "idempotencyKey": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9_-]+$"
+        },
+        "destructiveConfirmation": {
+          "type": "string",
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "kind",
+        "runAt"
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "list_jobs",
+    "description": "List approved jobs and their execution states.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {}
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "cancel_job",
+    "description": "Cancel a future job after preview confirmation. First prepare a preview; confirmed:true MUST include its previewId and identical arguments. Changed/expired previews are rejected. Destructive operations also require the exact separate confirmation phrase.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "jobId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "confirmed": {
+          "default": false,
+          "type": "boolean"
+        },
+        "previewId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "idempotencyKey": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9_-]+$"
+        },
+        "destructiveConfirmation": {
+          "type": "string",
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "jobId"
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "list_reports",
+    "description": "Read stored scheduled reports and polling reminders; no external messages are sent.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {}
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
+    "name": "get_audit_log",
+    "description": "Read sanitized operation outcomes and scheduled job events; no credentials, signed input URLs or verification PINs.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "limit": {
+          "default": 50,
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        }
+      }
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
     "name": "upload_media",
-    "description": "Accept a user-attached JPEG/PNG through ChatGPT file input. With confirmed:true, download and stage it in White5 for 72 hours (10 KB–5 MiB, minimum 250x250). Returns sourceUrl for posts or profile gallery photos. Anyone with this temporary URL can read it. Never publishes to Google. Default is a local preview without downloading. Do not invent file IDs or URLs; ask for an attachment if missing.",
+    "description": "Accept a user-attached JPEG/PNG or MP4 (up to 75 MiB, 30 seconds, 720p) through ChatGPT file input. With confirmed:true, download and stage it in White5 for 72 hours (10 KB–5 MiB, minimum 250x250). Returns sourceUrl for posts or profile gallery photos. Anyone with this temporary URL can read it. Never publishes to Google. Default is a local preview without downloading. Do not invent file IDs or URLs; ask for an attachment if missing. First prepare a preview; confirmed:true MUST include its previewId and identical arguments. Changed/expired previews are rejected. Destructive operations also require the exact separate confirmation phrase.",
     "inputSchema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "type": "object",
@@ -36,6 +2606,21 @@
         "confirmed": {
           "default": false,
           "type": "boolean"
+        },
+        "previewId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "idempotencyKey": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9_-]+$"
+        },
+        "destructiveConfirmation": {
+          "type": "string",
+          "maxLength": 500
         }
       },
       "required": [
@@ -55,8 +2640,83 @@
     }
   },
   {
+    "name": "upload_media_batch",
+    "description": "Stage up to ten user attachments after exact preview approval, with independent per-item success/failure results. Never publishes to Google. JPEG/PNG photos or supported MP4 video. First prepare a preview; confirmed:true MUST include its previewId and identical arguments. Changed/expired previews are rejected. Destructive operations also require the exact separate confirmation phrase.",
+    "inputSchema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "type": "object",
+      "properties": {
+        "files": {
+          "minItems": 1,
+          "maxItems": 10,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "download_url": {
+                "type": "string",
+                "maxLength": 16384
+              },
+              "file_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              },
+              "mime_type": {
+                "type": "string",
+                "maxLength": 100
+              },
+              "file_name": {
+                "type": "string",
+                "maxLength": 255
+              }
+            },
+            "required": [
+              "download_url",
+              "file_id"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "confirmed": {
+          "default": false,
+          "type": "boolean"
+        },
+        "previewId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "idempotencyKey": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9_-]+$"
+        },
+        "destructiveConfirmation": {
+          "type": "string",
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "files"
+      ],
+      "additionalProperties": false
+    },
+    "_meta": {
+      "openai/fileParams": [
+        "files"
+      ]
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "openWorldHint": true
+    }
+  },
+  {
     "name": "create_media",
-    "description": "Preview adding a photo to the Google Business Profile gallery from sourceUrl (including upload_media output). confirmed:true publishes after explicit approval of the exact photo, category and description. COVER/PROFILE changes the profile's cover/profile photo. Google may moderate publication. Does not create a local post.",
+    "description": "Preview adding a photo to the Google Business Profile gallery from sourceUrl (including upload_media output). confirmed:true publishes after explicit approval of the exact photo, category and description. COVER/PROFILE changes the profile's cover/profile photo. Google may moderate publication. Does not create a local post. First prepare a preview; confirmed:true MUST include its previewId and identical arguments. Changed/expired previews are rejected. Destructive operations also require the exact separate confirmation phrase.",
     "inputSchema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "type": "object",
@@ -73,6 +2733,14 @@
           "type": "string",
           "maxLength": 2048,
           "format": "uri"
+        },
+        "mediaFormat": {
+          "default": "PHOTO",
+          "type": "string",
+          "enum": [
+            "PHOTO",
+            "VIDEO"
+          ]
         },
         "category": {
           "default": "ADDITIONAL",
@@ -100,6 +2768,21 @@
         "confirmed": {
           "default": false,
           "type": "boolean"
+        },
+        "previewId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "idempotencyKey": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9_-]+$"
+        },
+        "destructiveConfirmation": {
+          "type": "string",
+          "maxLength": 500
         }
       },
       "required": [
@@ -222,7 +2905,7 @@
           "maxLength": 4096
         },
         "readMask": {
-          "default": "name,title,storeCode,storefrontAddress,websiteUri,phoneNumbers,categories,regularHours,specialHours,serviceArea,metadata,profile,openInfo",
+          "default": "name,title,storeCode,storefrontAddress,websiteUri,phoneNumbers,categories,regularHours,specialHours,serviceArea,metadata,profile,openInfo,serviceItems,labels,moreHours",
           "type": "string",
           "minLength": 1
         }
@@ -249,7 +2932,7 @@
           "pattern": "^(?:locations\\/)?[0-9]+$"
         },
         "readMask": {
-          "default": "name,title,storeCode,storefrontAddress,websiteUri,phoneNumbers,categories,regularHours,specialHours,serviceArea,metadata,profile,openInfo",
+          "default": "name,title,storeCode,storefrontAddress,websiteUri,phoneNumbers,categories,regularHours,specialHours,serviceArea,metadata,profile,openInfo,serviceItems,labels,moreHours",
           "type": "string",
           "minLength": 1
         }
@@ -370,7 +3053,7 @@
   },
   {
     "name": "prepare_post",
-    "description": "Validate and prepare a local STANDARD post draft with text, photo URLs and call-to-action/website links. No network calls or Google draft is created.",
+    "description": "Validate and prepare a local STANDARD/EVENT/OFFER post draft with text, photo URLs and call-to-action/website links. No network calls or Google draft is created.",
     "inputSchema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "type": "object",
@@ -386,14 +3069,45 @@
         "post": {
           "type": "object",
           "properties": {
+            "topicType": {
+              "default": "STANDARD",
+              "type": "string",
+              "enum": [
+                "STANDARD",
+                "EVENT",
+                "OFFER"
+              ]
+            },
             "languageCode": {
               "type": "string",
-              "pattern": "^[a-z]{2,3}(?:-[A-Za-z0-9]{2,8})*$"
+              "maxLength": 20
             },
             "summary": {
               "type": "string",
               "minLength": 1,
               "maxLength": 1500
+            },
+            "media": {
+              "maxItems": 10,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "mediaFormat": {
+                    "type": "string",
+                    "const": "PHOTO"
+                  },
+                  "sourceUrl": {
+                    "type": "string",
+                    "maxLength": 2048,
+                    "format": "uri"
+                  }
+                },
+                "required": [
+                  "sourceUrl"
+                ],
+                "additionalProperties": false
+              }
             },
             "callToAction": {
               "type": "object",
@@ -420,32 +3134,149 @@
               ],
               "additionalProperties": false
             },
-            "media": {
-              "maxItems": 10,
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "mediaFormat": {
-                    "type": "string",
-                    "const": "PHOTO"
-                  },
-                  "sourceUrl": {
-                    "type": "string",
-                    "maxLength": 2048,
-                    "format": "uri"
-                  }
+            "event": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 58
                 },
-                "required": [
-                  "sourceUrl"
-                ],
-                "additionalProperties": false
-              }
+                "schedule": {
+                  "type": "object",
+                  "properties": {
+                    "startDate": {
+                      "type": "object",
+                      "properties": {
+                        "year": {
+                          "type": "integer",
+                          "minimum": 2020,
+                          "maximum": 2100
+                        },
+                        "month": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 12
+                        },
+                        "day": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 31
+                        }
+                      },
+                      "required": [
+                        "year",
+                        "month",
+                        "day"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "endDate": {
+                      "type": "object",
+                      "properties": {
+                        "year": {
+                          "type": "integer",
+                          "minimum": 2020,
+                          "maximum": 2100
+                        },
+                        "month": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 12
+                        },
+                        "day": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 31
+                        }
+                      },
+                      "required": [
+                        "year",
+                        "month",
+                        "day"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "startTime": {
+                      "type": "object",
+                      "properties": {
+                        "hours": {
+                          "default": 0,
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 23
+                        },
+                        "minutes": {
+                          "default": 0,
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 59
+                        },
+                        "seconds": {
+                          "default": 0,
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 59
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    "endTime": {
+                      "type": "object",
+                      "properties": {
+                        "hours": {
+                          "default": 0,
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 23
+                        },
+                        "minutes": {
+                          "default": 0,
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 59
+                        },
+                        "seconds": {
+                          "default": 0,
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 59
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "startDate",
+                    "endDate"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "title",
+                "schedule"
+              ],
+              "additionalProperties": false
             },
-            "topicType": {
-              "default": "STANDARD",
-              "type": "string",
-              "const": "STANDARD"
+            "offer": {
+              "type": "object",
+              "properties": {
+                "couponCode": {
+                  "type": "string",
+                  "maxLength": 100
+                },
+                "redeemOnlineUrl": {
+                  "type": "string",
+                  "maxLength": 2048,
+                  "format": "uri"
+                },
+                "termsConditions": {
+                  "type": "string",
+                  "maxLength": 5000
+                }
+              },
+              "additionalProperties": false
             }
           },
           "additionalProperties": false
@@ -465,7 +3296,7 @@
   },
   {
     "name": "create_post",
-    "description": "Preview a STANDARD post by default; confirmed:true publishes after explicit user approval. No server-side draft or validateOnly API exists for posts.",
+    "description": "Preview a STANDARD/EVENT/OFFER post by default; confirmed:true publishes after explicit user approval. No server-side draft or validateOnly API exists for posts. First prepare a preview; confirmed:true MUST include its previewId and identical arguments. Changed/expired previews are rejected. Destructive operations also require the exact separate confirmation phrase.",
     "inputSchema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "type": "object",
@@ -481,14 +3312,45 @@
         "post": {
           "type": "object",
           "properties": {
+            "topicType": {
+              "default": "STANDARD",
+              "type": "string",
+              "enum": [
+                "STANDARD",
+                "EVENT",
+                "OFFER"
+              ]
+            },
             "languageCode": {
               "type": "string",
-              "pattern": "^[a-z]{2,3}(?:-[A-Za-z0-9]{2,8})*$"
+              "maxLength": 20
             },
             "summary": {
               "type": "string",
               "minLength": 1,
               "maxLength": 1500
+            },
+            "media": {
+              "maxItems": 10,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "mediaFormat": {
+                    "type": "string",
+                    "const": "PHOTO"
+                  },
+                  "sourceUrl": {
+                    "type": "string",
+                    "maxLength": 2048,
+                    "format": "uri"
+                  }
+                },
+                "required": [
+                  "sourceUrl"
+                ],
+                "additionalProperties": false
+              }
             },
             "callToAction": {
               "type": "object",
@@ -515,32 +3377,149 @@
               ],
               "additionalProperties": false
             },
-            "media": {
-              "maxItems": 10,
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "mediaFormat": {
-                    "type": "string",
-                    "const": "PHOTO"
-                  },
-                  "sourceUrl": {
-                    "type": "string",
-                    "maxLength": 2048,
-                    "format": "uri"
-                  }
+            "event": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 58
                 },
-                "required": [
-                  "sourceUrl"
-                ],
-                "additionalProperties": false
-              }
+                "schedule": {
+                  "type": "object",
+                  "properties": {
+                    "startDate": {
+                      "type": "object",
+                      "properties": {
+                        "year": {
+                          "type": "integer",
+                          "minimum": 2020,
+                          "maximum": 2100
+                        },
+                        "month": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 12
+                        },
+                        "day": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 31
+                        }
+                      },
+                      "required": [
+                        "year",
+                        "month",
+                        "day"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "endDate": {
+                      "type": "object",
+                      "properties": {
+                        "year": {
+                          "type": "integer",
+                          "minimum": 2020,
+                          "maximum": 2100
+                        },
+                        "month": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 12
+                        },
+                        "day": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 31
+                        }
+                      },
+                      "required": [
+                        "year",
+                        "month",
+                        "day"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "startTime": {
+                      "type": "object",
+                      "properties": {
+                        "hours": {
+                          "default": 0,
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 23
+                        },
+                        "minutes": {
+                          "default": 0,
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 59
+                        },
+                        "seconds": {
+                          "default": 0,
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 59
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    "endTime": {
+                      "type": "object",
+                      "properties": {
+                        "hours": {
+                          "default": 0,
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 23
+                        },
+                        "minutes": {
+                          "default": 0,
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 59
+                        },
+                        "seconds": {
+                          "default": 0,
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 59
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "startDate",
+                    "endDate"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "title",
+                "schedule"
+              ],
+              "additionalProperties": false
             },
-            "topicType": {
-              "default": "STANDARD",
-              "type": "string",
-              "const": "STANDARD"
+            "offer": {
+              "type": "object",
+              "properties": {
+                "couponCode": {
+                  "type": "string",
+                  "maxLength": 100
+                },
+                "redeemOnlineUrl": {
+                  "type": "string",
+                  "maxLength": 2048,
+                  "format": "uri"
+                },
+                "termsConditions": {
+                  "type": "string",
+                  "maxLength": 5000
+                }
+              },
+              "additionalProperties": false
             }
           },
           "additionalProperties": false
@@ -548,6 +3527,21 @@
         "confirmed": {
           "default": false,
           "type": "boolean"
+        },
+        "previewId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "idempotencyKey": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9_-]+$"
+        },
+        "destructiveConfirmation": {
+          "type": "string",
+          "maxLength": 500
         }
       },
       "required": [
@@ -564,7 +3558,7 @@
   },
   {
     "name": "update_post",
-    "description": "Preview post changes by default; confirmed:true applies only supplied fields after explicit user approval.",
+    "description": "Preview post changes by default; confirmed:true applies only supplied fields after explicit user approval. First prepare a preview; confirmed:true MUST include its previewId and identical arguments. Changed/expired previews are rejected. Destructive operations also require the exact separate confirmation phrase.",
     "inputSchema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "type": "object",
@@ -576,14 +3570,44 @@
         "post": {
           "type": "object",
           "properties": {
+            "topicType": {
+              "type": "string",
+              "enum": [
+                "STANDARD",
+                "EVENT",
+                "OFFER"
+              ]
+            },
             "languageCode": {
               "type": "string",
-              "pattern": "^[a-z]{2,3}(?:-[A-Za-z0-9]{2,8})*$"
+              "maxLength": 20
             },
             "summary": {
               "type": "string",
               "minLength": 1,
               "maxLength": 1500
+            },
+            "media": {
+              "maxItems": 10,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "mediaFormat": {
+                    "type": "string",
+                    "const": "PHOTO"
+                  },
+                  "sourceUrl": {
+                    "type": "string",
+                    "maxLength": 2048,
+                    "format": "uri"
+                  }
+                },
+                "required": [
+                  "sourceUrl"
+                ],
+                "additionalProperties": false
+              }
             },
             "callToAction": {
               "type": "object",
@@ -610,27 +3634,149 @@
               ],
               "additionalProperties": false
             },
-            "media": {
-              "maxItems": 10,
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "mediaFormat": {
-                    "type": "string",
-                    "const": "PHOTO"
-                  },
-                  "sourceUrl": {
-                    "type": "string",
-                    "maxLength": 2048,
-                    "format": "uri"
-                  }
+            "event": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 58
                 },
-                "required": [
-                  "sourceUrl"
-                ],
-                "additionalProperties": false
-              }
+                "schedule": {
+                  "type": "object",
+                  "properties": {
+                    "startDate": {
+                      "type": "object",
+                      "properties": {
+                        "year": {
+                          "type": "integer",
+                          "minimum": 2020,
+                          "maximum": 2100
+                        },
+                        "month": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 12
+                        },
+                        "day": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 31
+                        }
+                      },
+                      "required": [
+                        "year",
+                        "month",
+                        "day"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "endDate": {
+                      "type": "object",
+                      "properties": {
+                        "year": {
+                          "type": "integer",
+                          "minimum": 2020,
+                          "maximum": 2100
+                        },
+                        "month": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 12
+                        },
+                        "day": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 31
+                        }
+                      },
+                      "required": [
+                        "year",
+                        "month",
+                        "day"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "startTime": {
+                      "type": "object",
+                      "properties": {
+                        "hours": {
+                          "default": 0,
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 23
+                        },
+                        "minutes": {
+                          "default": 0,
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 59
+                        },
+                        "seconds": {
+                          "default": 0,
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 59
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    "endTime": {
+                      "type": "object",
+                      "properties": {
+                        "hours": {
+                          "default": 0,
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 23
+                        },
+                        "minutes": {
+                          "default": 0,
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 59
+                        },
+                        "seconds": {
+                          "default": 0,
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 59
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "startDate",
+                    "endDate"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "title",
+                "schedule"
+              ],
+              "additionalProperties": false
+            },
+            "offer": {
+              "type": "object",
+              "properties": {
+                "couponCode": {
+                  "type": "string",
+                  "maxLength": 100
+                },
+                "redeemOnlineUrl": {
+                  "type": "string",
+                  "maxLength": 2048,
+                  "format": "uri"
+                },
+                "termsConditions": {
+                  "type": "string",
+                  "maxLength": 5000
+                }
+              },
+              "additionalProperties": false
             }
           },
           "additionalProperties": false
@@ -638,6 +3784,21 @@
         "confirmed": {
           "default": false,
           "type": "boolean"
+        },
+        "previewId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "idempotencyKey": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9_-]+$"
+        },
+        "destructiveConfirmation": {
+          "type": "string",
+          "maxLength": 500
         }
       },
       "required": [
@@ -653,7 +3814,7 @@
   },
   {
     "name": "delete_post",
-    "description": "Preview deletion of one local post; confirmed:true deletes only after explicit user approval. Never deletes business profiles.",
+    "description": "Preview deletion of one local post; confirmed:true deletes only after explicit user approval. Never deletes business profiles. First prepare a preview; confirmed:true MUST include its previewId and identical arguments. Changed/expired previews are rejected. Destructive operations also require the exact separate confirmation phrase.",
     "inputSchema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "type": "object",
@@ -665,6 +3826,21 @@
         "confirmed": {
           "default": false,
           "type": "boolean"
+        },
+        "previewId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "idempotencyKey": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9_-]+$"
+        },
+        "destructiveConfirmation": {
+          "type": "string",
+          "maxLength": 500
         }
       },
       "required": [
@@ -679,7 +3855,7 @@
   },
   {
     "name": "reply_to_review",
-    "description": "Validate and preview a review reply; confirmed:true sends only after explicit user approval of the exact text.",
+    "description": "Validate and preview a review reply; confirmed:true sends only after explicit user approval of the exact text. First prepare a preview; confirmed:true MUST include its previewId and identical arguments. Changed/expired previews are rejected. Destructive operations also require the exact separate confirmation phrase.",
     "inputSchema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "type": "object",
@@ -696,6 +3872,21 @@
         "confirmed": {
           "default": false,
           "type": "boolean"
+        },
+        "previewId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "idempotencyKey": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9_-]+$"
+        },
+        "destructiveConfirmation": {
+          "type": "string",
+          "maxLength": 500
         }
       },
       "required": [
@@ -711,7 +3902,7 @@
   },
   {
     "name": "update_location",
-    "description": "Preview validated business information changes. confirmed:true with validateOnly:true validates at Google without mutation; validateOnly:false applies after explicit approval.",
+    "description": "Preview validated business information changes. confirmed:true with validateOnly:true validates at Google without mutation; validateOnly:false applies after explicit approval. First prepare a preview; confirmed:true MUST include its previewId and identical arguments. Changed/expired previews are rejected. Destructive operations also require the exact separate confirmation phrase.",
     "inputSchema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "type": "object",
@@ -1040,6 +4231,147 @@
               ],
               "additionalProperties": false
             },
+            "categories": {
+              "type": "object",
+              "properties": {
+                "primaryCategory": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "pattern": "^categories\\/gcid:[a-z0-9_]+$"
+                    }
+                  },
+                  "required": [
+                    "name"
+                  ],
+                  "additionalProperties": false
+                },
+                "additionalCategories": {
+                  "maxItems": 9,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "pattern": "^categories\\/gcid:[a-z0-9_]+$"
+                      }
+                    },
+                    "required": [
+                      "name"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "primaryCategory"
+              ],
+              "additionalProperties": false
+            },
+            "labels": {
+              "maxItems": 10,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "maxLength": 50
+              }
+            },
+            "moreHours": {
+              "maxItems": 30,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "hoursTypeId": {
+                    "type": "string",
+                    "pattern": "^[A-Z_]+$"
+                  },
+                  "periods": {
+                    "maxItems": 100,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "openDay": {
+                          "type": "string",
+                          "enum": [
+                            "MONDAY",
+                            "TUESDAY",
+                            "WEDNESDAY",
+                            "THURSDAY",
+                            "FRIDAY",
+                            "SATURDAY",
+                            "SUNDAY"
+                          ]
+                        },
+                        "openTime": {
+                          "type": "object",
+                          "properties": {
+                            "hours": {
+                              "default": 0,
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 23
+                            },
+                            "minutes": {
+                              "default": 0,
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 59
+                            }
+                          },
+                          "additionalProperties": false
+                        },
+                        "closeDay": {
+                          "type": "string",
+                          "enum": [
+                            "MONDAY",
+                            "TUESDAY",
+                            "WEDNESDAY",
+                            "THURSDAY",
+                            "FRIDAY",
+                            "SATURDAY",
+                            "SUNDAY"
+                          ]
+                        },
+                        "closeTime": {
+                          "type": "object",
+                          "properties": {
+                            "hours": {
+                              "default": 0,
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 23
+                            },
+                            "minutes": {
+                              "default": 0,
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 59
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "openDay",
+                        "openTime",
+                        "closeDay",
+                        "closeTime"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": [
+                  "hoursTypeId",
+                  "periods"
+                ],
+                "additionalProperties": false
+              }
+            },
             "profile": {
               "type": "object",
               "properties": {
@@ -1063,6 +4395,21 @@
         "confirmed": {
           "default": false,
           "type": "boolean"
+        },
+        "previewId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "idempotencyKey": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9_-]+$"
+        },
+        "destructiveConfirmation": {
+          "type": "string",
+          "maxLength": 500
         }
       },
       "required": [
@@ -1161,7 +4508,7 @@
   },
   {
     "name": "set_primary_location",
-    "description": "Validate an accessible White5 location with Voice of Merchant and save its account/location in private Worker KV only after explicit confirmation. Does not change the Google listing.",
+    "description": "Validate an accessible White5 location with Voice of Merchant and save its account/location in private Worker KV only after explicit confirmation. Does not change the Google listing. First prepare a preview; confirmed:true MUST include its previewId and identical arguments. Changed/expired previews are rejected. Destructive operations also require the exact separate confirmation phrase.",
     "inputSchema": {
       "$schema": "https://json-schema.org/draft/2020-12/schema",
       "type": "object",
@@ -1177,6 +4524,21 @@
         "confirmed": {
           "default": false,
           "type": "boolean"
+        },
+        "previewId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "idempotencyKey": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9_-]+$"
+        },
+        "destructiveConfirmation": {
+          "type": "string",
+          "maxLength": 500
         }
       },
       "required": [

@@ -11,5 +11,5 @@
     { "binding": "ZOHO", "service": "white5-zoho-mail-mcp", "entrypoint": "White5Service" },
     { "binding": "GOOGLE_BUSINESS", "service": "white5-google-business-mcp", "entrypoint": "White5Service" }
   ],
-  "observability": { "enabled": true, "head_sampling_rate": 1 }
+  "observability": { "enabled": true, "head_sampling_rate": 1, "logs": { "enabled": true, "invocation_logs": false } }
 }

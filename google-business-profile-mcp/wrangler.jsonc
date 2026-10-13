@@ -10,5 +10,7 @@
       "id": "177ff5b5335d4b6d960040cfefb69cf6"
     }
   ],
+  "durable_objects": { "bindings": [{ "name": "GBP_CONTROL", "class_name": "GBPControl" }] },
+  "migrations": [{ "tag": "gbp-control-v1", "new_sqlite_classes": ["GBPControl"] }],
   "observability": { "enabled": true, "head_sampling_rate": 1, "logs": { "enabled": true, "invocation_logs": false } }
 }

@@ -99,7 +99,7 @@ export function createServer(env: Env, identity: { scopes: string[]; accessToken
     catch (error) { return errorResult(provider, error); }
   });
   server.registerTool("run_provider_write_tool", {
-    title: "Preview or run advanced provider write", description: "Preview without network calls unless confirmed:true. After approval, delegates to the exact existing provider tool and preserves its own safety gates.",
+    title: "Preview or run advanced provider write", description: "Preview using provider validation (GBP reads current state). After approval, delegates to the exact existing provider tool and preserves its own safety gates.",
     inputSchema: { ...advanced, confirmed: z.boolean().default(false) }, annotations: { readOnlyHint: false, destructiveHint: true, openWorldHint: true },
   }, async ({ provider, tool_name, arguments: args, confirmed }) => {
     try {
