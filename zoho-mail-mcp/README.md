@@ -1,5 +1,17 @@
 # White5 Zoho Mail MCP connector
 
+This Worker also provides the named `White5Service` entrypoint used by the
+existing `white5-mcp` gateway for OAuth, authorization and mailbox RPC. Keep
+both original KV bindings in `wrangler.jsonc`: `OAUTH_KV` stores standalone
+connector grants, and `GATEWAY_OAUTH_KV` stores White5 gateway grants. Changing
+or omitting either namespace can invalidate existing connections.
+
+Run `npm run deploy` to check types, test gateway OAuth/RPC, verify the built
+named entrypoint and deploy with existing dashboard variables preserved.
+`npm run dry-run` also checks the bundle export and both namespace IDs.
+Do not deploy an older standalone-only version that lacks `White5Service`.
+See [the recovery report](../WHITE5-AUTH-RECOVERY.md) for the October 18 fix.
+
 Private remote MCP connector for the `info@white5.ca` Zoho Mail mailbox. It is a separate Cloudflare Worker and does not change the website AI assistant.
 
 ## Available tools
@@ -16,7 +28,12 @@ Private remote MCP connector for the `info@white5.ca` Zoho Mail mailbox. It is a
 - `send_email` — send a new email after explicit user confirmation.
 - `reply_email` — send a reply after explicit user confirmation.
 
-Permanent deletion, mailbox settings, and attachments are intentionally excluded.
+- `send_email_with_attachments` — preview and confirm attachment delivery.
+- `send_calendar_invite` — preview and confirm a new ICS invitation.
+- `update_calendar_invite` — preview and confirm an update with the original UID.
+- `cancel_calendar_invite` — preview and confirm cancellation with the original UID.
+
+Permanent deletion and mailbox settings are intentionally excluded.
 
 ## Security model
 

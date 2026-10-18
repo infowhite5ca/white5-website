@@ -76,8 +76,8 @@ function safeOAuthError(error: AuthorizationError): Response {
   return Response.redirect(redirect, 302);
 }
 
-function callbackUri(request: Request): string {
-  return `${new URL(request.url).origin}/oauth/zoho/callback`;
+function callbackUri(request: Request, env: ConnectorEnv): string {
+  return `${env.AUTH_CALLBACK_ORIGIN || new URL(request.url).origin}/oauth/zoho/callback`;
 }
 
 function redirectAuthorizationError(
@@ -119,7 +119,7 @@ async function beginZohoAuthorization(request: Request, env: ConnectorEnv): Prom
   const authorize = new URL(`${ZOHO_ACCOUNTS_BASE}/oauth/v2/auth`);
   authorize.searchParams.set("client_id", env.ZOHO_CLIENT_ID);
   authorize.searchParams.set("response_type", "code");
-  authorize.searchParams.set("redirect_uri", callbackUri(request));
+  authorize.searchParams.set("redirect_uri", callbackUri(request, env));
   authorize.searchParams.set("scope", ZOHO_MAIL_SCOPES.join(","));
   authorize.searchParams.set("access_type", "offline");
   authorize.searchParams.set("prompt", "consent");
@@ -162,7 +162,7 @@ async function finishZohoAuthorization(request: Request, env: ConnectorEnv): Pro
 
   let tokens: Awaited<ReturnType<typeof exchangeAuthorizationCode>>;
   try {
-    tokens = await exchangeAuthorizationCode(env, code, callbackUri(request));
+    tokens = await exchangeAuthorizationCode(env, code, callbackUri(request, env));
   } catch (error) {
     await recordAuthDiagnostic(env, "token_exchange", diagnosticCode(error));
     const description = error instanceof Error ? error.message : "Zoho authorization failed.";
@@ -182,8 +182,9 @@ async function finishZohoAuthorization(request: Request, env: ConnectorEnv): Pro
     const client = await env.OAUTH_PROVIDER.lookupClient(stored.request.clientId);
     if (!client) return new Response("OAuth client is no longer registered.", { status: 400 });
 
-    const grantedScopes = stored.request.scope.filter((scope) => CONNECTOR_SCOPES.includes(scope));
-    const scopes = stored.request.scope.length === 0 ? CONNECTOR_SCOPES : grantedScopes;
+    const supportedScopes = env.AUTH_SCOPES ?? CONNECTOR_SCOPES;
+    const grantedScopes = stored.request.scope.filter((scope) => supportedScopes.includes(scope));
+    const scopes = stored.request.scope.length === 0 ? supportedScopes : grantedScopes;
     if (scopes.length === 0) {
       return redirectAuthorizationError(stored.request, "invalid_scope", "No supported connector scope was requested.");
     }
@@ -238,8 +239,8 @@ export const authHandler: ExportedHandler<ConnectorEnv> = {
       return Response.json({
         ok: true,
         service: "White5 Zoho Mail MCP",
-        version: "0.2.5",
-        toolCount: 11,
+        version: "0.5.1",
+        toolCount: 15,
         endpoint: "/mcp",
         authentication: "OAuth",
       }, { headers: { "cache-control": "no-store" } });

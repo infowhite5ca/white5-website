@@ -5,12 +5,15 @@
   "type": "module",
   "scripts": {
     "dev": "wrangler dev",
-    "deploy": "wrangler deploy",
+    "deploy": "npm run typecheck && npm test && npm run dry-run && wrangler deploy --keep-vars",
     "dry-run": "wrangler deploy --dry-run --outdir dist",
+    "postdry-run": "node scripts/check-gateway-build.mjs",
+    "test": "node scripts/test-gateway.mjs",
     "typecheck": "tsc --noEmit",
     "types": "wrangler types worker-configuration.d.ts --include-runtime false"
   },
   "dependencies": {
+    "@modelcontextprotocol/client": "2.0.0",
     "@cloudflare/workers-oauth-provider": "0.10.3",
     "@modelcontextprotocol/server": "2.0.0",
     "agents": "0.21.0",
