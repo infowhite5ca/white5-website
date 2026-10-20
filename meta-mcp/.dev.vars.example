@@ -1,0 +1,4 @@
+META_ACCESS_TOKEN=replace-with-a-system-user-token
+META_APP_SECRET=replace-with-the-selected-meta-app-secret
+META_APP_ID=replace-with-the-selected-meta-app-id
+MCP_ACCESS_KEY=replace-with-a-long-random-secret
