@@ -1,0 +1,51 @@
+/* White5 readable decorative lettering — shared across public pages.
+   Apply the dark navy edge only to white script on dark backgrounds.
+   Preserve regular body copy and dark text on water/light surfaces. */
+:root { --white5-script-edge: #061728; }
+
+body h1,
+body h2,
+body h3,
+body h4,
+body .service-name strong,
+body .site-navigation a,
+body .site-navigation summary,
+body .nav a,
+body .ghost-btn,
+body .request-btn,
+body .button--secondary,
+body .mobile-bottom-bar a.secondary,
+body .footer-brand,
+body .faq-section .faq-list summary {
+  -webkit-text-stroke: 0.8px var(--white5-script-edge);
+  text-shadow:
+    -1px -1px 0 var(--white5-script-edge),
+     1px -1px 0 var(--white5-script-edge),
+    -1px  1px 0 var(--white5-script-edge),
+     1px  1px 0 var(--white5-script-edge),
+     0 3px 5px rgba(0, 0, 0, .65);
+}
+
+/* FAQ card labels have more visual noise behind them than other headings. */
+body .faq-section .faq-list summary {
+  -webkit-text-stroke: 1px var(--white5-script-edge);
+}
+
+/* These headings sit on white/light panels and intentionally use dark text. */
+body .quote-card h2,
+body .quote-card h3,
+body .cta h2 {
+  -webkit-text-stroke: 0;
+  text-shadow: none;
+}
+
+/* On light water-image buttons keep the existing dark lettering/white glow. */
+body .site-header__quote,
+body .button--primary,
+body .water-btn,
+body .estimate-btn,
+body .nav-cta:not(.nav a),
+body .mobile-bottom-bar a:first-child,
+body .quote-calculator button {
+  -webkit-text-stroke: 0;
+}
