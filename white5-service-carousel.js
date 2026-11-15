@@ -31,6 +31,25 @@
       const index = Math.max(0, Math.min(track.children.length - 1, current + (event.key === 'ArrowRight' ? 1 : -1)));
       track.scrollTo({left: index * track.clientWidth, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth'});
     });
-    gallery.append(track);
+    const previous = document.createElement('button');
+    const next = document.createElement('button');
+    const updateArrows = () => {
+      previous.disabled = track.scrollLeft < 1;
+      next.disabled = track.scrollLeft >= track.scrollWidth - track.clientWidth - 1;
+    };
+    [previous, next].forEach((button, i) => {
+      button.type = 'button';
+      button.className = 'service-carousel__arrow ' + (i ? 'service-carousel__next' : 'service-carousel__previous');
+      button.setAttribute('aria-label', i ? 'Next photo' : 'Previous photo');
+      button.textContent = i ? '›' : '‹';
+      button.addEventListener('click', () => {
+        const current = Math.round(track.scrollLeft / (track.clientWidth || 1));
+        const index = Math.max(0, Math.min(track.children.length - 1, current + (i ? 1 : -1)));
+        track.scrollTo({left: index * track.clientWidth, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth'});
+      });
+    });
+    track.addEventListener('scroll', updateArrows, {passive: true});
+    gallery.append(track, previous, next);
+    requestAnimationFrame(updateArrows);
   });
 })();

@@ -267,12 +267,6 @@ const HOME_SERVICE_STYLES = `
       color: #fff;
     }
 
-    #services .service-card .ghost-btn {
-      background: rgba(5,18,30,.58);
-      border-color: rgba(255,255,255,.26);
-      backdrop-filter: blur(5px);
-    }
-
     @media (max-width: 1060px) {
       #services .services-grid > .service-card {
         min-height: 360px;

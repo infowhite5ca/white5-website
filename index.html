@@ -461,7 +461,11 @@
     .service-carousel__track { position: absolute; inset: 0; display: flex; width: 100%; height: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
     .service-carousel__track::-webkit-scrollbar { display: none; }
     .service-carousel__track > img { display: block; flex: 0 0 100%; width: 100%; min-width: 0; height: 100%; margin: 0; border-radius: 0; object-fit: cover; scroll-snap-align: start; scroll-snap-stop: always; }
-    .service-carousel__track:focus-visible { outline: 3px solid #67ddff; outline-offset: -3px; }
+    .service-carousel__arrow { position: absolute; top: calc(50% - 22px); width: 44px; height: 44px; padding: 0; border-radius: 50%; border: 1px solid #b6f2ff; background: rgba(3,23,39,.85); color: #fff; font: 32px/1 Arial,sans-serif; cursor: pointer; }
+    .service-carousel__previous { left: 8px; }
+    .service-carousel__next { right: 8px; }
+    .service-carousel__arrow:disabled { opacity: .35; cursor: default; }
+    .service-carousel__arrow:focus-visible, .service-carousel__track:focus-visible { outline: 3px solid #67ddff; outline-offset: -3px; }
     @media (max-width: 1060px) { .service-carousel { height: auto; flex-basis: auto; aspect-ratio: 4 / 3; } }
   </style>
   <script type="application/ld+json">
