@@ -17,24 +17,84 @@ body .button--secondary,
 body .mobile-bottom-bar a.secondary,
 body .footer-brand,
 body .faq-section .faq-list summary {
-  -webkit-text-stroke: 0.8px var(--white5-script-edge);
-  text-shadow:
-    -1px -1px 0 var(--white5-script-edge),
-     1px -1px 0 var(--white5-script-edge),
-    -1px  1px 0 var(--white5-script-edge),
-     1px  1px 0 var(--white5-script-edge),
-     0 3px 5px rgba(0, 0, 0, .65);
+  /* Paint the edge behind the fill so it cannot swallow thin script strokes. */
+  paint-order: stroke fill;
+  -webkit-text-stroke: 0.4px var(--white5-script-edge);
+  text-shadow: 0 2px 3px rgba(0, 0, 0, .6);
 }
 
 /* FAQ card labels have more visual noise behind them than other headings. */
 body .faq-section .faq-list summary {
-  -webkit-text-stroke: 1px var(--white5-script-edge);
+  -webkit-text-stroke: 0.4px var(--white5-script-edge);
+}
+
+/* Solid dark panels keep copy readable over the green/gold page gradient. */
+body .faq-card,
+body .review-card {
+  background: #0b2737;
+  color: #f4faff;
+}
+
+body .faq-card p,
+body .review-card p,
+body .review-card cite {
+  color: #e0edf5;
+}
+
+body h1,
+body h2,
+body h3,
+body h4,
+body .faq-list summary {
+  color: #f4faff;
+  -webkit-text-fill-color: currentColor;
+}
+
+/* Card headings are questions and names: prioritize quick reading on phones. */
+body .faq-card h3,
+body .review-card h3 {
+  font-family: Arial, sans-serif;
+  font-weight: 700;
+  font-size: 1.25rem;
+  line-height: 1.4;
+  -webkit-text-stroke: 0;
+  text-shadow: none;
+}
+
+body .section-head > p {
+  color: #fff;
+  text-shadow: 0 1px 3px #061728;
+}
+
+/* Comfortable reading size across home, service pages, FAQ and reviews. */
+body p,
+body li,
+body .contact-list {
+  font-size: max(1.125rem, 18px);
+  line-height: 1.65;
+}
+
+body .field label,
+body .consent,
+body .review-card cite,
+body .breadcrumb,
+body footer {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+@media (max-width: 700px) {
+  body h2 { font-size: 2.125rem; line-height: 1.2; }
+  body h3 { font-size: 1.875rem; line-height: 1.25; }
+  body .faq-card h3,
+  body .review-card h3 { font-size: 1.375rem; line-height: 1.4; }
 }
 
 /* These headings sit on white/light panels and intentionally use dark text. */
 body .quote-card h2,
 body .quote-card h3,
 body .cta h2 {
+  color: #0b1f33;
   -webkit-text-stroke: 0;
   text-shadow: none;
 }
