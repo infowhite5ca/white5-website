@@ -457,6 +457,20 @@
       .nav a { min-height: 44px; padding: 0 8px; }
       .water-btn, .ghost-btn, .quote-calculator button, .mobile-bottom-bar a { font-size: 19px; }
     }
+    .service-carousel { position: relative; width: 100%; height: 220px; flex: 0 0 220px; min-width: 0; margin-bottom: 18px; border-radius: 16px; overflow: hidden; background: #071d2b; }
+    .service-carousel__track { display: flex; width: 100%; height: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+    .service-carousel__track::-webkit-scrollbar { display: none; }
+    .service-carousel__track > img { display: block; flex: 0 0 100%; width: 100%; min-width: 0; height: 100%; margin: 0; border-radius: 0; object-fit: cover; scroll-snap-align: start; scroll-snap-stop: always; }
+    .service-carousel__arrow { position: absolute; top: calc(50% - 22px); width: 44px; height: 44px; border-radius: 50%; border: 1px solid #b6f2ff; background: rgba(3,23,39,.85); color: #fff; font: 32px/1 Arial,sans-serif; cursor: pointer; }
+    .service-carousel__previous { left: 8px; }
+    .service-carousel__next { right: 8px; }
+    .service-carousel__arrow:disabled { opacity: .35; cursor: default; }
+    .service-carousel__count { position: absolute; top: 8px; right: 8px; border-radius: 20px; padding: 4px 10px; background: rgba(3,23,39,.85); color: white; font: 14px/1.4 Arial,sans-serif; pointer-events: none; }
+    .service-carousel__dots { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); display: flex; padding: 0 4px; border-radius: 20px; background: rgba(3,23,39,.75); }
+    .service-carousel__dots button { width: 32px; height: 32px; padding: 0; border: 0; background: transparent; cursor: pointer; }
+    .service-carousel__dots button::after { content: ''; display: block; width: 8px; height: 8px; margin: auto; border-radius: 50%; background: white; }
+    .service-carousel__dots button[aria-current='true']::after { background: #67ddff; transform: scale(1.3); }
+    .service-carousel button:focus-visible, .service-carousel__track:focus-visible { outline: 3px solid #67ddff; outline-offset: -3px; }
   </style>
   <script type="application/ld+json">
     {
@@ -607,5 +621,6 @@
       document.getElementById('estimateOutput').textContent = '$' + Math.round(estimate);
     }
   </script>
+  <script src="/white5-service-carousel.js?v=20261115" defer></script>
 </body>
 </html>
