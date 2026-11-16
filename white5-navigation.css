@@ -75,7 +75,7 @@
 
 @media (max-width: 1060px) {
   .site-header__inner { gap: 16px; min-height: 96px; flex-wrap: wrap; padding: 0 0 12px; }
-  .site-header__brand { width: 125px; height: 90px; flex-basis: 125px; }
+  .site-header__brand { width: 125px; height: 90px; flex-basis: 125px; transform: translateY(6px); }
   .site-header__brand img { width: 180px; margin: -10px 0 0 -28px; }
   .site-navigation { width: 100%; order: 4; flex-wrap: wrap; justify-content: center; gap: 12px 24px; }
   .site-header__quote { margin-left: auto; font-size: 23px; }
